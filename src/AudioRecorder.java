@@ -61,7 +61,7 @@ public class AudioRecorder {
             File audioFile = new File(filePath);
             AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
             } catch (Exception ex) {
-            ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
         );
