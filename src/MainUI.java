@@ -113,6 +113,22 @@ class List extends JPanel {
   /**
    * Saves Questions to a file called "Questions.txt"
    */
+  public void saveQuestions() {
+    try {
+        //creating new file to write to
+        FileWriter file = new FileWriter("Questions.txt"); //not in src
+        //iterating through questions to save them 
+        Component[] listItems = this.getComponents(); 
+        for (int i = 0; i < listItems.length; i++) {
+            if (listItems[i] instanceof Question) {
+                file.write(((Question)listItems[i]).QuestionName.getText() + "\n"); 
+            }
+            file.close();
+        }
+    } catch (Exception e) {
+        System.out.println("Your questions aren't saving :("); 
+    }
+  }
 }
 
 class Footer extends JPanel {
@@ -142,7 +158,7 @@ class Footer extends JPanel {
 
   }
 
-  public JButton geQuestionButton() {
+  public JButton getQuestionButton() {
     return askButton;
   }
 
@@ -186,7 +202,7 @@ class AppFrame extends JFrame {
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
 
-    askButton = footer.geQuestionButton();
+    askButton = footer.getQuestionButton();
     //clearButton = footer.getClearButton(); 
     
     addListeners();
@@ -195,16 +211,28 @@ class AppFrame extends JFrame {
   }
 
   public void addListeners() {
+    //creating AudioRecorder
+    AudioRecorder audio = new AudioRecorder(); 
+    String currPrompt; 
     askButton.addMouseListener(
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-
-            // TODO: Start recording upon first button press, 
-            // TODO: Stop recording on second button press
-            // TODO: Save file
-            // TODO: Transcribe using Whisper
-            // TODO: Pass transcription to ChatGPT function
+                //comparing label of button to see if recording or not
+                //note file name for recording is "recording.wav"
+                if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
+                    audio.startRecording("recording.wav"); 
+                    footer.getQuestionButton().setText("End Question"); 
+                } else {
+                    audio.stopRecording(); 
+                    //after recording ends, we can save the text of the question before another question is recorded
+                    currPrompt = transcribe("recording.wav");
+                    
+                    // TODO: Pass transcription to ChatGPT function
+                    footer.getQuestionButton().setText("Add Question"); 
+                }
+        }
+            
 
             // Later:
                 // TODO: When asking a question, reuse save question prompt for storing history to file
@@ -229,7 +257,6 @@ class AppFrame extends JFrame {
         //     }
         //   ); 
         }
-      }
     );
   }
 
@@ -244,4 +271,3 @@ public class MainUI {
 
 @interface override {
 }
-
