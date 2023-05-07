@@ -227,7 +227,7 @@ class AppFrame extends JFrame {
                     audio.stopRecording(); 
                     //after recording ends, we can save the text of the question before another question is recorded
                     currPrompt = transcribe("recording.wav");
-                    
+                    System.out.println(currPrompt);
                     // TODO: Pass transcription to ChatGPT function
                     footer.getQuestionButton().setText("Add Question"); 
                 }
