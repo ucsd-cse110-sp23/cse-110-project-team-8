@@ -1,3 +1,4 @@
+package src;
 
 /**
  * Handle requests to history database.
