@@ -9,13 +9,19 @@ import org.json.JSONObject;
 public class Whisper {
     private static final String MODEL = "whisper-1";
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        System.out.println(Whisper.transcribe(args[0]));
+    }
+
+    public static String transcribe(String filepath) {
         try {
-            File file = new File(args[0]);
+            File file = new File(filepath);
             String result = WhisperAPI.transcribe(file, MODEL);
-            System.out.println("Transcription Result: " + result);
+            return result;
         } catch (IOException | JSONException e) {
             System.out.println("Error: " + e.getMessage());
+            return "Error: Couldn't Transcribe File";
         }
     }
+
 }
