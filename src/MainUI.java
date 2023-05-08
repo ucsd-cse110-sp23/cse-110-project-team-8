@@ -185,6 +185,8 @@ class AppFrame extends JFrame {
   private Header header;
   private Footer footer;
   private List list;
+  
+  private String currPrompt;
 
   private JButton askButton;
 
@@ -198,6 +200,7 @@ class AppFrame extends JFrame {
     footer = new Footer();
     list = new List();
 
+    
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
@@ -213,7 +216,7 @@ class AppFrame extends JFrame {
   public void addListeners() {
     //creating AudioRecorder
     AudioRecorder audio = new AudioRecorder(); 
-    String currPrompt; 
+    // String currPrompt; 
     askButton.addMouseListener(
       new MouseAdapter() {
         @override
@@ -221,12 +224,12 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    audio.startRecording("recording.wav"); 
+                    audio.startRecording("lib/recording.wav"); 
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
                     //after recording ends, we can save the text of the question before another question is recorded
-                    currPrompt = transcribe("recording.wav");
+                    currPrompt = Whisper.transcribe("lib/recording.wav");
                     System.out.println(currPrompt);
                     // TODO: Pass transcription to ChatGPT function
                     footer.getQuestionButton().setText("Add Question"); 
