@@ -14,7 +14,7 @@ public class AudioRecorderTest {
 
     @BeforeEach
     void setUp() {
-        fileName = "recording.wav";
+        fileName = "TestingWhisper.mp3";
         audioRecorder = new AudioRecorder();
     }
 
