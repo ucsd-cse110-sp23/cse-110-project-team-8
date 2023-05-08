@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -187,6 +188,9 @@ class AppFrame extends JFrame {
   private List list;
   
   private String currPrompt;
+  private String currResponse; 
+  private AudioRecorder audio; 
+  private JTextArea questionText; 
 
   private JButton askButton;
 
@@ -196,14 +200,17 @@ class AppFrame extends JFrame {
     this.setSize(400, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
+    audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
     list = new List();
+    questionText = new JTextArea(currPrompt); 
 
     
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
+    this.add(questionText, BorderLayout.CENTER); 
 
     askButton = footer.getQuestionButton();
     //clearButton = footer.getClearButton(); 
@@ -213,10 +220,8 @@ class AppFrame extends JFrame {
 
   }
 
-  public void addListeners() {
-    //creating AudioRecorder
-    AudioRecorder audio = new AudioRecorder(); 
-    // String currPrompt; 
+
+  public void addListeners()  { //throws IOException, InterruptedException
     askButton.addMouseListener(
       new MouseAdapter() {
         @override
@@ -230,9 +235,10 @@ class AppFrame extends JFrame {
                     audio.stopRecording(); 
                     //after recording ends, we can save the text of the question before another question is recorded
                     currPrompt = Whisper.transcribe("lib/recording.wav");
-                    System.out.println(currPrompt);
-                    // TODO: Pass transcription to ChatGPT function
+                    questionText.insert(currPrompt, 0); 
                     footer.getQuestionButton().setText("Add Question"); 
+                    //currResponse = ChatGPT.getResponse(currPrompt, 100);
+                    // TODO: Pass transcription to ChatGPT function
                 }
         }
             
