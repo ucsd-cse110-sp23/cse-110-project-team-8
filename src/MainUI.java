@@ -190,30 +190,41 @@ class AppFrame extends JFrame {
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
-  private JTextArea questionText; 
+  private JLabel questionText; 
+  private JLabel responseText; 
+
+  private JPanel panel; 
 
   private JButton askButton;
-
 
 
   AppFrame() {
     this.setSize(400, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
+    panel = new JPanel(); 
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
     list = new List();
-    questionText = new JTextArea(currPrompt); 
+    //Creating text labels and setting default text
+    currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
+    currResponse = "..."; 
+    questionText = new JLabel(currPrompt); 
+    //questionText.setBounds(0, 0, 20, 2);
+    responseText = new JLabel(currResponse); 
+    //responseText.setBounds(5,500, 20, 30);
+    panel.add(questionText);
+    panel.add(responseText);
 
-    
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
-    this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
-    this.add(questionText, BorderLayout.CENTER); 
+    //this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
+    this.add(panel); 
+    //this.add(questionText); 
+    //this.add(responseText); 
 
     askButton = footer.getQuestionButton();
-    //clearButton = footer.getClearButton(); 
     
     addListeners();
     this.setVisible(true); // Make visible
@@ -221,7 +232,7 @@ class AppFrame extends JFrame {
   }
 
 
-  public void addListeners()  { //throws IOException, InterruptedException
+  public void addListeners() { //throws IOException, InterruptedException
     askButton.addMouseListener(
       new MouseAdapter() {
         @override
@@ -233,14 +244,21 @@ class AppFrame extends JFrame {
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
-                    //after recording ends, we can save the text of the question before another question is recorded
-                    currPrompt = Whisper.transcribe("lib/recording.wav");
-                    questionText.insert(currPrompt, 0); 
                     footer.getQuestionButton().setText("Add Question"); 
+                    //after we have finished recording a question:
+                    try {
+                      Whisper whisp = new Whisper();
+                      currPrompt = whisp.transcribe("lib/recording.wav"); //transcribe
+                      questionText.setText(currPrompt + "\n"); //set field to transcribed question
+                      //currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                      responseText.setText(currResponse); 
+                    } catch (Exception error) {
+                      System.out.print("this thingy doesn't work"); 
+                    }
                     //currResponse = ChatGPT.getResponse(currPrompt, 100);
                     // TODO: Pass transcription to ChatGPT function
                 }
-        }
+        } 
             
 
             // Later:

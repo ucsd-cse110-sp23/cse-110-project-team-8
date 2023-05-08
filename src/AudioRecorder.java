@@ -11,7 +11,7 @@ public class AudioRecorder {
     private TargetDataLine targetDataLine;
 
     public AudioRecorder() {
-        audioFormat = getAudioFormat();
+        this.audioFormat = getAudioFormat();
     }
 
     private AudioFormat getAudioFormat() {
