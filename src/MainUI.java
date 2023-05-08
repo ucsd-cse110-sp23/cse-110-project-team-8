@@ -247,7 +247,8 @@ class AppFrame extends JFrame {
                     footer.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
                     try {
-                      //currPrompt = WhisperMine.fileToText("lib/recording.wav"); //transcribe
+                      Whisper whisp = new Whisper();
+                      currPrompt = whisp.transcribe("lib/recording.wav"); //transcribe
                       questionText.setText(currPrompt + "\n"); //set field to transcribed question
                       //currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                       responseText.setText(currResponse); 
