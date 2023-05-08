@@ -159,7 +159,7 @@ class List extends JPanel {
       FileReader file = new FileReader("Questions.txt");
       BufferedReader reader = new BufferedReader(file);
       while ((currentLine = reader.readLine()) != null){
-        lines.add(currentLine)
+        lines.add(currentLine);
 
       }
       reader.close();
