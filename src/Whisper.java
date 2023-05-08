@@ -14,10 +14,13 @@ public class Whisper {
     //     System.out.println(Whisper.transcribe(args[0]));
     // }
 
-    public String transcribe(String filepath) {
+    public static String transcribe(String filepath) {
         try {
             File file = new File(filepath);
             String result = WhisperAPI.transcribe(file, MODEL);
+            System.out.print("Whisper");
+
+            System.out.print(result);
             return result;
         } catch (IOException | JSONException e) {
             System.out.println("Error: " + e.getMessage());

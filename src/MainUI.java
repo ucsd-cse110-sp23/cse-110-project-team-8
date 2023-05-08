@@ -240,17 +240,22 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    audio.startRecording("lib/recording.wav"); 
+                    responseText.setText("Recording");
+                    audio.startRecording("lib/recording.mp3"); 
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
                     footer.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
                     try {
-                      Whisper whisp = new Whisper();
-                      currPrompt = whisp.transcribe("lib/recording.wav"); //transcribe
+                      //Whisper whisp = new Whisper();
+                      responseText.setText("Transcribing");
+                      currPrompt = Whisper.transcribe("lib/recording.mp3"); //transcribe
                       questionText.setText(currPrompt + "\n"); //set field to transcribed question
-                      //currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                      System.out.println("\nPrompt" + currPrompt);
+                      currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                      System.out.println("\nResponse:" + currResponse);
+
                       responseText.setText(currResponse); 
                     } catch (Exception error) {
                       System.out.print("this thingy doesn't work"); 
