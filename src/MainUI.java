@@ -235,8 +235,8 @@ class AppFrame extends JFrame {
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
-  private JLabel questionText; 
-  private JLabel responseText; 
+  private JTextArea questionText; 
+  private JTextArea responseText; 
 
   private JPanel panel; 
 
@@ -255,10 +255,12 @@ class AppFrame extends JFrame {
     //Creating text labels and setting default text
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
-    questionText = new JLabel(currPrompt); 
-    //questionText.setBounds(0, 0, 20, 2);
-    responseText = new JLabel(currResponse); 
-    //responseText.setBounds(5,500, 20, 30);
+    questionText = new JTextArea(currPrompt); 
+    questionText.setBounds(0, 0, 350, 200);
+    responseText = new JTextArea(currResponse); 
+    responseText.setBounds(0,225, 350, 350);
+    questionText.setLineWrap(true);
+    responseText.setLineWrap(true); 
     panel.add(questionText);
     panel.add(responseText);
 
