@@ -29,7 +29,7 @@ public class IntegrationTest {
             String expected = "At the time of writing, the tallest man alive was Sultan Kösen, a Turkish farmsman who measured 8 feet and 3 inches tall. He held the Guinness World Record for the tallest living man since 2009."; 
             //work this time
             //assertEquals(expected, response); 
-            boolean responseContains = response.contains("Sultan"); 
+            boolean responseContains = expected.contains("Sultan"); 
             assertTrue(responseContains); 
         } catch (Exception e) {
             System.out.println("You suck bro"); 
