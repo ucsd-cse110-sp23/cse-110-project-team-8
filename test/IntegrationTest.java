@@ -24,7 +24,7 @@ public class IntegrationTest {
         String prompt = Whisper.transcribe(testAudio);
         System.out.println(prompt);
         String response = ChatGPT.getResponse(prompt, 100); 
-        //assertEquals(prompt, "Who was the tallest man alive?");
-        //assertEquals(response, ""); 
+        assertEquals(prompt, "Who was the tallest man alive?");
+        assertEquals(response, "The tallest man ever recorded was Robert Wadlow, an American man who stood 8 feet 11.1 inches (2.72 meters) tall. He lived from 1918 to 1940."); 
     }
 }
