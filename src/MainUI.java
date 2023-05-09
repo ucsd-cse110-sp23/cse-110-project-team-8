@@ -230,7 +230,6 @@ class AppFrame extends JFrame {
 
   private Header header;
   private Footer footer;
-  private List list;
   
   private String currPrompt;
   private String currResponse; 
@@ -241,6 +240,10 @@ class AppFrame extends JFrame {
   private JPanel panel; 
 
   private JButton askButton;
+  
+  private List list; 
+
+  //private SidebarUI(List.loadQuestions()); 
 
 
   AppFrame() {
