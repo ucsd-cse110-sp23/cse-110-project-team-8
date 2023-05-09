@@ -28,7 +28,7 @@ test {
 sourceSets {
     main {
         java {
-            scrDirs = ['src']
+            srcDirs = ['src']
         }
     }
     test {
