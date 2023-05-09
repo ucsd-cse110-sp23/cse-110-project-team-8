@@ -196,9 +196,9 @@ class AppFrame extends JFrame {
 
   private JButton askButton;
   
-  private List list = new List(); 
+  private List list; 
 
-  private SidebarUI(List.loadQuestions()); 
+  //private SidebarUI(List.loadQuestions()); 
 
 
   AppFrame() {
