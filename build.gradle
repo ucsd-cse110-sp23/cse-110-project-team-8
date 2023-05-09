@@ -24,3 +24,16 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+sourceSets {
+    main {
+        java {
+            scrDirs = ['src']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
