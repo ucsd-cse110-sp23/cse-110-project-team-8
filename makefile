@@ -6,7 +6,7 @@ JC = javac
 .java.class:
 	$(JC) $(JFLAGS) $*.java
 
-CLASSES = src/AudioRecorder.java src/ChatGPT.java src/FileWriter.java src/MainUI.java src/Whisper.java src/WhisperAPI.java src/WhisperToChatGPT.java src/History.java
+CLASSES = src/AudioRecorder.java src/ChatGPT.java src/FileWriter.java src/MainUI.java src/Whisper.java src/WhisperAPI.java src/SidebarUI.java src/History.java
 
 default: classes
 
