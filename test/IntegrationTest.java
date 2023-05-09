@@ -15,7 +15,7 @@ public class IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        testAudio = "testRecording.wav";
+        testAudio = "lib/testRecording.wav";
     }
 
     @Test
