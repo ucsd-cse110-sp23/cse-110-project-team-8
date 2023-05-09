@@ -22,6 +22,6 @@ public class IntegrationTest {
     void testWhisperChatGPTIntegration() {
         String prompt = Whisper.transcribe(testAudio);
         System.out.println(prompt);
-        assertEquals(prompt, "Who is the tallest man in the world");
+        assertEquals(prompt, "Who is the tallest man alive?");
     }
 }
