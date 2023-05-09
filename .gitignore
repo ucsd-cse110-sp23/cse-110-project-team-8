@@ -1,2 +1,4 @@
 *.class
 recording.wav
+.vscode/settings.json
+Questions.txt

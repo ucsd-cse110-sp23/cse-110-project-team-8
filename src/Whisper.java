@@ -18,9 +18,9 @@ public class Whisper {
         try {
             File file = new File(filepath);
             String result = WhisperAPI.transcribe(file, MODEL);
-            System.out.print("Whisper");
+            // System.out.print("Whisper");
 
-            System.out.print(result);
+            // System.out.print(result);
             return result;
         } catch (IOException | JSONException e) {
             System.out.println("Error: " + e.getMessage());
