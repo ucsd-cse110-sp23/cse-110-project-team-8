@@ -241,7 +241,7 @@ class AppFrame extends JFrame {
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
                     responseText.setText("Recording");
-                    audio.startRecording("lib/recording.mp3"); 
+                    audio.startRecording("lib/recording.wav"); 
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
@@ -250,7 +250,7 @@ class AppFrame extends JFrame {
                     try {
                       //Whisper whisp = new Whisper();
                       responseText.setText("Transcribing");
-                      currPrompt = Whisper.transcribe("lib/recording.mp3"); //transcribe
+                      currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
                       questionText.setText(currPrompt + "\n"); //set field to transcribed question
                       System.out.println("\nPrompt" + currPrompt);
                       currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
