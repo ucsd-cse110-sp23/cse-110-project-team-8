@@ -25,7 +25,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JList; 
 import javax.swing.border.Border;
+
+import src.SidebarUI;
 
 
 
@@ -228,33 +231,40 @@ class Header extends JPanel {
 
 class AppFrame extends JFrame {
 
+  //basic main panelUI variables
   private Header header;
   private Footer footer;
+  private JPanel panel; 
+  private JButton askButton;
   
+  //basic question/answer variables
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
   private JTextArea questionText; 
   private JTextArea responseText; 
 
-  private JPanel panel; 
-
-  private JButton askButton;
-  
+  //basic sidebar variables
   private List list; 
-
-  //private SidebarUI(List.loadQuestions()); 
+  private ArrayList<String> historyList; 
+  private SidebarUI sidebar; 
 
 
   AppFrame() {
     this.setSize(400, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
+    //setting up basic question answer objects 
     panel = new JPanel(); 
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
+
+    //setting up basic sidebar
     list = new List();
+    historyList = list.loadHistory(); 
+    sidebar = new SidebarUI(historyList); 
+
     //Creating text labels and setting default text
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
@@ -271,6 +281,7 @@ class AppFrame extends JFrame {
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     //this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
     this.add(panel); 
+    //this.add(sidebar, BorderLayout.WEST); 
     //this.add(questionText); 
     //this.add(responseText); 
 
