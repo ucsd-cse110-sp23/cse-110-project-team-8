@@ -32,7 +32,8 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.setBackground(gray); // set background color of task
         this.setLayout(new BorderLayout()); // set layout of task
 
-        this.jlist = new JList<String>((String[]) historyList.toArray());
+        // new String[map1.size()];
+        this.jlist = new JList<String>((String[]) historyList.toArray(new String[historyList.size()]));
         this.jlist.setPreferredSize(new Dimension(listWidth, listHeight));
         this.jlist.addListSelectionListener(this);
         this.add(this.jlist, BorderLayout.NORTH);
@@ -97,4 +98,3 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         }
     }
 }
-
