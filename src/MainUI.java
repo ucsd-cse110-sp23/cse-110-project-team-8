@@ -27,6 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+
+
 class Question extends JPanel {
 
   JLabel index;
@@ -65,7 +67,7 @@ class Question extends JPanel {
 class List extends JPanel {
   
   Color backgroundColor = new Color(240, 248, 255);
-
+  ArrayList<String> history;
   List() {
     GridLayout layout = new GridLayout(10, 1);
     layout.setVgap(5); // Vertical gap
@@ -130,6 +132,49 @@ class List extends JPanel {
         System.out.println("Your questions aren't saving :("); 
     }
   }
+
+  /**
+   * Function to save single question.  To be run after each Whisper transcript
+   * so save history without diplicates
+   */
+  public void saveQuestion(String txt) {
+    try {
+      //creating new file to write to
+      FileWriter file = new FileWriter("Questions.txt"); //not in src
+      //iterating through questions to save them 
+       
+      file.write(txt + "\n"); 
+          
+      file.close();
+  
+  } catch (Exception e) {
+      System.out.println("Your question isn't saving :("); 
+  }
+  }
+
+  public ArrayList<String> loadHistory(){
+    String currentLine;
+    ArrayList<String> lines = new ArrayList<String>();
+    try{
+
+      FileReader file = new FileReader("Questions.txt");
+      BufferedReader reader = new BufferedReader(file);
+      while ((currentLine = reader.readLine()) != null){
+        lines.add(currentLine);
+
+      }
+      reader.close();
+      file.close();
+      return lines;
+
+    }
+    catch (Exception e){
+      System.out.println("Uh-Oh, you are bad at loading tasks");
+      return lines;
+    }
+
+  }
+
 }
 
 class Footer extends JPanel {
@@ -185,17 +230,20 @@ class AppFrame extends JFrame {
 
   private Header header;
   private Footer footer;
-  private List list;
   
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
-  private JLabel questionText; 
-  private JLabel responseText; 
+  private JTextArea questionText; 
+  private JTextArea responseText; 
 
   private JPanel panel; 
 
   private JButton askButton;
+  
+  private List list; 
+
+  //private SidebarUI(List.loadQuestions()); 
 
 
   AppFrame() {
@@ -210,10 +258,12 @@ class AppFrame extends JFrame {
     //Creating text labels and setting default text
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
-    questionText = new JLabel(currPrompt); 
-    //questionText.setBounds(0, 0, 20, 2);
-    responseText = new JLabel(currResponse); 
-    //responseText.setBounds(5,500, 20, 30);
+    questionText = new JTextArea(currPrompt); 
+    questionText.setBounds(0, 0, 350, 200);
+    responseText = new JTextArea(currResponse); 
+    responseText.setBounds(0,225, 350, 350);
+    questionText.setLineWrap(true);
+    responseText.setLineWrap(true); 
     panel.add(questionText);
     panel.add(responseText);
 
@@ -241,16 +291,23 @@ class AppFrame extends JFrame {
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
                     responseText.setText("Recording");
-                    audio.startRecording("lib/recording.mp3"); 
+                    audio.startRecording("lib/recording.wav"); 
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
+                    //after recording ends, we can save the text of the question before another question is recorded
+                    currPrompt = Whisper.transcribe("lib/recording.wav");
+
+                    list.saveQuestion(currPrompt);
+                    //System.out.println(currPrompt);
+
+                    // TODO: Pass transcription to ChatGPT function
                     footer.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
                     try {
                       //Whisper whisp = new Whisper();
                       responseText.setText("Transcribing");
-                      currPrompt = Whisper.transcribe("lib/recording.mp3"); //transcribe
+                      currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
                       questionText.setText(currPrompt + "\n"); //set field to transcribed question
                       System.out.println("\nPrompt" + currPrompt);
                       currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
