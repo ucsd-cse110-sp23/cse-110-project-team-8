@@ -160,7 +160,7 @@ class List extends JPanel {
     ArrayList<String> lines = new ArrayList<String>();
     try{
 
-      FileReader file = new FileReader("Questions.txt");
+      FileReader file = new FileReader("src/Questions.txt");
       BufferedReader reader = new BufferedReader(file);
       while ((currentLine = reader.readLine()) != null){
         lines.add(currentLine);
@@ -320,7 +320,7 @@ class AppFrame extends JFrame {
                       responseText.setText("Transcribing");
                       currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
                       questionText.setText(currPrompt + "\n"); //set field to transcribed question
-                      System.out.println("\nPrompt" + currPrompt);
+                      System.out.println("\nPrompt:\n" + currPrompt);
                       currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                       System.out.println("\nResponse:" + currResponse);
 
