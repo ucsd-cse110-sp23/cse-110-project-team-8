@@ -332,6 +332,7 @@ class AppFrame extends JFrame {
                             //Whisper whisp = new Whisper();
                               responseText.setText("Transcribing");
                             currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
+                            list.saveQuestion(currPrompt);
                             questionText.setText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
