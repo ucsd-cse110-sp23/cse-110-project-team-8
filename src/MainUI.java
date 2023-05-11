@@ -25,7 +25,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JList; 
 import javax.swing.border.Border;
+
+import src.SidebarUI;
 
 
 
@@ -157,7 +160,7 @@ class List extends JPanel {
     ArrayList<String> lines = new ArrayList<String>();
     try{
 
-      FileReader file = new FileReader("Questions.txt");
+      FileReader file = new FileReader("src/Questions.txt");
       BufferedReader reader = new BufferedReader(file);
       while ((currentLine = reader.readLine()) != null){
         lines.add(currentLine);
@@ -228,33 +231,39 @@ class Header extends JPanel {
 
 class AppFrame extends JFrame {
 
+  //basic main panelUI variables
   private Header header;
   private Footer footer;
+  private JPanel panel; 
+  private JButton askButton;
   
+  //basic question/answer variables
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
   private JTextArea questionText; 
   private JTextArea responseText; 
 
-  private JPanel panel; 
-
-  private JButton askButton;
-  
+  //basic sidebar variables
   private List list; 
-
-  //private SidebarUI(List.loadQuestions()); 
-
+  private ArrayList<String> historyList; 
+  private SidebarUI sidebar; 
 
   AppFrame() {
     this.setSize(400, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
+    //setting up basic question answer objects 
     panel = new JPanel(); 
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
+
+    //setting up basic sidebar
     list = new List();
+    historyList = list.loadHistory(); 
+    sidebar = new SidebarUI(historyList); 
+
     //Creating text labels and setting default text
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
@@ -271,6 +280,7 @@ class AppFrame extends JFrame {
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     //this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
     this.add(panel); 
+    //this.add(sidebar, BorderLayout.WEST); 
     //this.add(questionText); 
     //this.add(responseText); 
 
@@ -291,32 +301,54 @@ class AppFrame extends JFrame {
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
                     responseText.setText("Recording");
-                    audio.startRecording("lib/recording.wav"); 
+                   
+                    audio.startRecording("lib/recording.wav");
+                     
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
                     //after recording ends, we can save the text of the question before another question is recorded
-                    currPrompt = Whisper.transcribe("lib/recording.wav");
+                    // Thread t = new Thread(
+                    //   new Runnable(){
+                    //     @Override
+                    //     public void run(){
+                    //       currPrompt = Whisper.transcribe("lib/recording.wav");
+                    //     }
+                    //   }
+                    // );
+                    // t.start();
 
-                    list.saveQuestion(currPrompt);
+                    // list.saveQuestion(currPrompt);
                     //System.out.println(currPrompt);
 
                     // TODO: Pass transcription to ChatGPT function
                     footer.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
-                    try {
-                      //Whisper whisp = new Whisper();
-                      responseText.setText("Transcribing");
-                      currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
-                      questionText.setText(currPrompt + "\n"); //set field to transcribed question
-                      System.out.println("\nPrompt" + currPrompt);
-                      currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
-                      System.out.println("\nResponse:" + currResponse);
-
-                      responseText.setText(currResponse); 
-                    } catch (Exception error) {
-                      System.out.print("this thingy doesn't work"); 
-                    }
+                    Thread t2 = new Thread(
+                      new Runnable(){
+                        @Override
+                        public void run(){
+                          try {
+                            //Whisper whisp = new Whisper();
+                              responseText.setText("Transcribing");
+                            currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
+                            list.saveQuestion(currPrompt);
+                            questionText.setText(currPrompt + "\n"); //set field to transcribed question
+                            System.out.println("\nPrompt" + currPrompt);
+                            currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                            System.out.println("\nResponse:" + currResponse);
+      
+                            responseText.setText(currResponse); 
+                            
+                            
+                          } catch (Exception error) {
+                            System.out.print("this thingy doesn't work"); 
+                          }
+                        }
+                      }
+                    );
+                    t2.start();
+                    
                     //currResponse = ChatGPT.getResponse(currPrompt, 100);
                     // TODO: Pass transcription to ChatGPT function
                 }
