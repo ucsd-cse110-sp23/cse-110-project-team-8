@@ -26,6 +26,7 @@ test {
     useJUnitPlatform()
 }
 
+/*
 sourceSets {
     main {
         java {
@@ -38,3 +39,4 @@ sourceSets {
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-package src;
+package cse110;
 
 /**
  * This code was refactored from the original code found at:
@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.JList; 
 import javax.swing.border.Border;
 
-import src.SidebarUI;
+import cse110.SidebarUI;
 
 
 

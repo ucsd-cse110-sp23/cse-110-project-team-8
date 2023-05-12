@@ -1,4 +1,4 @@
-package src; 
+package cse110;
 import java.io.*;
 
 public class FileWriter {
