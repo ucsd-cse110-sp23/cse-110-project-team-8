@@ -6,14 +6,14 @@ JC = javac
 .java.class:
 	$(JC) $(JFLAGS) $*.java
 
-CLASSES = src/AudioRecorder.java src/ChatGPT.java src/FileWriter.java src/MainUI.java src/Whisper.java src/WhisperAPI.java src/SidebarUI.java src/History.java
+CLASSES = src/main/java/cse110/AudioRecorder.java src/main/java/cse110/ChatGPT.java src/main/java/cse110/FileWriter.java src/main/java/cse110/MainUI.java src/main/java/cse110/Whisper.java src/main/java/cse110/WhisperAPI.java src/main/java/cse110/SidebarUI.java src/main/java/cse110/History.java
 
 default: classes
 
 classes: $(CLASSES:.java=.class)
 
 clean:
-	$(RM) src/*.class
+	$(RM) src/main/java/cse110/*.class
 	
 run:
-	java -cp lib/json-20230227.jar:. src/MainUI
+	java -cp lib/json-20230227.jar:. src/main/java/cse110/MainUI
