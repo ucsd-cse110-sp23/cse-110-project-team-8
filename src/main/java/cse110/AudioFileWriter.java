@@ -1,11 +1,11 @@
 package cse110;
 import java.io.*;
 
-public class FileWriter {
+public class AudioFileWriter {
     private OutputStream outputStream;
     private String boundary;
 
-    public FileWriter(OutputStream outputStream, String boundary) {
+    public AudioFileWriter(OutputStream outputStream, String boundary) {
         this.outputStream = outputStream;
         this.boundary = boundary;
     }

@@ -19,7 +19,7 @@ public class WhisperAPI {
         connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
 
         OutputStream outputStream = connection.getOutputStream();
-        FileWriter builder = new FileWriter(outputStream, boundary);
+        AudioFileWriter builder = new AudioFileWriter(outputStream, boundary);
         builder.writeParameter("model", model);
         builder.writeFile("file", file);
 

@@ -1,6 +1,6 @@
 *.class
 recording.wav
 .vscode/settings.json
-Questions.txt
+data.json
 .gradle
 build/

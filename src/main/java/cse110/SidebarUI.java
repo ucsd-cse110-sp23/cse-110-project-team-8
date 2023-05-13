@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -14,7 +15,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class SidebarUI extends JPanel implements ListSelectionListener {
     private JList<String> jlist;
-    private List<String> historyList;
+    private ArrayList<String> historyList;
     private int selectedIndex;
     private int UNSELECTED = -1;
 
@@ -24,8 +25,16 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     int listWidth = panelWidth;
     int listHeight = panelHeight-80;
 
-    public SidebarUI(List<String> historyList) {
-        this.historyList = historyList;
+    public SidebarUI(ArrayList<QuestionData> dataList) {
+        // TODO: Converts to arraylist of prompts, refactor to just use the QuestionDatas
+        ArrayList<String> newlist = new ArrayList<>();
+        if (dataList != null){
+            for (int i=0; i<dataList.size();i++){
+                newlist.add(dataList.get(i).getPrompt());
+            }
+        }
+
+        this.historyList = newlist;
         this.selectedIndex = UNSELECTED;
 
         this.setPreferredSize(new Dimension(panelWidth, panelHeight)); // set size of task
@@ -61,13 +70,13 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
     public String deleteItem(int index) {
         String deletedString = this.historyList.remove(index);
-        this.jlist = new JList<String>((String[]) this.historyList.toArray());
+        this.jlist = new JList<String>(this.historyList.toArray(new String[0]));
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
-        this.jlist = new JList<String>((String[]) this.historyList.toArray());
+        this.jlist = new JList<String>(this.historyList.toArray(new String[0]));
         return addedPrompt;
     }
 

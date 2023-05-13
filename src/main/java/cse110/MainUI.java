@@ -109,70 +109,6 @@ class List extends JPanel {
     // System.out.println("loadQuestions() not implemented");
     // return null;
   }
-
-  // TODO: Complete this method
-  /**
-   * Saves Questions to a file called "Questions.txt"
-   */
-  public void saveQuestions() {
-    try {
-        //creating new file to write to
-        FileWriter file = new FileWriter("Questions.txt"); //not in src
-        //iterating through questions to save them 
-        Component[] listItems = this.getComponents(); 
-        for (int i = 0; i < listItems.length; i++) {
-            if (listItems[i] instanceof Question) {
-                file.write(((Question)listItems[i]).QuestionName.getText() + "\n"); 
-            }
-            file.close();
-        }
-    } catch (Exception e) {
-        System.out.println("Your questions aren't saving :("); 
-    }
-  }
-
-  /**
-   * Function to save single question.  To be run after each Whisper transcript
-   * so save history without diplicates
-   */
-  public void saveQuestion(String txt) {
-    try {
-      //creating new file to write to
-      FileWriter file = new FileWriter("Questions.txt"); //not in src
-      //iterating through questions to save them 
-       
-      file.write(txt + "\n"); 
-          
-      file.close();
-  
-  } catch (Exception e) {
-      System.out.println("Your question isn't saving :("); 
-  }
-  }
-
-  public ArrayList<String> loadHistory(){
-    String currentLine;
-    ArrayList<String> lines = new ArrayList<String>();
-    try{
-
-      FileReader file = new FileReader("src/Questions.txt");
-      BufferedReader reader = new BufferedReader(file);
-      while ((currentLine = reader.readLine()) != null){
-        lines.add(currentLine);
-
-      }
-      reader.close();
-      file.close();
-      return lines;
-
-    }
-    catch (Exception e){
-      System.out.println("Uh-Oh, you are bad at loading tasks");
-      return lines;
-    }
-
-  }
-
 }
 
 class Footer extends JPanel {
@@ -241,7 +177,7 @@ class AppFrame extends JFrame {
 
   //basic sidebar variables
   private List list; 
-  private ArrayList<String> historyList; 
+  private ArrayList<QuestionData> historyList; 
   private SidebarUI sidebar; 
 
   AppFrame() {
@@ -256,7 +192,7 @@ class AppFrame extends JFrame {
 
     //setting up basic sidebar
     list = new List();
-    historyList = list.loadHistory(); 
+    historyList = DataManager.loadData(); 
     sidebar = new SidebarUI(historyList); 
 
     //Creating text labels and setting default text
@@ -327,17 +263,24 @@ class AppFrame extends JFrame {
                             //Whisper whisp = new Whisper();
                               responseText.setText("Transcribing");
                             currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
-                            list.saveQuestion(currPrompt);
                             questionText.setText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
       
-                            responseText.setText(currResponse); 
+                            responseText.setText(currResponse);
+
+                            // Save question
+                            ArrayList<QuestionData> currData = DataManager.getData();
+                            if (currData == null) currData = new ArrayList<>();
+                            currData.add(new QuestionData(currPrompt, currResponse));
+                            DataManager.setData(currData);
+                            DataManager.saveData();
+                            sidebar.addItem(currPrompt);
                             
                             
-                          } catch (Exception error) {
-                            System.out.print("this thingy doesn't work"); 
+                          } catch (Exception e) {
+                            e.printStackTrace(System.out);
                           }
                         }
                       }
@@ -376,10 +319,13 @@ class AppFrame extends JFrame {
     );
   }
 
+  public SidebarUI getSidebar(){
+    return sidebar;
+  }
+
 }
 
 public class MainUI {
-
   public static void main(String args[]) {
     new AppFrame(); // Create the frame
   }
