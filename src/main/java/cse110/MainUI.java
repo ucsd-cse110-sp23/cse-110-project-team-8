@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -109,6 +110,7 @@ class List extends JPanel {
     // System.out.println("loadQuestions() not implemented");
     // return null;
   }
+
 }
 
 class Footer extends JPanel {
@@ -181,7 +183,7 @@ class AppFrame extends JFrame {
   private SidebarUI sidebar; 
 
   AppFrame() {
-    this.setSize(400, 600); // 400 width and 600 height
+    this.setSize(800, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
     //setting up basic question answer objects 
@@ -199,9 +201,9 @@ class AppFrame extends JFrame {
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
     questionText = new JTextArea(currPrompt); 
-    questionText.setBounds(160, 0, 230, 200);
+    questionText.setBounds(360, 0, 430, 200);
     responseText = new JTextArea(currResponse); 
-    responseText.setBounds(160,210, 230, 350);
+    responseText.setBounds(360,210, 430, 350);
     questionText.setLineWrap(true);
     responseText.setLineWrap(true); 
     panel.add(questionText);
@@ -265,6 +267,7 @@ class AppFrame extends JFrame {
                             currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
                             questionText.setText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
+
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
       
