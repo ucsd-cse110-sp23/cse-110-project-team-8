@@ -8,12 +8,13 @@ import java.io.*;
 
 // Adapted from https://stackoverflow.com/questions/58988210/storing-data-in-json-file-using-java
 public class DataManager {
+    protected static String dataFile = "data.json";
 
     private static ArrayList<QuestionData> data;
     private static Gson gson = new Gson();
 
     public static ArrayList<QuestionData> loadData(){
-        try (FileReader file = new FileReader("data.json")){
+        try (FileReader file = new FileReader(dataFile)) {
             QuestionData[] readdata = gson.fromJson(file,QuestionData[].class);
             if (readdata == null) return null;
             data = new ArrayList<>(Arrays.asList(readdata));
@@ -26,7 +27,7 @@ public class DataManager {
     }
 
     public static boolean saveData(){
-        try (FileWriter file = new FileWriter("data.json")){
+        try (FileWriter file = new FileWriter(dataFile)){
             file.write(gson.toJson(data));
         }catch(Exception e){
             e.printStackTrace(System.out);
