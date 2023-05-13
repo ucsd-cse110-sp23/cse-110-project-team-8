@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -138,11 +139,11 @@ class List extends JPanel {
   public void saveQuestion(String txt) {
     try {
       //creating new file to write to
-      FileWriter file = new FileWriter("Questions.txt"); //not in src
+      FileWriter file = new FileWriter("Questions.txt", true); //not in src
       //iterating through questions to save them 
-       
-      file.write(txt + "\n"); 
-          
+      BufferedWriter bufferedWriter = new BufferedWriter(file);
+      bufferedWriter.write(txt + "\n"); 
+      bufferedWriter.close();  
       file.close();
   
   } catch (Exception e) {
