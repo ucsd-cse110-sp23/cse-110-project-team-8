@@ -2,3 +2,5 @@
 recording.wav
 .vscode/settings.json
 Questions.txt
+.gradle
+build/
