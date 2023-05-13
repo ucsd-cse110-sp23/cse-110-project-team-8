@@ -1,4 +1,9 @@
-JFLAGS = -cp lib/json-20230227.jar:.
+ifeq ($(OS),Windows_NT)
+	JFLAGS = -cp lib/json-20230227.jar;.
+else
+	JFLAGS = -cp lib/json-20230227.jar:.
+endif
+
 JC = javac
 
 .SUFFIXES: .java .class
@@ -13,7 +18,12 @@ default: classes
 classes: $(CLASSES:.java=.class)
 
 clean:
-	$(RM) src/main/java/cse110/*.class
-	
+	$(RM) src/*.class
+
+ifeq ($(OS),Windows_NT)
 run:
-	java -cp lib/json-20230227.jar:. src/main/java/cse110/MainUI
+	java -cp ../lib/json-20230227.jar;. src/MainUI
+else
+run:
+	java -cp lib/json-20230227.jar:. src/MainUI
+endif
