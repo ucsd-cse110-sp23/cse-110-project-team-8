@@ -50,9 +50,13 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         SidebarButtonPanel buttonPanel = new SidebarButtonPanel(panelWidth, panelHeight-listHeight);
         buttonPanel.clearButton.addActionListener(
             (ActionEvent e) -> {
-                // Clear jlist
+                // Clear historyList
                 this.historyList.clear();
-                this.jlist = new JList<>();
+                
+                // Clear jlist
+                this.jlist.setListData(new String[0]);
+                this.jlist.revalidate();
+                this.jlist.repaint();
 
                 // TODO: Clear history database
             }
