@@ -162,23 +162,52 @@ class Header extends JPanel {
   }
 }
 
+class MainPanel extends JPanel {
+  private JTextArea questionText; 
+  private JTextArea responseText; 
+
+  MainPanel(String currPrompt, String currResponse) {
+    questionText = new JTextArea(currPrompt); 
+    questionText.setBounds(360, 0, 430, 200);
+
+    responseText = new JTextArea(currResponse); 
+    responseText.setBounds(360,210, 430, 350);
+
+    questionText.setLineWrap(true);
+    responseText.setLineWrap(true); 
+
+    this.add(questionText);
+    this.add(responseText);
+  }
+
+  public void setResponseText(String text) {
+    this.responseText.setText(text);
+  }
+
+  public void setQuestionText(String text) {
+    this.questionText.setText(text);
+  }
+
+  public void updateData(String question, String response) {
+    this.responseText.setText(response);
+    this.questionText.setText(question);
+  }
+}
+
 class AppFrame extends JFrame {
 
   //basic main panelUI variables
   private Header header;
   private Footer footer;
-  private JPanel panel; 
+  private MainPanel panel; 
   private JButton askButton;
   
   //basic question/answer variables
   private String currPrompt;
   private String currResponse; 
   private AudioRecorder audio; 
-  private JTextArea questionText; 
-  private JTextArea responseText; 
 
   //basic sidebar variables
-  private List list; 
   private ArrayList<QuestionData> historyList; 
   private SidebarUI sidebar; 
 
@@ -186,42 +215,29 @@ class AppFrame extends JFrame {
     this.setSize(800, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
+    //Creating text labels and setting default text
+    currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
+    currResponse = "..."; 
+
     //setting up basic question answer objects 
-    panel = new JPanel(); 
+    panel = new MainPanel(currPrompt, currResponse); 
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
 
     //setting up basic sidebar
-    list = new List();
     historyList = DataManager.loadData(); 
-    sidebar = new SidebarUI(historyList); 
-
-    //Creating text labels and setting default text
-    currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
-    currResponse = "..."; 
-    questionText = new JTextArea(currPrompt); 
-    questionText.setBounds(360, 0, 430, 200);
-    responseText = new JTextArea(currResponse); 
-    responseText.setBounds(360,210, 430, 350);
-    questionText.setLineWrap(true);
-    responseText.setLineWrap(true); 
-    panel.add(questionText);
-    panel.add(responseText);
+    sidebar = new SidebarUI(panel, historyList); 
 
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
-    //this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
     this.add(panel); 
     this.add(sidebar, BorderLayout.WEST); 
-    //this.add(questionText); 
-    //this.add(responseText); 
 
     askButton = footer.getQuestionButton();
     
     addListeners();
     this.setVisible(true); // Make visible
-
   }
 
 
@@ -233,7 +249,7 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    responseText.setText("Recording");
+                    panel.setResponseText("Recording");
                    
                     audio.startRecording("lib/recording.wav");
                      
@@ -262,16 +278,15 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            //Whisper whisp = new Whisper();
-                              responseText.setText("Transcribing");
+                            panel.setResponseText("Transcribing");
                             currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
-                            questionText.setText(currPrompt + "\n"); //set field to transcribed question
+                            panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
 
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
       
-                            responseText.setText(currResponse);
+                            panel.setResponseText(currResponse);
 
                             // Save question
                             ArrayList<QuestionData> currData = DataManager.getData();
@@ -280,8 +295,6 @@ class AppFrame extends JFrame {
                             DataManager.setData(currData);
                             DataManager.saveData();
                             sidebar.addItem(currPrompt);
-                            
-                            
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
                           }
@@ -322,9 +335,13 @@ class AppFrame extends JFrame {
     );
   }
 
-  public SidebarUI getSidebar(){
-    return sidebar;
-  }
+  // public SidebarUI getSidebar(){
+  //   return sidebar;
+  // }
+
+  // public JPanel getMainPanel(){
+  //   return panel;
+  // }
 
 }
 
