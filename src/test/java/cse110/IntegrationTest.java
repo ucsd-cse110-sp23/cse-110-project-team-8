@@ -1,10 +1,10 @@
-package test;
+package cse110;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-import src.Whisper;
-import src.ChatGPT; 
+import cse110.Whisper;
+import cse110.ChatGPT; 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;

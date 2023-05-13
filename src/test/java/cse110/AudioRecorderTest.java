@@ -1,4 +1,4 @@
-package test;
+package cse110;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
 
-import src.AudioRecorder;
+import cse110.AudioRecorder;
 
 public class AudioRecorderTest {
     private AudioRecorder audioRecorder;
