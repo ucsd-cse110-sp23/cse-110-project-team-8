@@ -70,13 +70,17 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
     public String deleteItem(int index) {
         String deletedString = this.historyList.remove(index);
-        this.jlist = new JList<String>(this.historyList.toArray(new String[0]));
+        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        jlist.revalidate();
+        jlist.repaint();
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
-        this.jlist = new JList<String>(this.historyList.toArray(new String[0]));
+        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        jlist.revalidate();
+        jlist.repaint();
         return addedPrompt;
     }
 
