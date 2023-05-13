@@ -35,6 +35,11 @@ public class DataManager {
         return true;
     }
 
+    public static boolean addData(QuestionData qd) {
+        data.add(qd);
+        return saveData();
+    }
+
     public static boolean removeData(int index) {
         // Check if data is loaded, if not load the data
         if (data == null) {

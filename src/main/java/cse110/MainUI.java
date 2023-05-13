@@ -6,7 +6,6 @@ package cse110;
  */
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -14,8 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,97 +24,82 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 
+// class Question extends JPanel {
+//   JLabel index;
+//   JTextField QuestionName;
 
-class Question extends JPanel {
+//   Color gray = new Color(218, 229, 234);
+//   Color green = new Color(188, 226, 158);
 
-  JLabel index;
-  JTextField QuestionName;
+//   Question() {
+//     this.setPreferredSize(new Dimension(400, 20)); // set size of Question
+//     this.setBackground(gray); // set background color of Question
 
-  Color gray = new Color(218, 229, 234);
-  Color green = new Color(188, 226, 158);
+//     this.setLayout(new BorderLayout()); // set layout of Question
 
-  //private boolean markedDone;
+//     index = new JLabel(""); // create index label
+//     index.setPreferredSize(new Dimension(20, 20)); // set size of index label
+//     index.setHorizontalAlignment(JLabel.CENTER); // set alignment of index label
+//     this.add(index, BorderLayout.WEST); // add index label to Question
 
-  Question() {
-    this.setPreferredSize(new Dimension(400, 20)); // set size of Question
-    this.setBackground(gray); // set background color of Question
+//     QuestionName = new JTextField(""); // create Question name text field
+//     QuestionName.setBorder(BorderFactory.createEmptyBorder()); // remove border of text field
+//     QuestionName.setBackground(gray); // set background color of text field
 
-    this.setLayout(new BorderLayout()); // set layout of Question
+//     this.add(QuestionName, BorderLayout.CENTER);
+//   }
 
-    index = new JLabel(""); // create index label
-    index.setPreferredSize(new Dimension(20, 20)); // set size of index label
-    index.setHorizontalAlignment(JLabel.CENTER); // set alignment of index label
-    this.add(index, BorderLayout.WEST); // add index label to Question
+//   public void changeIndex(int num) {
+//     this.index.setText(num + ""); // num to String
+//     this.revalidate(); // refresh
+//   }
 
-    QuestionName = new JTextField(""); // create Question name text field
-    QuestionName.setBorder(BorderFactory.createEmptyBorder()); // remove border of text field
-    QuestionName.setBackground(gray); // set background color of text field
+// }
 
-    this.add(QuestionName, BorderLayout.CENTER);
-  }
+// class List extends JPanel {
+//   Color backgroundColor = new Color(240, 248, 255);
+//   ArrayList<String> history;
+//   List() {
+//     GridLayout layout = new GridLayout(10, 1);
+//     layout.setVgap(5); // Vertical gap
 
-  public void changeIndex(int num) {
-    this.index.setText(num + ""); // num to String
-    this.revalidate(); // refresh
-  }
+//     this.setLayout(layout); // 10 Questions
+//     this.setPreferredSize(new Dimension(400, 560));
+//     this.setBackground(backgroundColor);
+//   }
 
-}
+//   /**
+//    * Loads Questions from a file called "Questions.txt"
+//    * @return an ArrayList of Question
+//    */
+//   public ArrayList<Question> loadQuestions() {
+//     String currentLine;
+//     ArrayList<Question> Questions = new ArrayList<Question>();
+//     try{
 
-class List extends JPanel {
-  
-  Color backgroundColor = new Color(240, 248, 255);
-  ArrayList<String> history;
-  List() {
-    GridLayout layout = new GridLayout(10, 1);
-    layout.setVgap(5); // Vertical gap
+//       FileReader file = new FileReader("Questions.txt");
+//       BufferedReader reader = new BufferedReader(file);
+//       while ((currentLine = reader.readLine()) != null){
+//         Question CurrentQuestion = new Question();
+//         CurrentQuestion.QuestionName.setText(currentLine);
+//         System.out.println(currentLine);
+//         Questions.add(CurrentQuestion);
+//       }
+//       reader.close();
+//       file.close();
+//       return Questions;
 
-    this.setLayout(layout); // 10 Questions
-    this.setPreferredSize(new Dimension(400, 560));
-    this.setBackground(backgroundColor);
-  }
+//     }
+//     catch (Exception e){
+//       System.out.println("Uh-Oh, you are bad at loading Questions");
+//       return Questions;
+//     }
+//   }
 
-
-  /**
-   * Loads Questions from a file called "Questions.txt"
-   * @return an ArrayList of Question
-   */
-  public ArrayList<Question> loadQuestions() {
-    String currentLine;
-    ArrayList<Question> Questions = new ArrayList<Question>();
-    try{
-
-      FileReader file = new FileReader("Questions.txt");
-      BufferedReader reader = new BufferedReader(file);
-      while ((currentLine = reader.readLine()) != null){
-        Question CurrentQuestion = new Question();
-        CurrentQuestion.QuestionName.setText(currentLine);
-        System.out.println(currentLine);
-        Questions.add(CurrentQuestion);
-
-      }
-      reader.close();
-      file.close();
-      return Questions;
-
-    }
-    catch (Exception e){
-      System.out.println("Uh-Oh, you are bad at loading Questions");
-      return Questions;
-    }
-    // hint 1: use try-catch block
-    // hint 2: use BufferedReader and FileReader
-    // hint 3: Question.QuestionName.setText(line) sets the text of the Question
-    // System.out.println("loadQuestions() not implemented");
-    // return null;
-  }
-
-}
+// }
 
 class Footer extends JPanel {
-
   JButton askButton;
-//   JButton loadButton;
-//   JButton saveButton;
 
   Color backgroundColor = new Color(240, 248, 255);
   Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -130,21 +112,11 @@ class Footer extends JPanel {
     askButton = new JButton("Add Question"); // add Question button
     askButton.setFont(new Font("Sans-serif", Font.ITALIC, 10)); // set font
     this.add(askButton); // add to footer
-
-
-    // loadButton = new JButton("Load Questions"); // load Question button
-    // loadButton.setFont(new Font("Sans-serif", Font.ITALIC, 10)); // set font
-    // this.add(loadButton); // add to footer
-
-
-
   }
 
   public JButton getQuestionButton() {
     return askButton;
   }
-
-
 }
 
 class Header extends JPanel {
@@ -162,6 +134,9 @@ class Header extends JPanel {
   }
 }
 
+/**
+ * Panel for displaying prompt and response
+ */
 class MainPanel extends JPanel {
   private JTextArea questionText; 
   private JTextArea responseText; 
@@ -195,6 +170,7 @@ class MainPanel extends JPanel {
 }
 
 class AppFrame extends JFrame {
+  private String fileName = "lib/recording.wav";
 
   //basic main panelUI variables
   private Header header;
@@ -229,6 +205,7 @@ class AppFrame extends JFrame {
     historyList = DataManager.loadData(); 
     sidebar = new SidebarUI(panel, historyList); 
 
+    // Add panels to app frame
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     this.add(panel); 
@@ -240,8 +217,10 @@ class AppFrame extends JFrame {
     this.setVisible(true); // Make visible
   }
 
-
-  public void addListeners() { //throws IOException, InterruptedException
+  /** 
+   * Add listeners to button for starting and stopping recording
+   */
+  public void addListeners() { 
     askButton.addMouseListener(
       new MouseAdapter() {
         @override
@@ -251,26 +230,12 @@ class AppFrame extends JFrame {
                 if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
                     panel.setResponseText("Recording");
                    
-                    audio.startRecording("lib/recording.wav");
+                    audio.startRecording(fileName);
                      
                     footer.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
-                    //after recording ends, we can save the text of the question before another question is recorded
-                    // Thread t = new Thread(
-                    //   new Runnable(){
-                    //     @Override
-                    //     public void run(){
-                    //       currPrompt = Whisper.transcribe("lib/recording.wav");
-                    //     }
-                    //   }
-                    // );
-                    // t.start();
 
-                    // list.saveQuestion(currPrompt);
-                    //System.out.println(currPrompt);
-
-                    // TODO: Pass transcription to ChatGPT function
                     footer.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
                     Thread t2 = new Thread(
@@ -279,7 +244,7 @@ class AppFrame extends JFrame {
                         public void run(){
                           try {
                             panel.setResponseText("Transcribing");
-                            currPrompt = Whisper.transcribe("lib/recording.wav"); //transcribe
+                            currPrompt = Whisper.transcribe(fileName); //transcribe
                             panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
 
@@ -288,12 +253,9 @@ class AppFrame extends JFrame {
       
                             panel.setResponseText(currResponse);
 
-                            // Save question
-                            ArrayList<QuestionData> currData = DataManager.getData();
-                            if (currData == null) currData = new ArrayList<>();
-                            currData.add(new QuestionData(currPrompt, currResponse));
-                            DataManager.setData(currData);
-                            DataManager.saveData();
+                            // Save new question
+                            DataManager.addData(new QuestionData(currPrompt, currResponse));
+
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -302,47 +264,11 @@ class AppFrame extends JFrame {
                       }
                     );
                     t2.start();
-                    
-                    //currResponse = ChatGPT.getResponse(currPrompt, 100);
-                    // TODO: Pass transcription to ChatGPT function
-                }
+              }
         } 
-            
-
-            // Later:
-                // TODO: When asking a question, reuse save question prompt for storing history to file
-                // TODO: Modify history by deleting that line from the file 
-                    // (Maybe using indicies of question as refering to line numbers in file?)
-                // TODO: View history by opening sidebar which loads the saved file (THIS IS UNDER THE BACK-END Story Task!!)
-
-
-        //   Question Question = new Question();
-        //   list.add(Question); // Add new Question to list
-        //   list.updateNumbers(); // Updates the numbers of the Questions
-
-        //   JButton doneButton = Question.getDone();
-        //   doneButton.addMouseListener(
-        //     new MouseAdapter() {
-        //       @override
-        //       public void mousePressed(MouseEvent e) {
-        //         Question.changeState(); // Change color of Question
-        //         list.updateNumbers(); // Updates the numbers of the Questions
-        //         revalidate(); // Updates the frame
-        //       }
-        //     }
-        //   ); 
-        }
+      }
     );
   }
-
-  // public SidebarUI getSidebar(){
-  //   return sidebar;
-  // }
-
-  // public JPanel getMainPanel(){
-  //   return panel;
-  // }
-
 }
 
 public class MainUI {
