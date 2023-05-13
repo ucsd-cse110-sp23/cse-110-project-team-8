@@ -156,7 +156,7 @@ class List extends JPanel {
     ArrayList<String> lines = new ArrayList<String>();
     try{
 
-      FileReader file = new FileReader("src/Questions.txt");
+      FileReader file = new FileReader("Questions.txt");
       BufferedReader reader = new BufferedReader(file);
       while ((currentLine = reader.readLine()) != null){
         lines.add(currentLine);
@@ -246,7 +246,7 @@ class AppFrame extends JFrame {
   private SidebarUI sidebar; 
 
   AppFrame() {
-    this.setSize(400, 600); // 400 width and 600 height
+    this.setSize(800, 600); // 400 width and 600 height
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
     //setting up basic question answer objects 
@@ -264,9 +264,9 @@ class AppFrame extends JFrame {
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
     questionText = new JTextArea(currPrompt); 
-    questionText.setBounds(160, 0, 230, 200);
+    questionText.setBounds(360, 0, 430, 200);
     responseText = new JTextArea(currResponse); 
-    responseText.setBounds(160,210, 230, 350);
+    responseText.setBounds(360,210, 430, 350);
     questionText.setLineWrap(true);
     responseText.setLineWrap(true); 
     panel.add(questionText);
@@ -331,6 +331,7 @@ class AppFrame extends JFrame {
                             list.saveQuestion(currPrompt);
                             questionText.setText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
+
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
       

@@ -19,7 +19,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     private int UNSELECTED = -1;
 
     Color gray = new Color(218, 229, 234);
-    int panelWidth = 150;
+    int panelWidth = 350;
     int panelHeight = 400;
     int listWidth = panelWidth;
     int listHeight = panelHeight-80;
