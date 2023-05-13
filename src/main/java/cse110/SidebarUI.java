@@ -58,14 +58,17 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
                 this.jlist.revalidate();
                 this.jlist.repaint();
 
-                // TODO: Clear history database
+                // Clear DataManager and save
+                DataManager.setData(new ArrayList<QuestionData>());
+                if (!DataManager.saveData()) {
+                    System.out.println("Failed to clear data in JSON file.");
+                }
             }
         );
         buttonPanel.removeButton.addActionListener(
             (ActionEvent e) -> {
                 if (this.selectedIndex == UNSELECTED) return;
                 this.deleteItem(this.selectedIndex);
-
                 // TODO: Remove from history database
             }
         );
@@ -77,6 +80,13 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.jlist.setListData(this.historyList.toArray(new String[0]));
         jlist.revalidate();
         jlist.repaint();
+
+        // Remove the corresponding data from the JSON file
+        if (!DataManager.removeData(index)) {
+            System.out.println("Failed to remove data from JSON file.");
+        }
+
+
         return deletedString;
     }
 

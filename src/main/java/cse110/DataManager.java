@@ -35,6 +35,29 @@ public class DataManager {
         return true;
     }
 
+    public static boolean removeData(int index) {
+        // Check if data is loaded, if not load the data
+        if (data == null) {
+            data = loadData();
+        }
+
+        // If data is still null after trying to load, return false
+        if (data == null) {
+            return false;
+        }
+
+        // Check if index is valid
+        if (index < 0 || index >= data.size()) {
+            return false;
+        }
+
+        // Remove the question at the specified index
+        data.remove(index);
+
+        // Save the updated data
+        return saveData();
+    }
+
     public static ArrayList<QuestionData> getData(){
         return data;
     }
