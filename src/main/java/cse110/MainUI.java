@@ -15,8 +15,6 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,10 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JList; 
 import javax.swing.border.Border;
-
-import cse110.SidebarUI;
 
 
 
@@ -40,7 +35,7 @@ class Question extends JPanel {
   Color gray = new Color(218, 229, 234);
   Color green = new Color(188, 226, 158);
 
-  private boolean markedDone;
+  //private boolean markedDone;
 
   Question() {
     this.setPreferredSize(new Dimension(400, 20)); // set size of Question
@@ -268,9 +263,9 @@ class AppFrame extends JFrame {
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
     questionText = new JTextArea(currPrompt); 
-    questionText.setBounds(0, 0, 350, 200);
+    questionText.setBounds(160, 0, 230, 200);
     responseText = new JTextArea(currResponse); 
-    responseText.setBounds(0,225, 350, 350);
+    responseText.setBounds(160,210, 230, 350);
     questionText.setLineWrap(true);
     responseText.setLineWrap(true); 
     panel.add(questionText);
@@ -280,7 +275,7 @@ class AppFrame extends JFrame {
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
     //this.add(list, BorderLayout.CENTER); // Add list in middle of footer and title
     this.add(panel); 
-    //this.add(sidebar, BorderLayout.WEST); 
+    this.add(sidebar, BorderLayout.WEST); 
     //this.add(questionText); 
     //this.add(responseText); 
 
