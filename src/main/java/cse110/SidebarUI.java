@@ -97,13 +97,16 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
-        // Set selectedIndex for history item deletion
-        this.selectedIndex = this.jlist.getSelectedIndex();
+public void valueChanged(ListSelectionEvent e) {
+    // Set selectedIndex for history item deletion
+    this.selectedIndex = this.jlist.getSelectedIndex();
 
+    // Check if an item is selected
+    if (this.selectedIndex != UNSELECTED) {
         QuestionData qd = DataManager.getData().get(this.selectedIndex);
         this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
     }
+}
 
     class SidebarButtonPanel extends JPanel {
         JButton clearButton;
