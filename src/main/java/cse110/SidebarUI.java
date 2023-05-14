@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -13,8 +13,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class SidebarUI extends JPanel implements ListSelectionListener {
+    private MainPanel mainPanel;
     private JList<String> jlist;
-    private List<String> historyList;
+    private ArrayList<String> historyList;
     private int selectedIndex;
     private int UNSELECTED = -1;
 
@@ -24,15 +25,23 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     int listWidth = panelWidth;
     int listHeight = panelHeight-80;
 
-    public SidebarUI(List<String> historyList) {
-        this.historyList = historyList;
+    public SidebarUI(MainPanel mainPanel ,ArrayList<QuestionData> dataList) {
+        this.mainPanel = mainPanel;
+
+        ArrayList<String> newlist = new ArrayList<>();
+        if (dataList != null){
+            for (int i=0; i<dataList.size();i++){
+                newlist.add(dataList.get(i).getPrompt());
+            }
+        }
+
+        this.historyList = newlist;
         this.selectedIndex = UNSELECTED;
 
         this.setPreferredSize(new Dimension(panelWidth, panelHeight)); // set size of task
         this.setBackground(gray); // set background color of task
         this.setLayout(new BorderLayout()); // set layout of task
 
-        // new String[map1.size()];
         this.jlist = new JList<String>((String[]) historyList.toArray(new String[historyList.size()]));
         this.jlist.setPreferredSize(new Dimension(listWidth, listHeight));
         this.jlist.addListSelectionListener(this);
@@ -41,19 +50,25 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         SidebarButtonPanel buttonPanel = new SidebarButtonPanel(panelWidth, panelHeight-listHeight);
         buttonPanel.clearButton.addActionListener(
             (ActionEvent e) -> {
-                // Clear jlist
+                // Clear historyList
                 this.historyList.clear();
-                this.jlist = new JList<>();
+                
+                // Clear jlist
+                this.jlist.setListData(new String[0]);
+                this.jlist.revalidate();
+                this.jlist.repaint();
 
-                // TODO: Clear history database
+                // Clear DataManager and save
+                DataManager.setData(new ArrayList<QuestionData>());
+                if (!DataManager.saveData()) {
+                    System.out.println("Failed to clear data in JSON file.");
+                }
             }
         );
         buttonPanel.removeButton.addActionListener(
             (ActionEvent e) -> {
                 if (this.selectedIndex == UNSELECTED) return;
                 this.deleteItem(this.selectedIndex);
-
-                // TODO: Remove from history database
             }
         );
         this.add(buttonPanel, BorderLayout.SOUTH);
@@ -61,23 +76,37 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
     public String deleteItem(int index) {
         String deletedString = this.historyList.remove(index);
-        this.jlist = new JList<String>((String[]) this.historyList.toArray());
+        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        jlist.revalidate();
+        jlist.repaint();
+
+        // Remove the corresponding data from the JSON file
+        if (!DataManager.removeData(index)) {
+            System.out.println("Failed to remove data from JSON file.");
+        }
+
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
-        this.jlist = new JList<String>((String[]) this.historyList.toArray());
+        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        jlist.revalidate();
+        jlist.repaint();
         return addedPrompt;
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
-        // Set selectedIndex for history item deletion
-        this.selectedIndex = this.jlist.getSelectedIndex();
+public void valueChanged(ListSelectionEvent e) {
+    // Set selectedIndex for history item deletion
+    this.selectedIndex = this.jlist.getSelectedIndex();
 
-        // TODO: Set UI of MainUI for selected prompt.
+    // Check if an item is selected
+    if (this.selectedIndex != UNSELECTED) {
+        QuestionData qd = DataManager.getData().get(this.selectedIndex);
+        this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
     }
+}
 
     class SidebarButtonPanel extends JPanel {
         JButton clearButton;
