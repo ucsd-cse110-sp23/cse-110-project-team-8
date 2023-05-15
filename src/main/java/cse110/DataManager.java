@@ -27,7 +27,7 @@ public class DataManager {
 
     public static boolean existsData(String prompt) {
         for (QuestionData qd: data) {
-            if (qd.getPrompt() == prompt) return true;
+            if (qd.getPrompt().equals(prompt)) return true;
         }
         return false;
     }
@@ -50,6 +50,16 @@ public class DataManager {
     }
 
     public static boolean addData(QuestionData qd) {
+        if (data == null) {
+            data = loadData();
+        }
+    
+        // Check if data is still null after trying to load
+        if (data == null) {
+            // If it's still null, initialize it as an empty ArrayList
+            data = new ArrayList<>();
+        }
+    
         data.add(qd);
         return saveData();
     }

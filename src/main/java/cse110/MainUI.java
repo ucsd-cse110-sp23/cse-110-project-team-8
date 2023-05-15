@@ -208,8 +208,8 @@ class AppFrame extends JFrame {
     //setting up basic sidebar
     historyList = DataManager.loadData(); 
     // TODO: Use Http Server API
-    URL url = new URL(URL);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    // URL url = new URL(URL);
+    // HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
     sidebar = new SidebarUI(panel, historyList); 
 
@@ -225,6 +225,36 @@ class AppFrame extends JFrame {
     this.setVisible(true); // Make visible
   }
 
+  public static void sendPostRequest(String prompt, String response) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL);
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("POST");
+
+        // To send a POST request, we must set DoOutput to true
+        conn.setDoOutput(true);
+
+        // Write the request content
+        OutputStreamWriter out = new OutputStreamWriter(
+              conn.getOutputStream()
+            );
+        out.write(prompt + "," + response);
+        out.flush();
+        out.close();
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("POST Response Code: " + responseCode);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
   /** 
    * Add listeners to button for starting and stopping recording
    */
@@ -262,9 +292,9 @@ class AppFrame extends JFrame {
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            DataManager.addData(new QuestionData(currPrompt, currResponse));
+                            // DataManager.addData(new QuestionData(currPrompt, currResponse));
                             // TODO: Use Http Server API
-
+                            sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
