@@ -12,7 +12,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,83 +19,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
-// class Question extends JPanel {
-//   JLabel index;
-//   JTextField QuestionName;
+import java.io.*;
+import java.net.*;
 
-//   Color gray = new Color(218, 229, 234);
-//   Color green = new Color(188, 226, 158);
-
-//   Question() {
-//     this.setPreferredSize(new Dimension(400, 20)); // set size of Question
-//     this.setBackground(gray); // set background color of Question
-
-//     this.setLayout(new BorderLayout()); // set layout of Question
-
-//     index = new JLabel(""); // create index label
-//     index.setPreferredSize(new Dimension(20, 20)); // set size of index label
-//     index.setHorizontalAlignment(JLabel.CENTER); // set alignment of index label
-//     this.add(index, BorderLayout.WEST); // add index label to Question
-
-//     QuestionName = new JTextField(""); // create Question name text field
-//     QuestionName.setBorder(BorderFactory.createEmptyBorder()); // remove border of text field
-//     QuestionName.setBackground(gray); // set background color of text field
-
-//     this.add(QuestionName, BorderLayout.CENTER);
-//   }
-
-//   public void changeIndex(int num) {
-//     this.index.setText(num + ""); // num to String
-//     this.revalidate(); // refresh
-//   }
-
-// }
-
-// class List extends JPanel {
-//   Color backgroundColor = new Color(240, 248, 255);
-//   ArrayList<String> history;
-//   List() {
-//     GridLayout layout = new GridLayout(10, 1);
-//     layout.setVgap(5); // Vertical gap
-
-//     this.setLayout(layout); // 10 Questions
-//     this.setPreferredSize(new Dimension(400, 560));
-//     this.setBackground(backgroundColor);
-//   }
-
-//   /**
-//    * Loads Questions from a file called "Questions.txt"
-//    * @return an ArrayList of Question
-//    */
-//   public ArrayList<Question> loadQuestions() {
-//     String currentLine;
-//     ArrayList<Question> Questions = new ArrayList<Question>();
-//     try{
-
-//       FileReader file = new FileReader("Questions.txt");
-//       BufferedReader reader = new BufferedReader(file);
-//       while ((currentLine = reader.readLine()) != null){
-//         Question CurrentQuestion = new Question();
-//         CurrentQuestion.QuestionName.setText(currentLine);
-//         System.out.println(currentLine);
-//         Questions.add(CurrentQuestion);
-//       }
-//       reader.close();
-//       file.close();
-//       return Questions;
-
-//     }
-//     catch (Exception e){
-//       System.out.println("Uh-Oh, you are bad at loading Questions");
-//       return Questions;
-//     }
-//   }
-
-// }
 
 class Footer extends JPanel {
   JButton askButton;
@@ -170,7 +102,8 @@ class MainPanel extends JPanel {
 }
 
 class AppFrame extends JFrame {
-  private String fileName = "lib/recording.wav";
+  private final String fileName = "lib/recording.wav";
+  public static final String URL = "http://localhost:8100/";
 
   //basic main panelUI variables
   private Header header;
@@ -201,8 +134,9 @@ class AppFrame extends JFrame {
     header = new Header();
     footer = new Footer();
 
-    //setting up basic sidebar
-    historyList = DataManager.loadData(); 
+    // setting up basic sidebar
+    historyList = sendGetAllRequest();
+
     sidebar = new SidebarUI(panel, historyList); 
 
     // Add panels to app frame
@@ -217,6 +151,138 @@ class AppFrame extends JFrame {
     this.setVisible(true); // Make visible
   }
 
+  public static void sendClearRequest() {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + "all");
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to CLEAR 
+        conn.setRequestMethod("DELETE");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("DELETE Response Code: " + responseCode);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
+
+  public static ArrayList<QuestionData> sendGetAllRequest() {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + "all");
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        Gson gson = new Gson();
+        return gson.fromJson(response,new TypeToken<ArrayList<QuestionData>>() {}.getType());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new ArrayList<QuestionData>();
+}
+
+  public static QuestionData sendGetRequest(int index) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + String.valueOf(index));
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
+        System.out.println("returned object is: " + jsonObj.toString());
+        return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new QuestionData("invalid prompt", "invalid response");
+}
+
+  public static void sendRemoveRequest(int index) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + String.valueOf(index));
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("DELETE");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("DELETE Response Code: " + responseCode);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+  public static void sendPostRequest(String prompt, String response) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL);
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("POST");
+
+        // To send a POST request, we must set DoOutput to true
+        conn.setDoOutput(true);
+
+        // Write the request content
+        OutputStreamWriter out = new OutputStreamWriter(
+              conn.getOutputStream()
+            );
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("prompt", prompt);
+        jsonObj.addProperty("response", response);
+        out.write(jsonObj.toString());
+        out.flush();
+        out.close();
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("POST Response Code: " + responseCode);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
   /** 
    * Add listeners to button for starting and stopping recording
    */
@@ -250,12 +316,11 @@ class AppFrame extends JFrame {
 
                             currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
-      
+
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            DataManager.addData(new QuestionData(currPrompt, currResponse));
-
+                            sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);

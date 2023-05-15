@@ -1,7 +1,6 @@
 package cse110;
 
 import com.google.gson.Gson;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
@@ -26,6 +25,22 @@ public class DataManager {
         return data;
     }
 
+    public static boolean existsData(String prompt) {
+        loadData();
+        for (QuestionData qd: data) {
+            if (qd.getPrompt().equals(prompt)) return true;
+        }
+        return false;
+    }
+    
+    public static QuestionData findData(String prompt) {
+        loadData();
+        for (QuestionData qd: data) {
+            if (qd.getPrompt() == prompt) return qd;
+        }
+        return new QuestionData("", "");
+    }
+
     public static boolean saveData(){
         try (FileWriter file = new FileWriter(dataFile)){
             file.write(gson.toJson(data));
@@ -37,15 +52,20 @@ public class DataManager {
     }
 
     public static boolean addData(QuestionData qd) {
+        data = loadData();
+    
+        // Check if data is still null after trying to load
+        if (data == null) {
+            // If it's still null, initialize it as an empty ArrayList
+            data = new ArrayList<>();
+        }
+    
         data.add(qd);
         return saveData();
     }
 
     public static boolean removeData(int index) {
-        // Check if data is loaded, if not load the data
-        if (data == null) {
-            data = loadData();
-        }
+        data = loadData();
 
         // If data is still null after trying to load, return false
         if (data == null) {
@@ -65,11 +85,13 @@ public class DataManager {
     }
 
     public static ArrayList<QuestionData> getData(){
+        loadData();
         return data;
     }
 
-    public static void setData(ArrayList<QuestionData> newdata){
+    public static boolean setData(ArrayList<QuestionData> newdata){
         data = newdata;
+        return saveData();
     }
 
 }

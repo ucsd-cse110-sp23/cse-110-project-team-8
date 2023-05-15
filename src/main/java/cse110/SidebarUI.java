@@ -59,10 +59,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
                 this.jlist.repaint();
 
                 // Clear DataManager and save
-                DataManager.setData(new ArrayList<QuestionData>());
-                if (!DataManager.saveData()) {
-                    System.out.println("Failed to clear data in JSON file.");
-                }
+                AppFrame.sendClearRequest();
             }
         );
         buttonPanel.removeButton.addActionListener(
@@ -81,32 +78,30 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         jlist.repaint();
 
         // Remove the corresponding data from the JSON file
-        if (!DataManager.removeData(index)) {
-            System.out.println("Failed to remove data from JSON file.");
-        }
+        AppFrame.sendRemoveRequest(index);
 
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
-        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        this.jlist.setListData(this.historyList.toArray(new String[this.historyList.size()]));
         jlist.revalidate();
         jlist.repaint();
         return addedPrompt;
     }
 
     @Override
-public void valueChanged(ListSelectionEvent e) {
-    // Set selectedIndex for history item deletion
-    this.selectedIndex = this.jlist.getSelectedIndex();
+    public void valueChanged(ListSelectionEvent e) {
+        // Set selectedIndex for history item deletion
+        this.selectedIndex = this.jlist.getSelectedIndex();
 
-    // Check if an item is selected
-    if (this.selectedIndex != UNSELECTED) {
-        QuestionData qd = DataManager.getData().get(this.selectedIndex);
-        this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
+        // Check if an item is selected
+        if (this.selectedIndex != UNSELECTED) {
+            QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
+            this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
+        }
     }
-}
 
     class SidebarButtonPanel extends JPanel {
         JButton clearButton;

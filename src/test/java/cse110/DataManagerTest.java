@@ -3,24 +3,16 @@ package cse110;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.AfterAll;
 
 import java.util.ArrayList;
 
 
 public class DataManagerTest {
-    String jsonFile;
-
-    static class TestableDataManager extends DataManager {
-        public static void setDataFile(String fileName) {
-            dataFile = fileName;
-        }
-    }
-
-    @BeforeEach
-    void setUp() {
-        jsonFile = "lib/testData.json";
-        TestableDataManager.setDataFile(jsonFile);
+    @AfterAll
+    static void tearDown() {
+        DataManager.setData(new ArrayList<>());
     }
 
     @Test
@@ -31,12 +23,12 @@ public class DataManagerTest {
         testData.add(qd1);
         testData.add(qd2);
 
-        TestableDataManager.setData(testData);
-        TestableDataManager.saveData();
+        DataManager.setData(testData);
+        DataManager.saveData();
         
-        assertEquals(2, TestableDataManager.getData().size());
-        assertEquals(qd1.getPrompt(), TestableDataManager.getData().get(0).getPrompt());
-        assertEquals(qd1.getResponse(), TestableDataManager.getData().get(0).getResponse());
+        assertEquals(2, DataManager.getData().size());
+        assertEquals(qd1.getPrompt(), DataManager.getData().get(0).getPrompt());
+        assertEquals(qd1.getResponse(), DataManager.getData().get(0).getResponse());
     }
 
     @Test
@@ -46,14 +38,14 @@ public class DataManagerTest {
         QuestionData qd2 = new QuestionData("prompt2", "answer2\ntesting newline");
         testData.add(qd1);
 
-        TestableDataManager.setData(testData);
-        TestableDataManager.saveData();
+        DataManager.setData(testData);
+        DataManager.saveData();
 
-        TestableDataManager.addData(qd2);
+        DataManager.addData(qd2);
         
-        assertEquals(2, TestableDataManager.getData().size());
-        assertEquals(qd2.getPrompt(), TestableDataManager.getData().get(1).getPrompt());
-        assertEquals(qd2.getResponse(), TestableDataManager.getData().get(1).getResponse());
+        assertEquals(2, DataManager.getData().size());
+        assertEquals(qd2.getPrompt(), DataManager.getData().get(1).getPrompt());
+        assertEquals(qd2.getResponse(), DataManager.getData().get(1).getResponse());
     }
 
     @Test
@@ -64,14 +56,14 @@ public class DataManagerTest {
         testData.add(qd1);
         testData.add(qd2);
 
-        TestableDataManager.setData(testData);
-        TestableDataManager.saveData();
+        DataManager.setData(testData);
+        DataManager.saveData();
 
-        TestableDataManager.removeData(0);
+        DataManager.removeData(0);
         
-        assertEquals(1, TestableDataManager.getData().size());
-        assertEquals(qd2.getPrompt(), TestableDataManager.getData().get(0).getPrompt());
-        assertEquals(qd2.getResponse(), TestableDataManager.getData().get(0).getResponse());
+        assertEquals(1, DataManager.getData().size());
+        assertEquals(qd2.getPrompt(), DataManager.getData().get(0).getPrompt());
+        assertEquals(qd2.getResponse(), DataManager.getData().get(0).getResponse());
     }
 
     @Test
@@ -83,20 +75,16 @@ public class DataManagerTest {
         testData.add(qd2);
 
         // Save data
-        TestableDataManager.setData(testData);
-        TestableDataManager.saveData();
-
-        // Clear list in data variable
-        TestableDataManager.setData(new ArrayList<>());
-        assertEquals(0, TestableDataManager.getData().size());
+        DataManager.setData(testData);
+        DataManager.saveData();
 
         // Load in saved data
-        TestableDataManager.loadData();
+        DataManager.loadData();
 
-        assertEquals(2, TestableDataManager.getData().size());
-        assertEquals(qd1.getPrompt(), TestableDataManager.getData().get(0).getPrompt());
-        assertEquals(qd1.getResponse(), TestableDataManager.getData().get(0).getResponse());
-        assertEquals(qd2.getPrompt(), TestableDataManager.getData().get(1).getPrompt());
-        assertEquals(qd2.getResponse(), TestableDataManager.getData().get(1).getResponse());
+        assertEquals(2, DataManager.getData().size());
+        assertEquals(qd1.getPrompt(), DataManager.getData().get(0).getPrompt());
+        assertEquals(qd1.getResponse(), DataManager.getData().get(0).getResponse());
+        assertEquals(qd2.getPrompt(), DataManager.getData().get(1).getPrompt());
+        assertEquals(qd2.getResponse(), DataManager.getData().get(1).getResponse());
     }
 }
