@@ -1,7 +1,6 @@
 package cse110;
 
 import com.google.gson.Gson;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
@@ -24,6 +23,20 @@ public class DataManager {
         }
 
         return data;
+    }
+
+    public static boolean existsData(String prompt) {
+        for (QuestionData qd: data) {
+            if (qd.getPrompt() == prompt) return true;
+        }
+        return false;
+    }
+    
+    public static QuestionData findData(String prompt) {
+        for (QuestionData qd: data) {
+            if (qd.getPrompt() == prompt) return qd;
+        }
+        return new QuestionData("", "");
     }
 
     public static boolean saveData(){
