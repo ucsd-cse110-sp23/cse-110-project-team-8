@@ -1,5 +1,6 @@
 package cse110;
 
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
@@ -95,11 +96,12 @@ public class RequestHandler implements HttpHandler {
             if (index<dataSize && index >= dataSize) return "No data for this index";
 
             QuestionData qd = DataManager.getData().get(index); // Retrieve data 
-            response = "Queried for " + qd.getPrompt() + " and found " + qd.getResponse();
+            // Set response to be returned as json object
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.addProperty(qd.getPrompt(), qd.getResponse());
+
+            response = jsonObj.toString();
             System.out.println(response);
-            // Set response to be returned
-            // Uses '#+#' as a separator between prompt and answer
-            response = qd.getPrompt() + "#+#" + qd.getResponse();
         }
         return response;
     }
