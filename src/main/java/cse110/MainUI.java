@@ -23,6 +23,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import java.io.*;
+import java.net.*;
+
 
 // class Question extends JPanel {
 //   JLabel index;
@@ -170,7 +173,8 @@ class MainPanel extends JPanel {
 }
 
 class AppFrame extends JFrame {
-  private String fileName = "lib/recording.wav";
+  private final String fileName = "lib/recording.wav";
+  public static final String URL = "http://localhost:8100/";
 
   //basic main panelUI variables
   private Header header;
@@ -203,6 +207,10 @@ class AppFrame extends JFrame {
 
     //setting up basic sidebar
     historyList = DataManager.loadData(); 
+    // TODO: Use Http Server API
+    URL url = new URL(URL);
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
     sidebar = new SidebarUI(panel, historyList); 
 
     // Add panels to app frame
@@ -255,6 +263,7 @@ class AppFrame extends JFrame {
 
                             // Save new question
                             DataManager.addData(new QuestionData(currPrompt, currResponse));
+                            // TODO: Use Http Server API
 
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
