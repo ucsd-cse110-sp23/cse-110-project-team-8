@@ -47,38 +47,6 @@ public class ServerTest {
         }
     }
 
-    // @Test
-    // public void testGetRequest() {
-    //     // First, post some data
-    //     HttpClient client = HttpClient.newHttpClient();
-    //     String json = "{\"prompt\": \"question\", \"response\": \"answer\"}";
-    //     HttpRequest postRequest = HttpRequest.newBuilder()
-    //             .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/"))
-    //             .header("Content-Type", "application/json")
-    //             .POST(BodyPublishers.ofString(json, StandardCharsets.UTF_8))
-    //             .build();
-    //     try {
-    //         client.send(postRequest, HttpResponse.BodyHandlers.ofString());
-    //     } catch (IOException | InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     // Now, make a get request
-    //     HttpRequest getRequest = HttpRequest.newBuilder()
-    //             .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/?index=0"))
-    //             .build();
-    //     HttpResponse<String> getResponse = null;
-    //     try {
-    //         getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-    //     } catch (IOException | InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     // Assuming the server correctly returns the data we just posted,
-    //     // the response should be that data
-    //     assertEquals("{\"prompt\": \"question\", \"response\": \"answer\"}", getResponse.body());
-    // }
-
     @Test
     public void testPostRequest() {
         HttpClient client = HttpClient.newHttpClient();
@@ -95,9 +63,39 @@ public class ServerTest {
             e.printStackTrace();
         }
 
+        String encodedPathParameter = URLEncoder.encode("question", StandardCharsets.UTF_8);
+        HttpRequest deleteRequest = HttpRequest.newBuilder()
+                .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/" + encodedPathParameter))
+                .DELETE()
+                .build();
+        try {
+            client.send(deleteRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        
         // Assert that the response message is as expected
         assertEquals("Posted entry {\"question\", \"answer\"}", response.body());
     }
+
+    // @Test
+    // public void testGetRequest() {
+    //     // Now, make a get request
+    //     HttpClient client = HttpClient.newHttpClient();
+    //     HttpRequest getRequest = HttpRequest.newBuilder()
+    //             .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/?index=0"))
+    //             .build();
+    //     HttpResponse<String> getResponse = null;
+    //     try {
+    //         getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+    //     } catch (IOException | InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     // Assuming the server correctly returns the data we just posted,
+    //     // the response should be that data
+    //     assertEquals("{\"prompt\": \"question\", \"response\": \"answer\"}", getResponse.body());
+    // }
 
     @Test
     public void testPutRequest() {
@@ -111,6 +109,17 @@ public class ServerTest {
         HttpResponse<String> response = null;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        String encodedPathParameter = URLEncoder.encode("question", StandardCharsets.UTF_8);
+        HttpRequest deleteRequest = HttpRequest.newBuilder()
+                .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/" + encodedPathParameter))
+                .DELETE()
+                .build();
+        try {
+            client.send(deleteRequest, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
