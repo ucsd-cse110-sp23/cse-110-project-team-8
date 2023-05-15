@@ -78,24 +78,24 @@ public class ServerTest {
         assertEquals("Posted entry {\"question\", \"answer\"}", response.body());
     }
 
-    // @Test
-    // public void testGetRequest() {
-    //     // Now, make a get request
-    //     HttpClient client = HttpClient.newHttpClient();
-    //     HttpRequest getRequest = HttpRequest.newBuilder()
-    //             .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/?index=0"))
-    //             .build();
-    //     HttpResponse<String> getResponse = null;
-    //     try {
-    //         getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-    //     } catch (IOException | InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
+    @Test
+    public void testGetRequest() {
+        // Now, make a get request
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/?index=0"))
+                .build();
+        HttpResponse<String> getResponse = null;
+        try {
+            getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
-    //     // Assuming the server correctly returns the data we just posted,
-    //     // the response should be that data
-    //     assertEquals("{\"prompt\": \"question\", \"response\": \"answer\"}", getResponse.body());
-    // }
+        // Assuming the server correctly returns the data we just posted,
+        // the response should be that data
+        assertEquals("{\"prompt\": \"question\", \"response\": \"answer\"}", getResponse.body());
+    }
 
     @Test
     public void testPutRequest() {

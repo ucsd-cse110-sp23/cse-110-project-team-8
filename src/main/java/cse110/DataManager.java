@@ -26,6 +26,7 @@ public class DataManager {
     }
 
     public static boolean existsData(String prompt) {
+        loadData();
         for (QuestionData qd: data) {
             if (qd.getPrompt().equals(prompt)) return true;
         }
@@ -33,6 +34,7 @@ public class DataManager {
     }
     
     public static QuestionData findData(String prompt) {
+        loadData();
         for (QuestionData qd: data) {
             if (qd.getPrompt() == prompt) return qd;
         }
@@ -50,9 +52,7 @@ public class DataManager {
     }
 
     public static boolean addData(QuestionData qd) {
-        if (data == null) {
-            data = loadData();
-        }
+        data = loadData();
     
         // Check if data is still null after trying to load
         if (data == null) {
@@ -65,10 +65,7 @@ public class DataManager {
     }
 
     public static boolean removeData(int index) {
-        // Check if data is loaded, if not load the data
-        if (data == null) {
-            data = loadData();
-        }
+        data = loadData();
 
         // If data is still null after trying to load, return false
         if (data == null) {
@@ -88,11 +85,13 @@ public class DataManager {
     }
 
     public static ArrayList<QuestionData> getData(){
+        loadData();
         return data;
     }
 
-    public static void setData(ArrayList<QuestionData> newdata){
+    public static boolean setData(ArrayList<QuestionData> newdata){
         data = newdata;
+        return saveData();
     }
 
 }

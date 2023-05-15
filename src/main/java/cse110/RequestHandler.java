@@ -29,8 +29,6 @@ public class RequestHandler implements HttpHandler {
                 response = handlePut(httpExchange);
             } else if (method.equals("DELETE")) {
                 response = handleDelete(httpExchange);
-            } else if (method.equals("CLEAR")) {
-                response = handleClear(httpExchange);
             } else {
                 throw new Exception("Not Valid Request Method");
             }
@@ -47,7 +45,7 @@ public class RequestHandler implements HttpHandler {
         outStream.close();
     }
 
-    private String handleClear(HttpExchange httpExchange) throws IOException {
+    private String handleClear() throws IOException {
         DataManager.setData(new ArrayList<QuestionData>());
         if (!DataManager.saveData()) return "Could not save cleared data";
         return "Cleared data";
@@ -58,7 +56,12 @@ public class RequestHandler implements HttpHandler {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         if (query != null) {
-            int value = Integer.parseInt(query.substring(query.indexOf("=") + 1));
+            String stringValue = query.substring(query.indexOf("=") + 1);
+            if (stringValue.equals("all")) {
+                this.handleClear();
+            }
+
+            int value = Integer.parseInt(stringValue);
 
             // Value should be index of DataManger.data
             if (DataManager.removeData(value)) {
@@ -135,7 +138,7 @@ public class RequestHandler implements HttpHandler {
         }
 
         String response = "Posted entry {" + prompt + ", " + answer + "}";
-        System.out.println(response);
+        // System.out.println(response);
         scanner.close();
 
         return response;

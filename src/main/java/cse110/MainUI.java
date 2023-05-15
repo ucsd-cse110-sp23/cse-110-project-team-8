@@ -235,16 +235,16 @@ class AppFrame extends JFrame {
   public static void sendClearRequest() {
     try {
         // Setup the server address
-        URL url = new URL(URL);
+        URL url = new URL(URL + "?=" + "all");
 
         // Create a HttpURLConnection object
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        // Set method to POST
-        conn.setRequestMethod("CLEAR");
+        // Set method to CLEAR 
+        conn.setRequestMethod("DELETE");
 
         // To send a POST request, we must set DoOutput to true
-        conn.setDoOutput(true);
+        // conn.setDoOutput(true);
 
         // // Write the request content
         // OutputStreamWriter out = new OutputStreamWriter(
@@ -256,7 +256,7 @@ class AppFrame extends JFrame {
 
         // Get the response code
         int responseCode = conn.getResponseCode();
-        System.out.println("CLEAR Response Code: " + responseCode);
+        System.out.println("DELETE Response Code: " + responseCode);
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -316,7 +316,7 @@ class AppFrame extends JFrame {
         conn.setRequestMethod("DELETE");
 
         // To send a POST request, we must set DoOutput to true
-        conn.setDoOutput(true);
+        // conn.setDoOutput(true);
 
         // // Write the request content
         // OutputStreamWriter out = new OutputStreamWriter(
@@ -394,18 +394,23 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            panel.setResponseText("Transcribing");
-                            currPrompt = Whisper.transcribe(fileName); //transcribe
-                            panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
-                            System.out.println("\nPrompt" + currPrompt);
+                            // panel.setResponseText("Transcribing");
+                            // currPrompt = Whisper.transcribe(fileName); //transcribe
+                            // panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
+                            // System.out.println("\nPrompt" + currPrompt);
 
-                            currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                            // currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                            // System.out.println("\nResponse:" + currResponse);
+
+                            currResponse = "new resposne";
+                            System.out.println("\nPrompt" + currPrompt);
+                            panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
+                            currPrompt = "new prompt";
                             System.out.println("\nResponse:" + currResponse);
-      
+
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            // DataManager.addData(new QuestionData(currPrompt, currResponse));
                             // TODO: Use Http Server API
                             sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
