@@ -63,10 +63,11 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
                 // TODO: Use Http Server API
                 // Clear DataManager and save
-                DataManager.setData(new ArrayList<QuestionData>());
-                if (!DataManager.saveData()) {
-                    System.out.println("Failed to clear data in JSON file.");
-                }
+                AppFrame.sendClearRequest();
+                // DataManager.setData(new ArrayList<QuestionData>());
+                // if (!DataManager.saveData()) {
+                //     System.out.println("Failed to clear data in JSON file.");
+                // }
             }
         );
         buttonPanel.removeButton.addActionListener(
@@ -86,33 +87,35 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
         // Remove the corresponding data from the JSON file
         // TODO: Use Http Server API
-        if (!DataManager.removeData(index)) {
-            System.out.println("Failed to remove data from JSON file.");
-        }
+        AppFrame.sendRemoveRequest(index);
+        // if (!DataManager.removeData(index)) {
+        //     System.out.println("Failed to remove data from JSON file.");
+        // }
 
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
-        this.jlist.setListData(this.historyList.toArray(new String[0]));
+        this.jlist.setListData(this.historyList.toArray(new String[this.historyList.size()]));
         jlist.revalidate();
         jlist.repaint();
         return addedPrompt;
     }
 
     @Override
-public void valueChanged(ListSelectionEvent e) {
-    // Set selectedIndex for history item deletion
-    this.selectedIndex = this.jlist.getSelectedIndex();
+    public void valueChanged(ListSelectionEvent e) {
+        // Set selectedIndex for history item deletion
+        this.selectedIndex = this.jlist.getSelectedIndex();
 
-    // Check if an item is selected
-    if (this.selectedIndex != UNSELECTED) {
-        // TODO: Use Http Server API
-        QuestionData qd = DataManager.getData().get(this.selectedIndex);
-        this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
+        // Check if an item is selected
+        if (this.selectedIndex != UNSELECTED) {
+            // TODO: Use Http Server API
+            // QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
+            QuestionData qd = DataManager.getData().get(this.selectedIndex);
+            this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
+        }
     }
-}
 
     class SidebarButtonPanel extends JPanel {
         JButton clearButton;

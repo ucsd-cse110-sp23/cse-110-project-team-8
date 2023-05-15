@@ -1,10 +1,13 @@
 package cse110;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
+import javax.xml.crypto.Data;
 
 
 public class RequestHandler implements HttpHandler {
@@ -26,6 +29,8 @@ public class RequestHandler implements HttpHandler {
                 response = handlePut(httpExchange);
             } else if (method.equals("DELETE")) {
                 response = handleDelete(httpExchange);
+            } else if (method.equals("CLEAR")) {
+                response = handleClear(httpExchange);
             } else {
                 throw new Exception("Not Valid Request Method");
             }
@@ -40,6 +45,12 @@ public class RequestHandler implements HttpHandler {
         OutputStream outStream = httpExchange.getResponseBody();
         outStream.write(response.getBytes());
         outStream.close();
+    }
+
+    private String handleClear(HttpExchange httpExchange) throws IOException {
+        DataManager.setData(new ArrayList<QuestionData>());
+        if (!DataManager.saveData()) return "Could not save cleared data";
+        return "Cleared data";
     }
 
     private String handleDelete(HttpExchange httpExchange) throws IOException {
@@ -110,11 +121,14 @@ public class RequestHandler implements HttpHandler {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
-        String prompt = postData.substring(
-            0,
-            postData.indexOf(",")
-        ), answer = postData.substring(postData.indexOf(",") + 1);
+        JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
+        // String prompt = postData.substring(
+        //     0,
+        //     postData.indexOf("=+=")
+        // ), answer = postData.substring(postData.indexOf("=+=") + 1);
 
+        String prompt = jsonObj.get("prompt").toString();
+        String answer = jsonObj.get("response").toString();
         if (!DataManager.addData(new QuestionData(prompt, answer))) {
             scanner.close();
             return "Could not add data";
