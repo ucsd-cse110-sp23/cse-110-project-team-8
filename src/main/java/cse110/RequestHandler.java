@@ -1,16 +1,13 @@
 package cse110;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
 
-import netscape.javascript.JSObject;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
-import javax.xml.crypto.Data;
 
 
 public class RequestHandler implements HttpHandler {
@@ -61,7 +58,7 @@ public class RequestHandler implements HttpHandler {
         if (query != null) {
             String stringValue = query.substring(query.indexOf("=") + 1);
             if (stringValue.equals("all")) {
-                this.handleClear();
+                return this.handleClear();
             }
 
             int value = Integer.parseInt(stringValue);
@@ -103,12 +100,25 @@ public class RequestHandler implements HttpHandler {
         return response;
     }
 
+    private String handleGetAll() throws IOException {
+        ArrayList<QuestionData> list = DataManager.getData();
+        Gson gson = new Gson();
+        String gsonList = gson.toJson(list);
+        System.out.println("gson list: " + gsonList);
+        return gsonList;
+    }
+
     private String handleGet(HttpExchange httpExchange) throws IOException {
         String response = "Invalid GET request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         if (query != null) {
-            int index = Integer.parseInt(query.substring(query.indexOf("=") + 1));
+            String value = query.substring(query.indexOf("=") + 1);
+            if (value.equals("all")) {
+                return handleGetAll();
+            }
+
+            int index = Integer.parseInt(value);
             System.out.println("found index: "+index);
             int dataSize = DataManager.getData().size();
             if (index<dataSize && index >= dataSize) return "No data for this index";
@@ -131,10 +141,6 @@ public class RequestHandler implements HttpHandler {
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
         JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
-        // String prompt = postData.substring(
-        //     0,
-        //     postData.indexOf("=+=")
-        // ), answer = postData.substring(postData.indexOf("=+=") + 1);
 
         String prompt = jsonObj.get("prompt").toString();
         String answer = jsonObj.get("response").toString();
@@ -144,7 +150,7 @@ public class RequestHandler implements HttpHandler {
         }
 
         String response = "Posted entry {" + prompt + ", " + answer + "}";
-        // System.out.println(response);
+        System.out.println(response);
         scanner.close();
 
         return response;

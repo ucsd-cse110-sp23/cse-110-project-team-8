@@ -12,7 +12,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,93 +19,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import org.json.JSONObject;
-
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import netscape.javascript.JSObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.net.*;
 
-
-// class Question extends JPanel {
-//   JLabel index;
-//   JTextField QuestionName;
-
-//   Color gray = new Color(218, 229, 234);
-//   Color green = new Color(188, 226, 158);
-
-//   Question() {
-//     this.setPreferredSize(new Dimension(400, 20)); // set size of Question
-//     this.setBackground(gray); // set background color of Question
-
-//     this.setLayout(new BorderLayout()); // set layout of Question
-
-//     index = new JLabel(""); // create index label
-//     index.setPreferredSize(new Dimension(20, 20)); // set size of index label
-//     index.setHorizontalAlignment(JLabel.CENTER); // set alignment of index label
-//     this.add(index, BorderLayout.WEST); // add index label to Question
-
-//     QuestionName = new JTextField(""); // create Question name text field
-//     QuestionName.setBorder(BorderFactory.createEmptyBorder()); // remove border of text field
-//     QuestionName.setBackground(gray); // set background color of text field
-
-//     this.add(QuestionName, BorderLayout.CENTER);
-//   }
-
-//   public void changeIndex(int num) {
-//     this.index.setText(num + ""); // num to String
-//     this.revalidate(); // refresh
-//   }
-
-// }
-
-// class List extends JPanel {
-//   Color backgroundColor = new Color(240, 248, 255);
-//   ArrayList<String> history;
-//   List() {
-//     GridLayout layout = new GridLayout(10, 1);
-//     layout.setVgap(5); // Vertical gap
-
-//     this.setLayout(layout); // 10 Questions
-//     this.setPreferredSize(new Dimension(400, 560));
-//     this.setBackground(backgroundColor);
-//   }
-
-//   /**
-//    * Loads Questions from a file called "Questions.txt"
-//    * @return an ArrayList of Question
-//    */
-//   public ArrayList<Question> loadQuestions() {
-//     String currentLine;
-//     ArrayList<Question> Questions = new ArrayList<Question>();
-//     try{
-
-//       FileReader file = new FileReader("Questions.txt");
-//       BufferedReader reader = new BufferedReader(file);
-//       while ((currentLine = reader.readLine()) != null){
-//         Question CurrentQuestion = new Question();
-//         CurrentQuestion.QuestionName.setText(currentLine);
-//         System.out.println(currentLine);
-//         Questions.add(CurrentQuestion);
-//       }
-//       reader.close();
-//       file.close();
-//       return Questions;
-
-//     }
-//     catch (Exception e){
-//       System.out.println("Uh-Oh, you are bad at loading Questions");
-//       return Questions;
-//     }
-//   }
-
-// }
 
 class Footer extends JPanel {
   JButton askButton;
@@ -212,11 +134,8 @@ class AppFrame extends JFrame {
     header = new Header();
     footer = new Footer();
 
-    //setting up basic sidebar
-    historyList = DataManager.loadData(); 
-    // TODO: Use Http Server API
-    // URL url = new URL(URL);
-    // HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    // setting up basic sidebar
+    historyList = sendGetAllRequest();
 
     sidebar = new SidebarUI(panel, historyList); 
 
@@ -243,17 +162,6 @@ class AppFrame extends JFrame {
         // Set method to CLEAR 
         conn.setRequestMethod("DELETE");
 
-        // To send a POST request, we must set DoOutput to true
-        // conn.setDoOutput(true);
-
-        // // Write the request content
-        // OutputStreamWriter out = new OutputStreamWriter(
-        //       conn.getOutputStream()
-        //     );
-        // out.write("Clear data");
-        // out.flush();
-        // out.close();
-
         // Get the response code
         int responseCode = conn.getResponseCode();
         System.out.println("DELETE Response Code: " + responseCode);
@@ -262,6 +170,35 @@ class AppFrame extends JFrame {
         e.printStackTrace();
     }
   }
+
+  public static ArrayList<QuestionData> sendGetAllRequest() {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + "all");
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        Gson gson = new Gson();
+        return gson.fromJson(response,new TypeToken<ArrayList<QuestionData>>() {}.getType());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new ArrayList<QuestionData>();
+}
 
   public static QuestionData sendGetRequest(int index) {
     try {
@@ -273,17 +210,6 @@ class AppFrame extends JFrame {
 
         // Set method to POST
         conn.setRequestMethod("GET");
-
-        // To send a POST request, we must set DoOutput to true
-        // conn.setDoOutput(true);
-
-        // // Write the request content
-        // OutputStreamWriter out = new OutputStreamWriter(
-        //       conn.getOutputStream()
-        //     );
-        // out.write(String.valueOf(index));
-        // out.flush();
-        // out.close();
 
         // Get the response code
         int responseCode = conn.getResponseCode();
@@ -314,17 +240,6 @@ class AppFrame extends JFrame {
 
         // Set method to POST
         conn.setRequestMethod("DELETE");
-
-        // To send a POST request, we must set DoOutput to true
-        // conn.setDoOutput(true);
-
-        // // Write the request content
-        // OutputStreamWriter out = new OutputStreamWriter(
-        //       conn.getOutputStream()
-        //     );
-        // out.write(String.valueOf(index));
-        // out.flush();
-        // out.close();
 
         // Get the response code
         int responseCode = conn.getResponseCode();
@@ -394,24 +309,17 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            // panel.setResponseText("Transcribing");
-                            // currPrompt = Whisper.transcribe(fileName); //transcribe
-                            // panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
-                            // System.out.println("\nPrompt" + currPrompt);
-
-                            // currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
-                            // System.out.println("\nResponse:" + currResponse);
-
-                            currResponse = "new resposne";
-                            System.out.println("\nPrompt" + currPrompt);
+                            panel.setResponseText("Transcribing");
+                            currPrompt = Whisper.transcribe(fileName); //transcribe
                             panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
-                            currPrompt = "new prompt";
+                            System.out.println("\nPrompt" + currPrompt);
+
+                            currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
 
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            // TODO: Use Http Server API
                             sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {

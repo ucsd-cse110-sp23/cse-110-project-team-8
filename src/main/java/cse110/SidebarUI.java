@@ -1,8 +1,5 @@
 package cse110;
 
-import java.io.*;
-import java.net.*;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,13 +58,8 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
                 this.jlist.revalidate();
                 this.jlist.repaint();
 
-                // TODO: Use Http Server API
                 // Clear DataManager and save
                 AppFrame.sendClearRequest();
-                // DataManager.setData(new ArrayList<QuestionData>());
-                // if (!DataManager.saveData()) {
-                //     System.out.println("Failed to clear data in JSON file.");
-                // }
             }
         );
         buttonPanel.removeButton.addActionListener(
@@ -86,11 +78,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         jlist.repaint();
 
         // Remove the corresponding data from the JSON file
-        // TODO: Use Http Server API
         AppFrame.sendRemoveRequest(index);
-        // if (!DataManager.removeData(index)) {
-        //     System.out.println("Failed to remove data from JSON file.");
-        // }
 
         return deletedString;
     }
@@ -110,10 +98,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
         // Check if an item is selected
         if (this.selectedIndex != UNSELECTED) {
-            // TODO: Use Http Server API
-            System.out.println("index: "+this.selectedIndex);
             QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
-            // QuestionData qd = DataManager.getData().get(this.selectedIndex);
             this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
         }
     }
