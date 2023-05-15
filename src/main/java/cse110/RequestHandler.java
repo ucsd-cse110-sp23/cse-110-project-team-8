@@ -3,6 +3,9 @@ package cse110;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
+
+import netscape.javascript.JSObject;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -106,13 +109,16 @@ public class RequestHandler implements HttpHandler {
         String query = uri.getRawQuery();
         if (query != null) {
             int index = Integer.parseInt(query.substring(query.indexOf("=") + 1));
+            System.out.println("found index: "+index);
             int dataSize = DataManager.getData().size();
             if (index<dataSize && index >= dataSize) return "No data for this index";
 
             QuestionData qd = DataManager.getData().get(index); // Retrieve data 
             // Set response to be returned as json object
             JsonObject jsonObj = new JsonObject();
-            jsonObj.addProperty(qd.getPrompt(), qd.getResponse());
+            jsonObj.addProperty("prompt", qd.getPrompt());
+            jsonObj.addProperty("response", qd.getResponse());
+            System.out.println("jsobob: " +jsonObj.toString());
 
             response = jsonObj.toString();
             System.out.println(response);

@@ -275,7 +275,7 @@ class AppFrame extends JFrame {
         conn.setRequestMethod("GET");
 
         // To send a POST request, we must set DoOutput to true
-        conn.setDoOutput(true);
+        // conn.setDoOutput(true);
 
         // // Write the request content
         // OutputStreamWriter out = new OutputStreamWriter(
@@ -296,12 +296,12 @@ class AppFrame extends JFrame {
         in.close();
 
         JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
+        System.out.println("returned object is: " + jsonObj.toString());
         return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
-
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return new QuestionData("", "");
+    return new QuestionData("invalid prompt", "invalid response");
 }
 
   public static void sendRemoveRequest(int index) {

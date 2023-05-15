@@ -111,8 +111,9 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         // Check if an item is selected
         if (this.selectedIndex != UNSELECTED) {
             // TODO: Use Http Server API
-            // QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
-            QuestionData qd = DataManager.getData().get(this.selectedIndex);
+            System.out.println("index: "+this.selectedIndex);
+            QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
+            // QuestionData qd = DataManager.getData().get(this.selectedIndex);
             this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
         }
     }

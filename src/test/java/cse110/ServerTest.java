@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.*;
+
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -14,9 +18,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.*;
+
 import java.net.URLEncoder;
 
+
+@TestMethodOrder(OrderAnnotation.class)
 public class ServerTest {
     private static final int SERVER_PORT = 8100;
     private static final String SERVER_HOSTNAME = "localhost";
@@ -45,6 +53,7 @@ public class ServerTest {
         if (server != null) {
             server.stop(0);
         }
+        DataManager.setData(new ArrayList<>());
     }
 
     @Test
@@ -79,7 +88,7 @@ public class ServerTest {
     }
 
     @Test
-    public void testGetRequest() {
+    public void testGetRequest_1() {
         // Now, make a get request
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest getRequest = HttpRequest.newBuilder()
@@ -92,9 +101,14 @@ public class ServerTest {
             e.printStackTrace();
         }
 
-        // Assuming the server correctly returns the data we just posted,
-        // the response should be that data
-        assertEquals("{\"prompt\": \"question\", \"response\": \"answer\"}", getResponse.body());
+        // Ensure there is at least one data entry
+        DataManager.addData(new QuestionData("question", "answer"));
+        // Compare with response from DataManager
+        QuestionData qd = DataManager.getData().get(0);
+        JsonObject jsobObj = new JsonObject();
+        jsobObj.addProperty("prompt", qd.getPrompt());
+        jsobObj.addProperty("response", qd.getResponse());
+        assertEquals(jsobObj.toString(), getResponse.body());
     }
 
     @Test
@@ -147,7 +161,4 @@ public class ServerTest {
         // Assert that the response code is as expected
         assertEquals(200, response.statusCode());
     }
-
-
-
 }
