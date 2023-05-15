@@ -26,7 +26,6 @@ public class Server {
         0
     );
     server.createContext("/", new RequestHandler());
-    server.createContext("/prompt", new PromptHandler());
     server.setExecutor(threadPoolExecutor);
     server.start();
 
