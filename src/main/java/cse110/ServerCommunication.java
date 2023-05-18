@@ -10,7 +10,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 
-public class ServerCall {
+public class ServerCommunication {
   public static final String URL = "http://localhost:8100/";
   public static final String transcriptionURL = URL+"transcribe";
   public static final String responseURL = URL+"response";
@@ -21,7 +21,7 @@ public class ServerCall {
    * @param maxTokens
    * @return String response to the given prompt
    */
-  public static String getResponse(String prompt, int maxTokens) {
+  public static String sendResponseRequest(String prompt, int maxTokens) {
     StringBuilder promptBuilder = new StringBuilder();
     // Set prompt as valid string first
     for (int i = 0 ; i < prompt.length(); i++) {
@@ -71,7 +71,7 @@ public class ServerCall {
    * @param filePath
    * @return Text transcription of the Audio
    */
-  public static String transcribeAudio(String filePath) {
+  public static String sendTranscribeRequest(String filePath) {
     try {
         // Setup the server address
         URL url = new URL(transcriptionURL + "?=" + filePath);

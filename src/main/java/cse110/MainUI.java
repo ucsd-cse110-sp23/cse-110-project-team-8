@@ -20,8 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
-import java.io.*;
-
 
 class Footer extends JPanel {
   JButton askButton;
@@ -128,7 +126,7 @@ class AppFrame extends JFrame {
     footer = new Footer();
 
     // setting up basic sidebar
-    historyList = ServerCall.sendGetAllRequest();
+    historyList = ServerCommunication.sendGetAllRequest();
 
     sidebar = new SidebarUI(panel, historyList); 
 
@@ -181,7 +179,7 @@ class AppFrame extends JFrame {
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            ServerCall.sendPostRequest(currPrompt, currResponse);
+                            ServerCommunication.sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -197,11 +195,11 @@ class AppFrame extends JFrame {
   }
 
   String transcribePrompt() {
-    return ServerCall.transcribeAudio(fileName);
+    return ServerCommunication.sendTranscribeRequest(fileName);
   }
 
   String getGPTResponse(String prompt) {
-    return ServerCall.getResponse(prompt, maxTokens);
+    return ServerCommunication.sendResponseRequest(prompt, maxTokens);
   }
 }
 
