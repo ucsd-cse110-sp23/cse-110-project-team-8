@@ -58,7 +58,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
                 this.jlist.revalidate();
                 this.jlist.repaint();
 
-                // Clear DataManager and save
+                // Clear stored data and save
                 ServerCall.sendClearRequest();
             }
         );

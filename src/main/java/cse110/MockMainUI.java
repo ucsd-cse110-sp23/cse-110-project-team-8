@@ -8,7 +8,7 @@ class MockAppFrame extends AppFrame {
 
     @override
     String getGPTResponse(String prompt) {
-        return "Centimeters";
+        return "5 inches is 12.7 centimeters.";
     }
 }
 

@@ -15,6 +15,12 @@ public class ServerCall {
   public static final String transcriptionURL = URL+"transcribe";
   public static final String responseURL = URL+"response";
 
+  /**
+   * Given a prompt, returns the response to that prompt
+   * @param prompt
+   * @param maxTokens
+   * @return String response to the given prompt
+   */
   public static String getResponse(String prompt, int maxTokens) {
     StringBuilder promptBuilder = new StringBuilder();
     // Set prompt as valid string first
@@ -26,16 +32,15 @@ public class ServerCall {
       }
     }
     prompt = promptBuilder.toString();
-    System.out.println("built prompt: " + prompt);
 
     try {
-        // Setup the server address
+        // Setup the server address with queries for prompt and tokens
         URL url = new URL(responseURL + "?prompt=" + prompt + "&tokens=" + maxTokens);
 
         // Create a HttpURLConnection object
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        // Set method to POST
+        // Set method to GET
         conn.setRequestMethod("GET");
 
         // Get the response code
@@ -47,14 +52,13 @@ public class ServerCall {
           new InputStreamReader(conn.getInputStream())
         );
         String response = reader.readLine();
-        System.out.println("response1: " + response);
         String in;
         while ((in = reader.readLine())!=null){
           response+=in;
         }
         reader.close();
 
-        System.out.println("response: " + response);
+        System.out.println("Response: " + response);
         return response;
     } catch (Exception e) {
         e.printStackTrace();
@@ -62,6 +66,11 @@ public class ServerCall {
     return "";
   }
 
+  /**
+   * Given an audio file, returns the text transcription of the audio
+   * @param filePath
+   * @return Text transcription of the Audio
+   */
   public static String transcribeAudio(String filePath) {
     try {
         // Setup the server address
@@ -70,7 +79,7 @@ public class ServerCall {
         // Create a HttpURLConnection object
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        // Set method to POST
+        // Set method to GET
         conn.setRequestMethod("GET");
 
         // Get the response code
@@ -84,7 +93,7 @@ public class ServerCall {
         String response = in.readLine();
         in.close();
 
-        System.out.println("response: " + response);
+        System.out.println("Transcribed prompt: " + response);
         return response;
     } catch (Exception e) {
         e.printStackTrace();
@@ -92,6 +101,9 @@ public class ServerCall {
     return "";
   }
 
+  /**
+   * Clears the promp response data
+   */
   public static void sendClearRequest() {
     try {
         // Setup the server address
@@ -100,7 +112,101 @@ public class ServerCall {
         // Create a HttpURLConnection object
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        // Set method to CLEAR 
+        // Set method to DELETE
+        conn.setRequestMethod("DELETE");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("DELETE Response Code: " + responseCode);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
+
+  /**
+   * Returns a list of all the stored question data
+   */
+  public static ArrayList<QuestionData> sendGetAllRequest() {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + "all");
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to GET
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        // Get response from server
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        // Convert response from string to our desired list
+        Gson gson = new Gson();
+        return gson.fromJson(response,new TypeToken<ArrayList<QuestionData>>() {}.getType());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new ArrayList<QuestionData>();
+}
+
+/**
+ * Gets the question data at a given index of the list
+ * @param index
+ * @return
+ */
+  public static QuestionData sendGetRequest(int index) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + String.valueOf(index));
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to GET 
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        // Get response from server
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        // Convert string response to QuestionData
+        JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
+        System.out.println("returned object is: " + jsonObj.toString());
+        return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return new QuestionData("invalid prompt", "invalid response");
+  }
+
+  /**
+   * Removes data at index from stored data.
+   * @param index
+   */
+  public static void sendRemoveRequest(int index) {
+    try {
+        // Setup the server address
+        URL url = new URL(URL + "?=" + String.valueOf(index));
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to DELETE 
         conn.setRequestMethod("DELETE");
 
         // Get the response code
@@ -112,85 +218,11 @@ public class ServerCall {
     }
   }
 
-  public static ArrayList<QuestionData> sendGetAllRequest() {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + "all");
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("GET");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("GET Response Code: " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-          new InputStreamReader(conn.getInputStream())
-        );
-        String response = in.readLine();
-        in.close();
-
-        Gson gson = new Gson();
-        return gson.fromJson(response,new TypeToken<ArrayList<QuestionData>>() {}.getType());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return new ArrayList<QuestionData>();
-}
-
-  public static QuestionData sendGetRequest(int index) {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + String.valueOf(index));
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("GET");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("GET Response Code: " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-          new InputStreamReader(conn.getInputStream())
-        );
-        String response = in.readLine();
-        in.close();
-
-        JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
-        System.out.println("returned object is: " + jsonObj.toString());
-        return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return new QuestionData("invalid prompt", "invalid response");
-}
-
-  public static void sendRemoveRequest(int index) {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + String.valueOf(index));
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("DELETE");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("DELETE Response Code: " + responseCode);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
+  /**
+   * Saves the prompt and response in data file
+   * @param prompt
+   * @param response
+   */
   public static void sendPostRequest(String prompt, String response) {
     try {
         // Setup the server address
@@ -223,5 +255,5 @@ public class ServerCall {
     } catch (Exception e) {
         e.printStackTrace();
     }
-}
+  }
 }
