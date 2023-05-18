@@ -3,12 +3,12 @@ package cse110;
 class MockAppFrame extends AppFrame {
     @override
     String transcribePrompt() {
-        return "testPrompt";
+        return "What is 5 inches in centimeters";
     }
 
     @override
     String getGPTResponse(String prompt) {
-        return "testResponse";
+        return "Centimeters";
     }
 }
 

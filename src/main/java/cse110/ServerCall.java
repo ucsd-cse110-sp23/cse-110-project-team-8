@@ -12,6 +12,85 @@ import java.util.ArrayList;
 
 public class ServerCall {
   public static final String URL = "http://localhost:8100/";
+  public static final String transcriptionURL = URL+"transcribe";
+  public static final String responseURL = URL+"response";
+
+  public static String getResponse(String prompt, int maxTokens) {
+    StringBuilder promptBuilder = new StringBuilder();
+    // Set prompt as valid string first
+    for (int i = 0 ; i < prompt.length(); i++) {
+      if (prompt.charAt(i) == ' ') {
+        promptBuilder.append('+');
+      } else {
+        promptBuilder.append(prompt.charAt(i));
+      }
+    }
+    prompt = promptBuilder.toString();
+    System.out.println("built prompt: " + prompt);
+
+    try {
+        // Setup the server address
+        URL url = new URL(responseURL + "?prompt=" + prompt + "&tokens=" + maxTokens);
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        // Get response from server
+        BufferedReader reader = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = reader.readLine();
+        System.out.println("response1: " + response);
+        String in;
+        while ((in = reader.readLine())!=null){
+          response+=in;
+        }
+        reader.close();
+
+        System.out.println("response: " + response);
+        return response;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "";
+  }
+
+  public static String transcribeAudio(String filePath) {
+    try {
+        // Setup the server address
+        URL url = new URL(transcriptionURL + "?=" + filePath);
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to POST
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        // Get response from server
+        BufferedReader in = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = in.readLine();
+        in.close();
+
+        System.out.println("response: " + response);
+        return response;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "";
+  }
 
   public static void sendClearRequest() {
     try {

@@ -197,11 +197,11 @@ class AppFrame extends JFrame {
   }
 
   String transcribePrompt() {
-    return Whisper.transcribe(fileName); //transcribe
+    return ServerCall.transcribeAudio(fileName);
   }
 
-  String getGPTResponse(String prompt) throws IOException, InterruptedException {
-    return ChatGPT.getResponse(prompt, maxTokens);
+  String getGPTResponse(String prompt) {
+    return ServerCall.getResponse(prompt, maxTokens);
   }
 }
 
