@@ -11,7 +11,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,14 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
-import java.net.*;
 
 
 class Footer extends JPanel {
@@ -103,7 +94,7 @@ class MainPanel extends JPanel {
 
 class AppFrame extends JFrame {
   private final String fileName = "lib/recording.wav";
-  public static final String URL = "http://localhost:8100/";
+  private int maxTokens = 1000;
 
   //basic main panelUI variables
   private Header header;
@@ -135,7 +126,7 @@ class AppFrame extends JFrame {
     footer = new Footer();
 
     // setting up basic sidebar
-    historyList = sendGetAllRequest();
+    historyList = ServerCommunication.sendGetAllRequest();
 
     sidebar = new SidebarUI(panel, historyList); 
 
@@ -151,138 +142,6 @@ class AppFrame extends JFrame {
     this.setVisible(true); // Make visible
   }
 
-  public static void sendClearRequest() {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + "all");
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to CLEAR 
-        conn.setRequestMethod("DELETE");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("DELETE Response Code: " + responseCode);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-  }
-
-  public static ArrayList<QuestionData> sendGetAllRequest() {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + "all");
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("GET");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("GET Response Code: " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-          new InputStreamReader(conn.getInputStream())
-        );
-        String response = in.readLine();
-        in.close();
-
-        Gson gson = new Gson();
-        return gson.fromJson(response,new TypeToken<ArrayList<QuestionData>>() {}.getType());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return new ArrayList<QuestionData>();
-}
-
-  public static QuestionData sendGetRequest(int index) {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + String.valueOf(index));
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("GET");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("GET Response Code: " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-          new InputStreamReader(conn.getInputStream())
-        );
-        String response = in.readLine();
-        in.close();
-
-        JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
-        System.out.println("returned object is: " + jsonObj.toString());
-        return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return new QuestionData("invalid prompt", "invalid response");
-}
-
-  public static void sendRemoveRequest(int index) {
-    try {
-        // Setup the server address
-        URL url = new URL(URL + "?=" + String.valueOf(index));
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("DELETE");
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("DELETE Response Code: " + responseCode);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-  public static void sendPostRequest(String prompt, String response) {
-    try {
-        // Setup the server address
-        URL url = new URL(URL);
-
-        // Create a HttpURLConnection object
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        // Set method to POST
-        conn.setRequestMethod("POST");
-
-        // To send a POST request, we must set DoOutput to true
-        conn.setDoOutput(true);
-
-        // Write the request content
-        OutputStreamWriter out = new OutputStreamWriter(
-              conn.getOutputStream()
-            );
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("prompt", prompt);
-        jsonObj.addProperty("response", response);
-        out.write(jsonObj.toString());
-        out.flush();
-        out.close();
-
-        // Get the response code
-        int responseCode = conn.getResponseCode();
-        System.out.println("POST Response Code: " + responseCode);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
   /** 
    * Add listeners to button for starting and stopping recording
    */
@@ -310,17 +169,17 @@ class AppFrame extends JFrame {
                         public void run(){
                           try {
                             panel.setResponseText("Transcribing");
-                            currPrompt = Whisper.transcribe(fileName); //transcribe
+                            currPrompt = transcribePrompt(); //transcribe
                             panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
 
-                            currResponse = ChatGPT.getResponse(currPrompt, 1000); //get chat gpt response
+                            currResponse = getGPTResponse(currPrompt); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
 
                             panel.setResponseText(currResponse);
 
                             // Save new question
-                            sendPostRequest(currPrompt, currResponse);
+                            ServerCommunication.sendPostRequest(currPrompt, currResponse);
                             sidebar.addItem(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -333,6 +192,14 @@ class AppFrame extends JFrame {
         } 
       }
     );
+  }
+
+  String transcribePrompt() {
+    return ServerCommunication.sendTranscribeRequest(fileName);
+  }
+
+  String getGPTResponse(String prompt) {
+    return ServerCommunication.sendResponseRequest(prompt, maxTokens);
   }
 }
 

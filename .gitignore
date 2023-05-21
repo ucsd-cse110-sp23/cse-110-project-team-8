@@ -3,4 +3,4 @@ recording.wav
 .vscode/settings.json
 data.json
 .gradle
-# build/
+build/

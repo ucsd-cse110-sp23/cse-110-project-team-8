@@ -22,7 +22,14 @@ public class Server {
         new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT),
         0
     );
+    
+    // Request handler for data handling
     server.createContext("/", new RequestHandler());
+    // Request handler for audio transcription
+    server.createContext("/transcribe", new TranscriptionHandler());
+    // Request handler for prompt response
+    server.createContext("/response", new ResponseHandler());
+
     server.setExecutor(threadPoolExecutor);
     server.start();
 

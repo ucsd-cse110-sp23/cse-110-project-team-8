@@ -58,8 +58,8 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
                 this.jlist.revalidate();
                 this.jlist.repaint();
 
-                // Clear DataManager and save
-                AppFrame.sendClearRequest();
+                // Clear stored data and save
+                ServerCommunication.sendClearRequest();
             }
         );
         buttonPanel.removeButton.addActionListener(
@@ -78,7 +78,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         jlist.repaint();
 
         // Remove the corresponding data from the JSON file
-        AppFrame.sendRemoveRequest(index);
+        ServerCommunication.sendRemoveRequest(index);
 
         return deletedString;
     }
@@ -98,7 +98,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
         // Check if an item is selected
         if (this.selectedIndex != UNSELECTED) {
-            QuestionData qd = AppFrame.sendGetRequest(this.selectedIndex);
+            QuestionData qd = ServerCommunication.sendGetRequest(this.selectedIndex);
             this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
         }
     }
