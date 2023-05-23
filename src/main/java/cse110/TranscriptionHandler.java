@@ -42,9 +42,6 @@ public class TranscriptionHandler implements HttpHandler {
 
         // Use Whisper API to transcribe audio
         response = Whisper.transcribe(filePath);
-        if (response == null){
-            response = "null";
-        }
         return response;
     }
 }
