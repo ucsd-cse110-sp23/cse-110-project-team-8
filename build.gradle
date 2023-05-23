@@ -29,3 +29,11 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task server(type: JavaExec){
+    group = "application"
+    description = "Runs the main server"
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = "cse110.Server"
+}
