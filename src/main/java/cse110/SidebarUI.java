@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class SidebarUI extends JPanel implements ListSelectionListener {
     private MainPanel mainPanel;
     private JList<String> jlist;
+    private JScrollPane scrollPane;
     private ArrayList<String> historyList;
     private int selectedIndex;
     private int UNSELECTED = -1;
@@ -43,9 +45,14 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.setLayout(new BorderLayout()); // set layout of task
 
         this.jlist = new JList<String>((String[]) historyList.toArray(new String[historyList.size()]));
-        this.jlist.setPreferredSize(new Dimension(listWidth, listHeight));
+        // this.jlist.setPreferredSize(new Dimension(listWidth, listHeight));
+
+        // Create a JScrollPane and add the JList to it
+        this.scrollPane = new JScrollPane(this.jlist);
+        scrollPane.setPreferredSize(new Dimension(listWidth, listHeight));
+        this.add(scrollPane, BorderLayout.NORTH);
+                        
         this.jlist.addListSelectionListener(this);
-        this.add(this.jlist, BorderLayout.NORTH);
 
         SidebarButtonPanel buttonPanel = new SidebarButtonPanel(panelWidth, panelHeight-listHeight);
         buttonPanel.clearButton.addActionListener(
@@ -74,8 +81,10 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     public String deleteItem(int index) {
         String deletedString = this.historyList.remove(index);
         this.jlist.setListData(this.historyList.toArray(new String[0]));
-        jlist.revalidate();
-        jlist.repaint();
+
+        // call revalidate() and repaint() on scrollPane
+        this.scrollPane.revalidate();
+        this.scrollPane.repaint();
 
         // Remove the corresponding data from the JSON file
         ServerCommunication.sendRemoveRequest(index);
@@ -86,8 +95,11 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     public boolean addItem(String prompt) {
         boolean addedPrompt = this.historyList.add(prompt);
         this.jlist.setListData(this.historyList.toArray(new String[this.historyList.size()]));
-        jlist.revalidate();
-        jlist.repaint();
+
+        // call revalidate() and repaint() on scrollPane
+        this.scrollPane.revalidate();
+        this.scrollPane.repaint();
+
         return addedPrompt;
     }
 
