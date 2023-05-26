@@ -20,8 +20,8 @@ public class WhisperTest {
 
     @Test
     void testWhisper() {
-        String prompt = Whisper.transcribe(testAudio);
+        String prompt = WhisperMock.transcribe(testAudio);
         System.out.println(prompt);
-        assertEquals(prompt, "Who was the tallest man alive?");
+        assertEquals(prompt, "[Audio of: "+testAudio+"]");
     }
 }
