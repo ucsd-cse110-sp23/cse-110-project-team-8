@@ -39,7 +39,7 @@ public class ReadDB {
                 // Password does not match
                 return "Error: Password does not match.";
             }
-            return "Match";
+            return "Success: Match";
         }
     }
 }
