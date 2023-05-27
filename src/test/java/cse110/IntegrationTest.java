@@ -22,15 +22,12 @@ public class IntegrationTest {
     @Test
     void testWhisperChatGPTIntegration() {
         try {
-            String prompt = Whisper.transcribe(testAudio);
-            System.out.println(prompt);
-            String response = ChatGPT.getResponse(prompt, 1000); 
-            //assertEquals(prompt, "Who was the tallest man alive?");
-            String expected = "At the time of writing, the tallest man alive was Sultan Kösen, a Turkish farmsman who measured 8 feet and 3 inches tall. He held the Guinness World Record for the tallest living man since 2009."; 
-            //work this time
-            //assertEquals(expected, response); 
-            boolean responseContains = response.contains("tallest"); 
-            assertTrue(responseContains); 
+            String prompt = WhisperMock.transcribe(testAudio);
+            assertEquals(prompt, "[Audio of: "+testAudio+"]");
+
+            String response = ChatGPTMock.getResponse(prompt, 1000); 
+            String expected = "[Answer to: " + prompt + "]";
+            assertEquals(expected, response); 
         } catch (Exception e) {
             System.out.println("You suck bro"); 
         }
