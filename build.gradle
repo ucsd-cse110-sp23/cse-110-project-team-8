@@ -24,6 +24,10 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     implementation files('lib/json-20230227.jar')
     implementation "com.google.code.gson:gson:2.10.1"
+
+    // MongoDB dependencies
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.mongodb:mongodb-driver-sync:4.9.1'
 }
 
 test {
