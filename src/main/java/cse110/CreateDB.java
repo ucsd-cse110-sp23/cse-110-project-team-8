@@ -9,11 +9,7 @@ import org.bson.types.ObjectId;
 import static com.mongodb.client.model.Filters.*;
 
 
-public class CreateDB {
-    static String DBusername = "team8";
-    static String DBpassword = "TGnSnsFqsz41yroz";
-    public static String uri = "mongodb+srv://"+DBusername+":"+DBpassword+"@sayit.nxzoquh.mongodb.net/?retryWrites=true&w=majority";
-
+public class CreateDB extends DBAccess {
     static String USERNAME_TAKEN = "Error: Username already taken";
     static String ADDED_USER = "Success: Added User";
 

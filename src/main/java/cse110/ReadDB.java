@@ -4,22 +4,10 @@ package cse110;
 import com.mongodb.client.*;
 import org.bson.Document;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-
 import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Projections.*;
-import static com.mongodb.client.model.Sorts.descending;
 
 
-public class ReadDB {
-    static String DBusername = "team8";
-    static String DBpassword = "TGnSnsFqsz41yroz";
-    public static String uri = "mongodb+srv://"+DBusername+":"+DBpassword+"@sayit.nxzoquh.mongodb.net/?retryWrites=true&w=majority";
-
+public class ReadDB extends DBAccess {
     static String LOGIN_SUCCESS = "Success: Username and password match";
     static String USERNAME_ERROR = "Error: This username does not exist.";
     static String PASSWORD_ERROR = "Error: Password does not match.";
