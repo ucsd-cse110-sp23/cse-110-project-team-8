@@ -14,6 +14,9 @@ public class CreateDB {
     static String DBpassword = "TGnSnsFqsz41yroz";
     public static String uri = "mongodb+srv://"+DBusername+":"+DBpassword+"@sayit.nxzoquh.mongodb.net/?retryWrites=true&w=majority";
 
+    static String USERNAME_TAKEN = "Error: Username already taken";
+    static String ADDED_USER = "Success: Added User";
+
     public static String addUser(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase accountsDB = mongoClient.getDatabase("accounts");
@@ -23,14 +26,14 @@ public class CreateDB {
             Document findUser = userCollection.find(eq("username", username)).first();
             if (findUser != null) {
                 // Username already exists
-                return "Error: Username already taken";
+                return USERNAME_TAKEN;
             }
 
             Document user = new Document("_id", new ObjectId());
             user.append("username", username)
                    .append("password", password);
             userCollection.insertOne(user);
-            return "Success: Added User";
+            return ADDED_USER;
         }
     }
 }

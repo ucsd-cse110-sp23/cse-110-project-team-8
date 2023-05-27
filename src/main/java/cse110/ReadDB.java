@@ -20,6 +20,10 @@ public class ReadDB {
     static String DBpassword = "TGnSnsFqsz41yroz";
     public static String uri = "mongodb+srv://"+DBusername+":"+DBpassword+"@sayit.nxzoquh.mongodb.net/?retryWrites=true&w=majority";
 
+    static String LOGIN_SUCCESS = "Success: Username and password match";
+    static String USERNAME_ERROR = "Error: This username does not exist.";
+    static String PASSWORD_ERROR = "Error: Password does not match.";
+
     public static String checkLogin(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase accountsDB = mongoClient.getDatabase("accounts");
@@ -30,16 +34,16 @@ public class ReadDB {
 
             if (user == null) {
                 // This username does not exist
-                return "Error: This username does not exist.";
+                return USERNAME_ERROR;
             }
 
             System.out.println("user: " + user.toJson());
 
-            if (user.get("password") != password) {
+            if (!user.get("password").equals(password)) {
                 // Password does not match
-                return "Error: Password does not match.";
+                return PASSWORD_ERROR;
             }
-            return "Success: Match";
+            return LOGIN_SUCCESS;
         }
     }
 }
