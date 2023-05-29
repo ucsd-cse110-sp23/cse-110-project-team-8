@@ -14,6 +14,7 @@ public class ServerCommunication {
   public static final String URL = "http://localhost:8100/";
   public static final String transcriptionURL = URL+"transcribe";
   public static final String responseURL = URL+"response";
+  public static final String accountURL = URL+"account";
 
   /**
    * Given a prompt, returns the response to that prompt
