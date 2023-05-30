@@ -29,6 +29,8 @@ public class Server {
     server.createContext("/transcribe", new TranscriptionHandler());
     // Request handler for prompt response
     server.createContext("/response", new ResponseHandler());
+    // Request handler for creating an account
+    server.createContext("/account", new AccountHandler());
 
     server.setExecutor(threadPoolExecutor);
     server.start();
