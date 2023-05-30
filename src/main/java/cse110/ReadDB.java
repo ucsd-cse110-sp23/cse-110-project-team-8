@@ -25,8 +25,6 @@ public class ReadDB extends DBAccess {
                 return USERNAME_ERROR;
             }
 
-            System.out.println("user: " + user.toJson());
-
             if (!user.get("password").equals(password)) {
                 // Password does not match
                 return PASSWORD_ERROR;

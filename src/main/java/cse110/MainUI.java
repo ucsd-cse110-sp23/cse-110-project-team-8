@@ -213,7 +213,16 @@ class AppFrame extends JFrame {
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-          cards.show(card, "questionPanel"); 
+          // Send message to server to verify log in info
+          String res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
+          System.out.println(res);
+
+          // TODO: handle errors in login
+
+          if (res.equals(ReadDB.LOGIN_SUCCESS)) {
+            // Switch to question panel if user is created
+            cards.show(card, "questionPanel"); 
+          }
         } 
       }
     );
@@ -222,7 +231,16 @@ class AppFrame extends JFrame {
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-          cards.show(card, "questionPanel"); 
+          // Send message to server to create account
+          String res = AccountCommunication.sendCreateRequest(createAccountPanel.getUsername(), createAccountPanel.getPassword());
+          System.out.println(res);
+
+          // TODO: handle errors in account creation
+
+          if (res.equals(CreateDB.ADDED_USER)) {
+            // Switch to question panel if user is created
+            cards.show(card, "questionPanel"); 
+          }
         } 
       }
     );
