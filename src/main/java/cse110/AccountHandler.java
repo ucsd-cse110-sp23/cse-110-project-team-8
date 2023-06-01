@@ -41,8 +41,8 @@ public class AccountHandler implements HttpHandler {
         String postData = scanner.nextLine();
         JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
 
-        String username = jsonObj.get("username").toString();
-        String password = jsonObj.get("password").toString();
+        String username = jsonObj.get("username").getAsString();
+        String password = jsonObj.get("password").getAsString();
         
         String response = CreateDB.addUser(username, password);
         System.out.println(response);
@@ -60,7 +60,7 @@ public class AccountHandler implements HttpHandler {
         String password = "";
         if (query != null) {
             username = query.substring(query.indexOf("username=") + "username=".length(), query.indexOf("&password="));
-            password = query.substring(query.indexOf("tokens=")+"tokens=".length());
+            password = query.substring(query.indexOf("password=")+"password=".length());
         }
 
         return ReadDB.checkLogin(username, password);

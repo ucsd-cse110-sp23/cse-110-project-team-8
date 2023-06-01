@@ -23,7 +23,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
     Color gray = new Color(218, 229, 234);
     int panelWidth = 350;
-    int panelHeight = 400;
+    int panelHeight = 600;
     int listWidth = panelWidth;
     int listHeight = panelHeight-80;
 
@@ -76,6 +76,8 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
             }
         );
         this.add(buttonPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(this); 
     }
 
     public String deleteItem(int index) {
