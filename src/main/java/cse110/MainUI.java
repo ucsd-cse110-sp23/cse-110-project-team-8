@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,7 +23,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
+import java.io.*;
 
 class Footer extends JPanel {
   //JButton askButton;
@@ -69,6 +70,9 @@ class AppFrame extends JFrame {
   private JButton loginBtn; 
   private JButton createToMainBtn; 
   private JButton loginToMainBtn; 
+  private JButton backToAccountBtnfromLogin;
+  private JButton backToAccountBtnfromCreate;
+  private JCheckBox autoCheck;
 
   //basic main panelUI variables
   private Header header;
@@ -131,6 +135,9 @@ class AppFrame extends JFrame {
     loginBtn.setPreferredSize(new Dimension(800, 200));
     createToMainBtn = createAccountPanel.getToMainPanelButton(); 
     loginToMainBtn = loginPanel.getToMainPanelButton(); 
+    backToAccountBtnfromLogin = loginPanel.getToAccountPanel();
+    backToAccountBtnfromCreate = createAccountPanel.getToAccountPanel();
+    autoCheck = loginPanel.isSelectedBox();
 
     //creating and modifying askButton
     askButton = questionPanel.getQuestionButton();
@@ -204,28 +211,81 @@ class AppFrame extends JFrame {
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-          cards.show(card, "loginPanel"); 
+          
+          try (Scanner scanner = new Scanner(new File("credentials.txt"))) {
+            if (scanner.hasNextLine() && "True".equals(scanner.nextLine())) {
+                System.out.println("Check Found AutoLogin Enabled");
+                if(scanner.hasNextLine()) {
+                  System.out.println("Checking Credentials");
+                  String username = scanner.nextLine();
+                    if(scanner.hasNextLine()) {
+                        String password = scanner.nextLine();
+                        System.out.println("Sending Request");
+                        String res = AccountCommunication.sendLoginRequest(username, password);
+                        if (ReadDB.LOGIN_SUCCESS.equals(res)) {
+                            // Switch to question panel if user is created
+                            cards.show(card, "questionPanel"); 
+                        } else System.out.println("Request Failed");
+                    } else System.out.println("Password not found");
+                }
+            } else {
+              cards.show(card, "loginPanel"); 
+            }
+          } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+          }  
+          
         } 
+      }
+    );
+
+    backToAccountBtnfromLogin.addMouseListener(
+      new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+          cards.show(card, "accountPanel");
+        }
+      }
+    );
+    
+    backToAccountBtnfromCreate.addMouseListener(
+      new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+          cards.show(card, "accountPanel");
+        }
       }
     );
 
     loginToMainBtn.addMouseListener(
       new MouseAdapter() {
-        @override
+        @Override
         public void mousePressed(MouseEvent e) {
-          // Send message to server to verify log in info
+          // Check if auto-login is enabled
+          
+
           String res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
           System.out.println(res);
-
+          boolean autoChecker = autoCheck.isSelected();
+          // if checkBox is selected, remember user
+          if (autoChecker){
+            System.out.println("AutoLogin Enabled");
+            try (FileWriter writer = new FileWriter("credentials.txt")) {
+                writer.write("True\n" + loginPanel.getUsername() + "\n" + loginPanel.getPassword() + "\n");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+          }
           // TODO: handle errors in login
 
-          if (res.equals(ReadDB.LOGIN_SUCCESS)) {
+          if (ReadDB.LOGIN_SUCCESS.equals(res)) {
             // Switch to question panel if user is created
             cards.show(card, "questionPanel"); 
           }
         } 
       }
     );
+
 
     createToMainBtn.addMouseListener(
       new MouseAdapter() {
