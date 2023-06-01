@@ -188,7 +188,7 @@ public class ServerCommunication {
         // Convert string response to QuestionData
         JsonObject jsonObj = JsonParser.parseString(response).getAsJsonObject();
         System.out.println("returned object is: " + jsonObj.toString());
-        return new QuestionData(jsonObj.get("prompt").toString(), jsonObj.get("response").toString());
+        return new QuestionData(jsonObj.get("prompt").getAsString(), jsonObj.get("response").getAsString());
     } catch (Exception e) {
         e.printStackTrace();
     }
