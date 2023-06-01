@@ -83,6 +83,9 @@ class SecondAccountPanel extends JPanel {
       return toAccountPanel; 
     }
 
+    public JCheckBox isSelectedBox() {
+      return autoCheck;
+    }
     public String getUsername() {
       return this.newUsername.getText();
     }
