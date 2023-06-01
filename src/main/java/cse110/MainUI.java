@@ -175,17 +175,7 @@ class AppFrame extends JFrame {
                           try {
                             questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
-                            questionPanel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
-                            System.out.println("\nPrompt" + currPrompt);
-
-                            currResponse = getGPTResponse(currPrompt); //get chat gpt response
-                            System.out.println("\nResponse:" + currResponse);
-
-                            questionPanel.setResponseText(currResponse);
-
-                            // Save new question
-                            ServerCommunication.sendPostRequest(currPrompt, currResponse);
-                            sidebar.addItem(currPrompt);
+                            handleCommand(currPrompt);
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
                           }
@@ -312,6 +302,29 @@ class AppFrame extends JFrame {
 
   String getGPTResponse(String prompt) {
     return ServerCommunication.sendResponseRequest(prompt, maxTokens);
+  }
+  
+  void handleCommand(String command) {
+    if (command.equalsIgnoreCase("Setup email")) {
+      // TODO: Open set up email screen
+      System.out.println("set up email");
+
+      return;
+    } 
+
+    // Handle when command is for a question 
+    currPrompt = command;
+    questionPanel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
+    System.out.println("\nPrompt" + currPrompt);
+
+    currResponse = getGPTResponse(currPrompt); //get chat gpt response
+    System.out.println("\nResponse:" + currResponse);
+
+    questionPanel.setResponseText(currResponse);
+
+    // Save new question
+    ServerCommunication.sendPostRequest(currPrompt, currResponse);
+    sidebar.addItem(currPrompt);
   }
 }
 
