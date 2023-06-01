@@ -79,6 +79,10 @@ class SecondAccountPanel extends JPanel {
       return toMainPanel; 
     }
 
+    public JButton getToAccountPanel() {
+      return toAccountPanel; 
+    }
+
     public String getUsername() {
       return this.newUsername.getText();
     }
