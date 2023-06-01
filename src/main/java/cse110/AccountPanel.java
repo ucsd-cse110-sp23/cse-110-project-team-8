@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,7 +47,9 @@ class AccountPanel extends JPanel {
 class SecondAccountPanel extends JPanel {
     private JTextArea newUsername; 
     private JTextArea newPassword; 
+    private JButton toAccountPanel;
     private JButton toMainPanel; 
+    private JCheckBox autoCheck;
     SecondAccountPanel() {
       newUsername = new JTextArea(); 
       newUsername.setBounds(360, 0, 430, 200);
@@ -59,9 +62,17 @@ class SecondAccountPanel extends JPanel {
       toMainPanel = new JButton("Login"); 
       toMainPanel.setFont(new Font("Sans-serif", Font.ITALIC, 50)); // set font
 
+      toAccountPanel = new JButton("Back to Home"); 
+      toAccountPanel.setFont(new Font("Sans-serif", Font.ITALIC, 50)); // set font
+
+      autoCheck = new JCheckBox("Automatic Login");
+      autoCheck.setFont(new Font("Sans serif", Font.ITALIC, 10));
+      
       this.add(newUsername);
       this.add(newPassword); 
       this.add(toMainPanel); 
+      this.add(toAccountPanel);
+      this.add(autoCheck);
     }
 
     public JButton getToMainPanelButton() {
@@ -75,6 +86,8 @@ class SecondAccountPanel extends JPanel {
     public String getPassword() {
       return this.newPassword.getText();
     }
+
+
 }
 
 
