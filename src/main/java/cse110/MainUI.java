@@ -201,7 +201,6 @@ class AppFrame extends JFrame {
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-          
           try (Scanner scanner = new Scanner(new File("credentials.txt"))) {
             if (scanner.hasNextLine() && "True".equals(scanner.nextLine())) {
                 System.out.println("Check Found AutoLogin Enabled");
