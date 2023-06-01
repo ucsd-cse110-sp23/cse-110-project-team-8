@@ -84,7 +84,7 @@ public class ServerTest {
         }
         
         // Assert that the response message is as expected
-        assertEquals("Posted entry {\"question\", \"answer\"}", response.body());
+        assertEquals("Posted entry {question, answer}", response.body());
     }
 
     @Test
