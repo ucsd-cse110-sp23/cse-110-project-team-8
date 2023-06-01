@@ -19,10 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 
 class Footer extends JPanel {
-  JButton askButton;
+  //JButton askButton;
 
   Color backgroundColor = new Color(240, 248, 255);
   Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -31,14 +34,6 @@ class Footer extends JPanel {
     this.setPreferredSize(new Dimension(400, 60));
     this.setBackground(backgroundColor);
     this.setLayout(new GridLayout(1, 1));
-    
-    askButton = new JButton("Add Question"); // add Question button
-    askButton.setFont(new Font("Sans-serif", Font.ITALIC, 10)); // set font
-    this.add(askButton); // add to footer
-  }
-
-  public JButton getQuestionButton() {
-    return askButton;
   }
 }
 
@@ -57,49 +52,28 @@ class Header extends JPanel {
   }
 }
 
-/**
- * Panel for displaying prompt and response
- */
-class MainPanel extends JPanel {
-  private JTextArea questionText; 
-  private JTextArea responseText; 
-
-  MainPanel(String currPrompt, String currResponse) {
-    questionText = new JTextArea(currPrompt); 
-    questionText.setBounds(360, 0, 430, 200);
-
-    responseText = new JTextArea(currResponse); 
-    responseText.setBounds(360,210, 430, 350);
-
-    questionText.setLineWrap(true);
-    responseText.setLineWrap(true); 
-
-    this.add(questionText);
-    this.add(responseText);
-  }
-
-  public void setResponseText(String text) {
-    this.responseText.setText(text);
-  }
-
-  public void setQuestionText(String text) {
-    this.questionText.setText(text);
-  }
-
-  public void updateData(String question, String response) {
-    this.responseText.setText(response);
-    this.questionText.setText(question);
-  }
-}
 
 class AppFrame extends JFrame {
   private final String fileName = "lib/recording.wav";
   private int maxTokens = 1000;
 
+  //JPanel manager CardLayout
+  private CardLayout cards; 
+  private JPanel card; 
+
+  //basic account panelUI variables
+  private AccountPanel accountPanel; 
+  private SecondAccountPanel createAccountPanel;
+  private SecondAccountPanel loginPanel; 
+  private JButton createAccountBtn; 
+  private JButton loginBtn; 
+  private JButton createToMainBtn; 
+  private JButton loginToMainBtn; 
+
   //basic main panelUI variables
   private Header header;
   private Footer footer;
-  private MainPanel panel; 
+  private MainPanel questionPanel; 
   private JButton askButton;
   
   //basic question/answer variables
@@ -119,25 +93,49 @@ class AppFrame extends JFrame {
     currPrompt = "Press \"Add Question\" to begin recording your next question \n"; 
     currResponse = "..."; 
 
-    //setting up basic question answer objects 
-    panel = new MainPanel(currPrompt, currResponse); 
+    //setting up basic account home page objects
+    accountPanel = new AccountPanel(); 
+    createAccountPanel = new SecondAccountPanel(); 
+    loginPanel = new SecondAccountPanel(); 
+
+    //setting up basic main panel question answer objects 
+    questionPanel = new MainPanel(currPrompt, currResponse);
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
 
     // setting up basic sidebar
     historyList = ServerCommunication.sendGetAllRequest();
+    sidebar = new SidebarUI(questionPanel, historyList); 
+    sidebar.setBounds(0, 0, 350, 600);
+    //questionPanel.add(sidebar); 
 
-    sidebar = new SidebarUI(panel, historyList); 
+    //creating JPanel cards which holds and manages all JPanels
+    cards = new CardLayout(); 
+    card = new JPanel(cards); 
+    card.setBounds(0, 0, 800, 600);
+    card.add(accountPanel, "accountPanel"); 
+    card.add(createAccountPanel, "createPanel"); 
+    card.add(loginPanel, "loginPanel");
+    card.add(questionPanel, "questionPanel"); 
 
-    // Add panels to app frame
+    // Add panels, header, footer to app frame
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
-    this.add(panel); 
-    this.add(sidebar, BorderLayout.WEST); 
+    this.add(card); 
 
-    askButton = footer.getQuestionButton();
-    
+    //creating and modifying account buttons
+    createAccountBtn = accountPanel.getCreateButton(); 
+    createAccountBtn.setPreferredSize(new Dimension (800, 200));
+    loginBtn = accountPanel.getLoginButton(); 
+    loginBtn.setPreferredSize(new Dimension(800, 200));
+    createToMainBtn = createAccountPanel.getToMainPanelButton(); 
+    loginToMainBtn = loginPanel.getToMainPanelButton(); 
+
+    //creating and modifying askButton
+    askButton = questionPanel.getQuestionButton();
+    askButton.setPreferredSize(new Dimension(430,50));
+
     addListeners();
     this.setVisible(true); // Make visible
   }
@@ -152,31 +150,31 @@ class AppFrame extends JFrame {
         public void mousePressed(MouseEvent e) {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
-                if (((footer.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    panel.setResponseText("Recording");
+                if (((questionPanel.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
+                    questionPanel.setResponseText("Recording");
                    
                     audio.startRecording(fileName);
                      
-                    footer.getQuestionButton().setText("End Question"); 
+                    questionPanel.getQuestionButton().setText("End Question"); 
                 } else {
                     audio.stopRecording(); 
 
-                    footer.getQuestionButton().setText("Add Question"); 
+                    questionPanel.getQuestionButton().setText("Add Question"); 
                     //after we have finished recording a question:
                     Thread t2 = new Thread(
                       new Runnable(){
                         @Override
                         public void run(){
                           try {
-                            panel.setResponseText("Transcribing");
+                            questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
-                            panel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
+                            questionPanel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
                             System.out.println("\nPrompt" + currPrompt);
 
                             currResponse = getGPTResponse(currPrompt); //get chat gpt response
                             System.out.println("\nResponse:" + currResponse);
 
-                            panel.setResponseText(currResponse);
+                            questionPanel.setResponseText(currResponse);
 
                             // Save new question
                             ServerCommunication.sendPostRequest(currPrompt, currResponse);
@@ -189,6 +187,60 @@ class AppFrame extends JFrame {
                     );
                     t2.start();
               }
+        } 
+      }
+    );
+
+    createAccountBtn.addMouseListener(
+      new MouseAdapter() {
+        @override
+        public void mousePressed(MouseEvent e) {
+          cards.show(card, "createPanel"); 
+        } 
+      }
+    );
+
+    loginBtn.addMouseListener(
+      new MouseAdapter() {
+        @override
+        public void mousePressed(MouseEvent e) {
+          cards.show(card, "loginPanel"); 
+        } 
+      }
+    );
+
+    loginToMainBtn.addMouseListener(
+      new MouseAdapter() {
+        @override
+        public void mousePressed(MouseEvent e) {
+          // Send message to server to verify log in info
+          String res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
+          System.out.println(res);
+
+          // TODO: handle errors in login
+
+          if (res.equals(ReadDB.LOGIN_SUCCESS)) {
+            // Switch to question panel if user is created
+            cards.show(card, "questionPanel"); 
+          }
+        } 
+      }
+    );
+
+    createToMainBtn.addMouseListener(
+      new MouseAdapter() {
+        @override
+        public void mousePressed(MouseEvent e) {
+          // Send message to server to create account
+          String res = AccountCommunication.sendCreateRequest(createAccountPanel.getUsername(), createAccountPanel.getPassword());
+          System.out.println(res);
+
+          // TODO: handle errors in account creation
+
+          if (res.equals(CreateDB.ADDED_USER)) {
+            // Switch to question panel if user is created
+            cards.show(card, "questionPanel"); 
+          }
         } 
       }
     );
