@@ -69,7 +69,7 @@ public class EmailInfo {
 
     Document toDocument() {
         return new Document("_id", new ObjectId())
-            .append(userIdKey, userId)
+            .append(userIdKey, new ObjectId(userId))
             .append(firstNameKey, firstName)
             .append(lastNameKey, lastName)
             .append(displayNameKey, displayName)
@@ -93,7 +93,7 @@ public class EmailInfo {
 
     public static EmailInfo fromDocument(Document doc) {
         return new EmailInfo()
-            .setUserId((String) doc.get(userIdKey))
+            .setUserId((String) doc.get(userIdKey).toString())
             .setFirstName((String) doc.get(firstNameKey))
             .setLastName((String) doc.get(lastNameKey))
             .setdisplayName((String) doc.get(displayNameKey))
