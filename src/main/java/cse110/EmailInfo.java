@@ -2,6 +2,7 @@ package cse110;
 
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import com.google.gson.JsonObject;
 
@@ -67,7 +68,7 @@ public class EmailInfo {
     }
 
     Document toDocument() {
-        return new Document()
+        return new Document("_id", new ObjectId())
             .append(userIdKey, userId)
             .append(firstNameKey, firstName)
             .append(lastNameKey, lastName)

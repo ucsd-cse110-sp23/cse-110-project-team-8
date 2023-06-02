@@ -24,14 +24,14 @@ public class ReadEmailDB extends DBAccess {
         }
     }
 
-    public static Document getEmailInfo(String userId) {
+    public static EmailInfo getEmailInfo(String userId) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase accountsDB = mongoClient.getDatabase("email");
             MongoCollection<Document> userCollection = accountsDB.getCollection("info");
 
             // find one document with Filters.eq()
             Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, userId)).first();
-            return emailInfoDoc;
+            return EmailInfo.fromDocument(emailInfoDoc);
         }
     }
 }

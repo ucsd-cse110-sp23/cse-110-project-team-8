@@ -46,14 +46,13 @@ public class EmailInfoHandler implements HttpHandler {
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
         JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
-
-        String username = jsonObj.get("username").getAsString();
-        String password = jsonObj.get("password").getAsString();
+        EmailInfo ei = EmailInfo.fromJson(jsonObj);
         
-        String response = CreateDB.addUser(username, password);
-        System.out.println(response);
-        scanner.close();
+        // Delete from database, then create new document
+        DeleteEmailDB.deleteEmailInfo(ei.getUserId());
+        String response = CreateEmailDB.addEmailInfo(ei);
 
+        scanner.close();
         return response;
     }
     
@@ -80,6 +79,6 @@ public class EmailInfoHandler implements HttpHandler {
         }
 
         // Return email info as json object as string
-        return EmailInfo.fromDocument(ReadEmailDB.getEmailInfo(userId)).toJson().toString();
+        return ReadEmailDB.getEmailInfo(userId).toJson().toString();
     }
 }
