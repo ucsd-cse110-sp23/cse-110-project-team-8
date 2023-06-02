@@ -76,6 +76,7 @@ public class EmailInfoHandler implements HttpHandler {
             // No Email info for this account
             JsonObject jsonObj = new JsonObject();
             jsonObj.addProperty("error", "No email info for this account");
+            return jsonObj.toString();
         }
 
         // Return email info as json object as string
