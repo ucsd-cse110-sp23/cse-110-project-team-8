@@ -204,7 +204,7 @@ class AppFrame extends JFrame {
       new MouseAdapter() {
         @override
         public void mousePressed(MouseEvent e) {
-          cards.show(card, "createPanel"); 
+          cards.show(card, "accountPanel"); 
         } 
       }
     );

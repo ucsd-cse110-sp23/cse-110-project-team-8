@@ -19,65 +19,80 @@ import javax.swing.border.Border;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EmailPanel extends JPanel {
-    private JTextArea firstName; 
-    private JTextArea lastName; 
-    private JTextArea displayName; 
-    private JTextArea emailAddress; 
-    private JTextArea smtpHost; 
-    private JTextArea tlsPort; 
-    private JPasswordField emailPassword; 
-    private JButton toAccountPanel;
-    private JButton toMainPanel; 
-    private JCheckBox autoCheck;
+    // UI elements
+    private JTextArea firstName;
+    private JTextArea lastName;
+    private JTextArea displayName;
+    private JTextArea emailAddress;
+    private JTextArea smtpHost;
+    private JTextArea tlsPort;
+    private JTextArea emailPassword;
+    private JButton saveButton;
+    private JButton cancelButton;
 
-    EmailPanel() {
-      firstName = new JTextArea(); 
-      firstName.setBounds(360, 0, 430, 200);
-      firstName.setLineWrap(true);
+    // Constructor
+    public EmailPanel() {
+        // Instantiate UI elements
+        firstName = new JTextArea();
+        lastName = new JTextArea();
+        displayName = new JTextArea();
+        emailAddress = new JTextArea();
+        smtpHost = new JTextArea();
+        tlsPort = new JTextArea();
+        emailPassword = new JTextArea();
 
-      lastName = new JTextArea(); 
-      lastName.setBounds(360, 210, 430, 200);
-      lastName.setLineWrap(true); 
+        // Set border to JTextAreas
+        firstName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        lastName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        displayName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        emailAddress.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        smtpHost.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        tlsPort.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        emailPassword.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-      displayName = new JTextArea(); 
-      displayName.setBounds(360, 420, 430, 200);
-      displayName.setLineWrap(true); 
 
-      emailAddress = new JTextArea(); 
-      emailAddress.setBounds(360, 630, 430, 200);
-      emailAddress.setLineWrap(true); 
+        saveButton = new JButton("Save");
+        cancelButton = new JButton("Cancel");
 
-      smtpHost = new JTextArea(); 
-      smtpHost.setBounds(360, 840, 430, 200);
-      smtpHost.setLineWrap(true); 
+        // Setup layout (you can adjust layout to your preference)
+        this.setLayout(new GridLayout(9, 1)); // Set grid layout
+        this.add(new JLabel("First Name:"));
+        this.add(firstName);
+        this.add(new JLabel("Last Name:"));
+        this.add(lastName);
+        this.add(new JLabel("Display Name:"));
+        this.add(displayName);
+        this.add(new JLabel("Email Address:"));
+        this.add(emailAddress);
+        this.add(new JLabel("SMTP Host:"));
+        this.add(smtpHost);
+        this.add(new JLabel("TLS Port:"));
+        this.add(tlsPort);
+        this.add(new JLabel("Email Password:"));
+        this.add(emailPassword);
 
-      tlsPort = new JTextArea(); 
-      tlsPort.setBounds(360, 1050, 430, 200);
-      tlsPort.setLineWrap(true); 
+        // Add save button and its action listener
+        this.add(saveButton);
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Save entered data (here you can put code to save the entered data)
+                System.out.println("Data Saved");
+            }
+        });
 
-      emailPassword = new JPasswordField(); 
-      emailPassword.setBounds(360, 1260, 430, 200);
-
-      toMainPanel = new JButton("Login"); 
-      toMainPanel.setFont(new Font("Sans-serif", Font.ITALIC, 50)); // set font
-
-      toAccountPanel = new JButton("Back to Home"); 
-      toAccountPanel.setFont(new Font("Sans-serif", Font.ITALIC, 50)); // set font
-
-      autoCheck = new JCheckBox("Automatic Login");
-      autoCheck.setFont(new Font("Sans serif", Font.ITALIC, 10));
-
-      this.add(firstName);
-      this.add(lastName); 
-      this.add(displayName); 
-      this.add(emailAddress); 
-      this.add(smtpHost); 
-      this.add(tlsPort); 
-      this.add(emailPassword); 
-      this.add(toMainPanel); 
-      this.add(toAccountPanel);
-      this.add(autoCheck);
+        // Add cancel button and its action listener
+        this.add(cancelButton);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cancel action (here you can put code to perform when cancel is clicked)
+                System.out.println("Action Cancelled");
+            }
+        });
     }
 }

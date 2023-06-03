@@ -34,7 +34,7 @@ class MainPanel extends JPanel {
       
       //NEW
       askButton = new JButton("Add Question"); // add Question button
-      askButton.setFont(new Font("Sans-serif", Font.ITALIC, 10)); // set font
+      askButton.setFont(new Font("Sans-serif", Font.ITALIC, 20)); // set font
       this.add(askButton); // add to footer
   
       this.add(questionText);
