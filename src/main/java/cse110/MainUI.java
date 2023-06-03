@@ -79,6 +79,9 @@ class AppFrame extends JFrame {
   private Footer footer;
   private MainPanel questionPanel; 
   private JButton askButton;
+
+  //basic email UI variables
+  private SetupEmailPanel setupEmailPanel; 
   
   //basic question/answer variables
   private String currPrompt;
@@ -112,7 +115,9 @@ class AppFrame extends JFrame {
     historyList = ServerCommunication.sendGetAllRequest();
     sidebar = new SidebarUI(questionPanel, historyList); 
     sidebar.setBounds(0, 0, 350, 600);
-    //questionPanel.add(sidebar); 
+    
+    //creating SetupEmail Email Panel
+    setupEmailPanel = new SetupEmailPanel(); 
 
     //creating JPanel cards which holds and manages all JPanels
     cards = new CardLayout(); 
@@ -122,6 +127,7 @@ class AppFrame extends JFrame {
     card.add(createAccountPanel, "createPanel"); 
     card.add(loginPanel, "loginPanel");
     card.add(questionPanel, "questionPanel"); 
+    card.add(setupEmailPanel, "setupEmailPanel"); 
 
     // Add panels, header, footer to app frame
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
@@ -303,12 +309,11 @@ class AppFrame extends JFrame {
     return ServerCommunication.sendResponseRequest(prompt, maxTokens);
   }
   
-  void handleCommand(String command) {
+  boolean handleCommand(String command) {
     if (command.equalsIgnoreCase("Setup email")) {
-      // TODO: Open set up email screen
+      cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
-
-      return;
+      return true;
     } 
 
     // Handle when command is for a question 
@@ -324,6 +329,8 @@ class AppFrame extends JFrame {
     // Save new question
     ServerCommunication.sendPostRequest(currPrompt, currResponse);
     sidebar.addItem(currPrompt);
+
+    return false; 
   }
 }
 
