@@ -26,7 +26,7 @@ import javax.swing.*;
 import java.io.*;
 
 class Footer extends JPanel {
-  //JButton askButton;
+  // JButton askButton;
 
   Color backgroundColor = new Color(240, 248, 255);
   Border emptyBorder = BorderFactory.createEmptyBorder();
@@ -66,6 +66,7 @@ class AppFrame extends JFrame {
   private AccountPanel accountPanel; 
   private SecondAccountPanel createAccountPanel;
   private SecondAccountPanel loginPanel; 
+  private EmailPanel emailPanel;
   private JButton createAccountBtn; 
   private JButton loginBtn; 
   private JButton createToMainBtn; 
@@ -101,7 +102,8 @@ class AppFrame extends JFrame {
     accountPanel = new AccountPanel(); 
     createAccountPanel = new SecondAccountPanel(); 
     loginPanel = new SecondAccountPanel(); 
-
+    emailPanel = new EmailPanel(); 
+    
     //setting up basic main panel question answer objects 
     questionPanel = new MainPanel(currPrompt, currResponse);
     audio = new AudioRecorder(); 
@@ -122,7 +124,7 @@ class AppFrame extends JFrame {
     card.add(createAccountPanel, "createPanel"); 
     card.add(loginPanel, "loginPanel");
     card.add(questionPanel, "questionPanel"); 
-
+    card.add(emailPanel, "emailPanel");
     // Add panels, header, footer to app frame
     this.add(header, BorderLayout.NORTH); // Add title bar on top of the screen
     this.add(footer, BorderLayout.SOUTH); // Add footer on bottom of the screen
