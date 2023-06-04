@@ -57,6 +57,7 @@ class Header extends JPanel {
 class AppFrame extends JFrame {
   private final String fileName = "lib/recording.wav";
   private int maxTokens = 1000;
+  private String currUserId = "";
 
   //JPanel manager CardLayout
   private CardLayout cards; 
@@ -117,7 +118,7 @@ class AppFrame extends JFrame {
     sidebar.setBounds(0, 0, 350, 600);
     
     //creating SetupEmail Email Panel
-    setupEmailPanel = new SetupEmailPanel(); 
+    setupEmailPanel = new SetupEmailPanel(this); 
 
     //creating JPanel cards which holds and manages all JPanels
     cards = new CardLayout(); 
@@ -222,6 +223,8 @@ class AppFrame extends JFrame {
                         System.out.println("Sending Request");
                         String res = AccountCommunication.sendLoginRequest(username, password);
                         if (ReadDB.LOGIN_SUCCESS.equals(res)) {
+                            currUserId = username;
+                            System.out.println("Current user: " + currUserId);
                             // Switch to question panel if user is created
                             cards.show(card, "questionPanel"); 
                         } else System.out.println("Request Failed");
@@ -278,13 +281,14 @@ class AppFrame extends JFrame {
           // TODO: handle errors in login
 
           if (ReadDB.LOGIN_SUCCESS.equals(res)) {
+            currUserId = loginPanel.getUsername();
+            System.out.println("Current user: " + currUserId);
             // Switch to question panel if user is created
-            cards.show(card, "questionPanel"); 
+            goToQuestionPanel();
           }
         } 
       }
     );
-
 
     createToMainBtn.addMouseListener(
       new MouseAdapter() {
@@ -297,8 +301,10 @@ class AppFrame extends JFrame {
           // TODO: handle errors in account creation
 
           if (res.equals(CreateDB.ADDED_USER)) {
+            currUserId = createAccountPanel.getUsername();
+            System.out.println("Current user: " + currUserId);
             // Switch to question panel if user is created
-            cards.show(card, "questionPanel"); 
+            goToQuestionPanel();
           }
         } 
       }
@@ -348,6 +354,13 @@ class AppFrame extends JFrame {
     }
     //invalid prompt but not empty 
     return false; 
+  }
+  void goToQuestionPanel() {
+    cards.show(card, "questionPanel");
+  }
+
+  String getCurrUserId() {
+    return this.currUserId;
   }
 }
 

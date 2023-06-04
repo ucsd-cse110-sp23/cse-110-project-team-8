@@ -20,7 +20,7 @@ public class DeleteEmailDB extends DBAccess {
             MongoCollection<Document> infoCollection = emailDB.getCollection("info");
 
             // delete one document
-            Bson filter = eq(EmailInfo.userIdKey, new ObjectId(userId));
+            Bson filter = eq(EmailInfo.userIdKey, userId);
             DeleteResult result = infoCollection.deleteOne(filter);
             System.out.println(result);
         }
