@@ -7,6 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class VoiceCommandsTest {
 
+    @Test 
+    void testSetUpEmail() {
+        String prompt = "Set up email.";
+        System.out.println(prompt);
+        assertTrue(handleCommandsMock.parseCommand(prompt));      
+    }
+
     @Test
     void testQuestion() {
         String prompt = "Question bla bla bla";

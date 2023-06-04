@@ -320,10 +320,13 @@ class AppFrame extends JFrame {
       return false; 
     }
     //handle for when command is setup email
-    if (command.equalsIgnoreCase("Setup email.")) {
+    if (command.equalsIgnoreCase("Set up email.")) {
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
       return true;
+    } else if (command.equals("Question.")) {
+      //when commmand is Question, but there is no prompt
+      return false; 
     } else if (command.indexOf("Question") == 0) {
       //handle when command is for a question
       questionPanel.setQuestionText(currPrompt + "\n"); 

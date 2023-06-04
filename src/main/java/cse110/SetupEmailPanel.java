@@ -1,45 +1,51 @@
 package cse110;
 
+import javax.swing.JLabel; 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JButton; 
 
 
 public class SetupEmailPanel extends JPanel{
-    private JTextArea firstName; 
-    private JTextArea lastName; 
-    private JTextArea displayName; 
-    private JTextArea emailAddress; 
-    private JTextArea smtpHost; 
-    private JTextArea tlsPort; 
-    private JTextArea emailPassword; 
+    private JTextField firstName; 
+    private JTextField lastName; 
+    private JTextField displayName; 
+    private JTextField emailAddress; 
+    private JTextField smtpHost; 
+    private JTextField tlsPort; 
+    private JTextField emailPassword; 
+
+    private JLabel firstNameLabel; 
+    private JLabel lastNameLabel; 
+    private JLabel displayNameLabel; 
+    private JLabel emailAddressLabel; 
+    private JLabel smtpHostLabel; 
+    private JLabel tlsPortLabel; 
+    private JLabel emailPasswordLabel; 
+
+    private JButton saveBtn; 
+    private JButton cancelBtn; 
+
     SetupEmailPanel() {
-      firstName = new JTextArea(); 
-      firstName.setLineWrap(true);
+      addText(firstName,firstNameLabel,"First Name");
+      addText(lastName, lastNameLabel, "Last Name");
+      addText(displayName, displayNameLabel, "Display Name");
+      addText(emailAddress, emailAddressLabel, "Email Address");
+      addText(smtpHost, smtpHostLabel, "SMTP Host");
+      addText(tlsPort, tlsPortLabel, "TLS Port");
+      addText(emailPassword, emailPasswordLabel, "Email Password");
 
-      lastName = new JTextArea(); 
-      lastName.setLineWrap(true); 
+      saveBtn = new JButton("save"); 
+      cancelBtn = new JButton("cancel"); 
+      this.add(saveBtn);
+      this.add(cancelBtn); 
+    }
 
-      displayName = new JTextArea(); 
-      displayName.setLineWrap(true); 
-
-      emailAddress = new JTextArea(); 
-      emailAddress.setLineWrap(true); 
-
-      smtpHost = new JTextArea(); 
-      smtpHost.setLineWrap(true); 
-
-      tlsPort = new JTextArea(); 
-      tlsPort.setLineWrap(true); 
-
-      emailPassword = new JTextArea(); 
-      emailPassword.setLineWrap(true); 
-
-      this.add(firstName);
-      this.add(lastName); 
-      this.add(displayName); 
-      this.add(smtpHost);
-      this.add(emailAddress); 
-      this.add(tlsPort); 
-      this.add(emailPassword);
+    public void addText(JTextField text, JLabel label, String nameLabel) {
+      label = new JLabel(nameLabel); 
+      this.add(label); 
+      text = new JTextField(); 
+      text.setColumns(100); 
+      this.add(text); 
     }
 }
