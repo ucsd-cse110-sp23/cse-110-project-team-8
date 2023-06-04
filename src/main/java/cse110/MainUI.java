@@ -182,7 +182,11 @@ class AppFrame extends JFrame {
                           try {
                             questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
-                            handleCommand(currPrompt);
+                            //runnning handleCommand and returning and error
+                            //if invalid command
+                            if(handleCommand(currPrompt) == false) {
+                              questionPanel.setResponseText("Invalid command");  
+                            }
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
                           }
@@ -315,27 +319,40 @@ class AppFrame extends JFrame {
     return ServerCommunication.sendResponseRequest(prompt, maxTokens);
   }
   
+  //if returns false, then not valid command or empty 
   boolean handleCommand(String command) {
-    if (command.equalsIgnoreCase("Setup email")) {
+    //handle for when prompt is null 
+    if (command == null || command.isEmpty()) {
+      return false; 
+    }
+    //handle for when command is setup email
+    if (command.equalsIgnoreCase("Set up email.")) {
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
       return true;
-    } 
-
-    // Handle when command is for a question 
-    currPrompt = command;
-    questionPanel.setQuestionText(currPrompt + "\n"); //set field to transcribed question
-    System.out.println("\nPrompt" + currPrompt);
-
-    currResponse = getGPTResponse(currPrompt); //get chat gpt response
-    System.out.println("\nResponse:" + currResponse);
-
-    questionPanel.setResponseText(currResponse);
-
-    // Save new question
-    ServerCommunication.sendPostRequest(currPrompt, currResponse);
-    sidebar.addItem(currPrompt);
-
+    } else if (command.equals("Question.")) {
+      //when commmand is Question, but there is no prompt
+      return false; 
+    } else if (command.indexOf("Question") == 0) {
+      //handle when command is for a question
+      questionPanel.setQuestionText(currPrompt + "\n"); 
+      System.out.println("\nPrompt" + currPrompt);
+      currResponse = getGPTResponse(currPrompt); //get chat gpt response
+      System.out.println("\nResponse:" + currResponse);
+      questionPanel.setResponseText(currResponse);  
+      //save question 
+      ServerCommunication.sendPostRequest(currPrompt, currResponse);
+      sidebar.addItem(currPrompt);
+      return true; 
+    } else if (command.equalsIgnoreCase("Clear all.")) { 
+      //handle for command clear all
+      sidebar.clearAll();
+      return true;
+    } else if (command.equalsIgnoreCase("Delete prompt.")) {
+      sidebar.deleteItem(); 
+      return true; 
+    }
+    //invalid prompt but not empty 
     return false; 
   }
   void goToQuestionPanel() {

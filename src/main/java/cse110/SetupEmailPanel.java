@@ -14,74 +14,50 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextField;
+import javax.swing.JButton; 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class SetupEmailPanel extends JPanel {
-    AppFrame appFrame;
+public class SetupEmailPanel extends JPanel{
+Appframe appFrame;
+    private JTextField firstName; 
+    private JTextField lastName; 
+    private JTextField displayName; 
+    private JTextField emailAddress; 
+    private JTextField smtpHost; 
+    private JTextField tlsPort; 
+    private JTextField emailPassword; 
 
-    // UI elements
-    private JTextArea firstName;
-    private JTextArea lastName;
-    private JTextArea displayName;
-    private JTextArea emailAddress;
-    private JTextArea smtpHost;
-    private JTextArea tlsPort;
-    private JTextArea emailPassword;
-    private JButton saveButton;
-    private JButton cancelButton;
+    private JLabel firstNameLabel; 
+    private JLabel lastNameLabel; 
+    private JLabel displayNameLabel; 
+    private JLabel emailAddressLabel; 
+    private JLabel smtpHostLabel; 
+    private JLabel tlsPortLabel; 
+    private JLabel emailPasswordLabel; 
 
-    // Constructor
-    public SetupEmailPanel(AppFrame appFrame) {
-        this.appFrame = appFrame;
-        // Instantiate UI elements
-        firstName = new JTextArea();
-        lastName = new JTextArea();
-        displayName = new JTextArea();
-        emailAddress = new JTextArea();
-        smtpHost = new JTextArea();
-        tlsPort = new JTextArea();
-        emailPassword = new JTextArea();
+    private JButton saveBtn; 
+    private JButton cancelBtn; 
 
-        // Set border to JTextAreas
-        firstName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        lastName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        displayName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        emailAddress.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        smtpHost.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        tlsPort.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        emailPassword.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    SetupEmailPanel(AppFrame appFrame) {
+     this.appFrame = appFrame;
+      addText(firstName,firstNameLabel,"First Name");
+      addText(lastName, lastNameLabel, "Last Name");
+      addText(displayName, displayNameLabel, "Display Name");
+      addText(emailAddress, emailAddressLabel, "Email Address");
+      addText(smtpHost, smtpHostLabel, "SMTP Host");
+      addText(tlsPort, tlsPortLabel, "TLS Port");
+      addText(emailPassword, emailPasswordLabel, "Email Password");
 
-
-        saveButton = new JButton("Save");
-        cancelButton = new JButton("Cancel");
-
-        // Setup layout (you can adjust layout to your preference)
-        this.setLayout(new GridLayout(9, 1)); // Set grid layout
-        this.add(new JLabel("First Name:"));
-        this.add(firstName);
-        this.add(new JLabel("Last Name:"));
-        this.add(lastName);
-        this.add(new JLabel("Display Name:"));
-        this.add(displayName);
-        this.add(new JLabel("Email Address:"));
-        this.add(emailAddress);
-        this.add(new JLabel("SMTP Host:"));
-        this.add(smtpHost);
-        this.add(new JLabel("TLS Port:"));
-        this.add(tlsPort);
-        this.add(new JLabel("Email Password:"));
-        this.add(emailPassword);
-
-        // Add save button and its action listener
-        this.add(saveButton);
-        saveButton.addActionListener(new ActionListener() {
+      saveBtn = new JButton("save"); 
+      cancelBtn = new JButton("cancel"); 
+      this.add(saveBtn);
+      this.add(cancelBtn); 
+      
+      // Add save button and its action listener
+        saveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
               // Set entered data as EmailInfo object
@@ -101,8 +77,7 @@ public class SetupEmailPanel extends JPanel {
         });
 
         // Add cancel button and its action listener
-        this.add(cancelButton);
-        cancelButton.addActionListener(new ActionListener() {
+        cancelBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Cancel action 
@@ -111,5 +86,13 @@ public class SetupEmailPanel extends JPanel {
                 System.out.println("Action Cancelled");
             }
         });
+    }
+
+    public void addText(JTextField text, JLabel label, String nameLabel) {
+      label = new JLabel(nameLabel); 
+      this.add(label); 
+      text = new JTextField(); 
+      text.setColumns(100); 
+      this.add(text); 
     }
 }
