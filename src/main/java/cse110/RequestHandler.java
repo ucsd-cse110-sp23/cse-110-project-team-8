@@ -142,8 +142,8 @@ public class RequestHandler implements HttpHandler {
         String postData = scanner.nextLine();
         JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
 
-        String prompt = jsonObj.get("prompt").toString();
-        String answer = jsonObj.get("response").toString();
+        String prompt = jsonObj.get("prompt").getAsString();
+        String answer = jsonObj.get("response").getAsString();
         if (!DataManager.addData(new QuestionData(prompt, answer))) {
             scanner.close();
             return "Could not add data";
