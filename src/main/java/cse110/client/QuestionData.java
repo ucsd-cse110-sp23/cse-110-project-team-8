@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 public class QuestionData{
     private String prompt;

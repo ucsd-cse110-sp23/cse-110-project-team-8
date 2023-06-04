@@ -1,6 +1,9 @@
-package cse110;
+package cse110.server;
 
 import com.sun.net.httpserver.*;
+
+import cse110.middleware.RequestHandler;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.*;

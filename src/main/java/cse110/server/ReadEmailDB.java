@@ -1,7 +1,10 @@
-package cse110;
+package cse110.server;
 
 
 import com.mongodb.client.*;
+
+import cse110.middleware.EmailInfo;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 

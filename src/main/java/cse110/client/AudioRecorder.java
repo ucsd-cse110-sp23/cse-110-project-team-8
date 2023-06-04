@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 import java.io.*;
 import javax.sound.sampled.*;

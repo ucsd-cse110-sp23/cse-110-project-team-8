@@ -1,10 +1,12 @@
-package cse110;
+package cse110.middleware;
 
 /**
  * Access Whisper API
  */
 import java.io.*;
 import org.json.JSONException;
+
+import cse110.server.WhisperAPI;
 
 public class Whisper {
     private static final String MODEL = "whisper-1";

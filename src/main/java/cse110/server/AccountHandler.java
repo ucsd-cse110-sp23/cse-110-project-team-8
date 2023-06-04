@@ -1,8 +1,9 @@
-package cse110;
+package cse110.server;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;

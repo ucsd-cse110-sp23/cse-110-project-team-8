@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 /**
  * This code was refactored from the original code found at:
@@ -20,6 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
+
+import cse110.middleware.AccountCommunication;
+import cse110.middleware.ServerCommunication;
+import cse110.middleware.ResponseStrings;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -221,7 +226,7 @@ class AppFrame extends JFrame {
                         String password = scanner.nextLine();
                         System.out.println("Sending Request");
                         String res = AccountCommunication.sendLoginRequest(username, password);
-                        if (ReadDB.LOGIN_SUCCESS.equals(res)) {
+                        if (ResponseStrings.LOGIN_SUCCESS.equals(res)) {
                             // Switch to question panel if user is created
                             cards.show(card, "questionPanel"); 
                         } else System.out.println("Request Failed");
@@ -277,7 +282,7 @@ class AppFrame extends JFrame {
           }
           // TODO: handle errors in login
 
-          if (ReadDB.LOGIN_SUCCESS.equals(res)) {
+          if (ResponseStrings.LOGIN_SUCCESS.equals(res)) {
             // Switch to question panel if user is created
             cards.show(card, "questionPanel"); 
           }
@@ -296,7 +301,7 @@ class AppFrame extends JFrame {
 
           // TODO: handle errors in account creation
 
-          if (res.equals(CreateDB.ADDED_USER)) {
+          if (res.equals(ResponseStrings.ADDED_USER)) {
             // Switch to question panel if user is created
             cards.show(card, "questionPanel"); 
           }

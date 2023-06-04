@@ -1,9 +1,11 @@
-package cse110;
+package cse110.middleware;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+
+import cse110.client.QuestionData;
 
 import java.io.*;
 import java.net.*;
@@ -103,7 +105,7 @@ public class ServerCommunication {
   }
 
   /**
-   * Clears the promp response data
+   * Clears the prompt response data
    */
   public static void sendClearRequest() {
     try {

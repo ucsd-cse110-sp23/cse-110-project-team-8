@@ -1,8 +1,10 @@
-package cse110; 
+package cse110.server; 
 import java.io.*;
 import java.net.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cse110.middleware.AudioFileWriter;
 
 public class WhisperAPI {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";

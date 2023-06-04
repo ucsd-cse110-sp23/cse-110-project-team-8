@@ -1,4 +1,4 @@
-package cse110;
+package cse110.middleware;
 
 
 import org.bson.Document;
@@ -16,16 +16,16 @@ public class EmailInfo {
     private String tls;
     private String password;
 
-    static final String userIdKey = "userId";
-    static final String firstNameKey = "firstName";
-    static final String lastNameKey= "lastName";
-    static final String displayNameKey = "displayName";
-    static final String emailAddressKey = "emailAddress";
-    static final String smtpKey = "SMTP";
-    static final String tlsKey = "TLS";
-    static final String passwordKey = "password";
+    public static final String userIdKey = "userId";
+    public static final String firstNameKey = "firstName";
+    public static final String lastNameKey= "lastName";
+    public static final String displayNameKey = "displayName";
+    public static final String emailAddressKey = "emailAddress";
+    public static final String smtpKey = "SMTP";
+    public static final String tlsKey = "TLS";
+    public static final String passwordKey = "password";
 
-    EmailInfo() {
+    public EmailInfo() {
         userId = "";
         firstName = "";
         lastName = "";
@@ -36,25 +36,25 @@ public class EmailInfo {
         password = "";
     }
 
-    EmailInfo setUserId(String userId) {this.userId = userId; return this;}
-    EmailInfo setFirstName(String firstName) {this.firstName= firstName; return this;}
-    EmailInfo setLastName(String lastName) {this.lastName= lastName; return this;}
-    EmailInfo setdisplayName(String displayname) {this.displayName= displayname; return this;}
-    EmailInfo setEmailAddress(String emailAddress) {this.emailAddress= emailAddress; return this;}
-    EmailInfo setSmtp(String smtp) {this.smtp= smtp; return this;}
-    EmailInfo setTls(String tls) {this.tls= tls; return this;}
-    EmailInfo setPassword(String password) {this.password= password; return this;}
+    public EmailInfo setUserId(String userId) {this.userId = userId; return this;}
+    public EmailInfo setFirstName(String firstName) {this.firstName= firstName; return this;}
+    public EmailInfo setLastName(String lastName) {this.lastName= lastName; return this;}
+    public EmailInfo setdisplayName(String displayname) {this.displayName= displayname; return this;}
+    public EmailInfo setEmailAddress(String emailAddress) {this.emailAddress= emailAddress; return this;}
+    public EmailInfo setSmtp(String smtp) {this.smtp= smtp; return this;}
+    public EmailInfo setTls(String tls) {this.tls= tls; return this;}
+    public EmailInfo setPassword(String password) {this.password= password; return this;}
 
-    String getUserId() {return this.userId;}
-    String getFirstName() {return this.firstName;}
-    String getLastName() {return this.lastName;}
-    String getDisplayName() {return this.displayName;}
-    String getEmailAddress() {return this.emailAddress;}
-    String getSmtp() {return this.smtp;}
-    String getTls() {return this.tls;}
-    String getPassword() {return this.password;}
+    public String getUserId() {return this.userId;}
+    public String getFirstName() {return this.firstName;}
+    public String getLastName() {return this.lastName;}
+    public String getDisplayName() {return this.displayName;}
+    public String getEmailAddress() {return this.emailAddress;}
+    public String getSmtp() {return this.smtp;}
+    public String getTls() {return this.tls;}
+    public String getPassword() {return this.password;}
 
-    JsonObject toJson() {
+    public JsonObject toJson() {
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty(userIdKey, userId);
         jsonObj.addProperty(firstNameKey, firstName);
@@ -67,7 +67,7 @@ public class EmailInfo {
         return jsonObj;
     }
 
-    Document toDocument() {
+    public Document toDocument() {
         return new Document("_id", new ObjectId())
             .append(userIdKey, new ObjectId(userId))
             .append(firstNameKey, firstName)

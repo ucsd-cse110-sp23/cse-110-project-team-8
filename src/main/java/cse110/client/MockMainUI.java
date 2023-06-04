@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 class MockAppFrame extends AppFrame {
     @override

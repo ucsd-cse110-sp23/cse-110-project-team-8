@@ -1,4 +1,4 @@
-package cse110;
+package cse110.middleware;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

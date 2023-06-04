@@ -1,16 +1,16 @@
-package cse110;
+package cse110.server;
 
 
 import com.mongodb.client.*;
+
+import cse110.middleware.ResponseStrings;
+
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.*;
 
 
 public class ReadDB extends DBAccess {
-    static String LOGIN_SUCCESS = "Success: Username and password match";
-    static String USERNAME_ERROR = "Error: This username does not exist.";
-    static String PASSWORD_ERROR = "Error: Password does not match.";
 
     public static String checkLogin(String username, String password) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
@@ -22,14 +22,14 @@ public class ReadDB extends DBAccess {
 
             if (user == null) {
                 // This username does not exist
-                return USERNAME_ERROR;
+                return ResponseStrings.USERNAME_ERROR;
             }
 
             if (!user.get("password").equals(password)) {
                 // Password does not match
-                return PASSWORD_ERROR;
+                return ResponseStrings.PASSWORD_ERROR;
             }
-            return LOGIN_SUCCESS;
+            return ResponseStrings.LOGIN_SUCCESS;
         }
     }
 }

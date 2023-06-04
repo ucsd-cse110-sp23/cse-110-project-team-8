@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 
+import cse110.middleware.EmailInfo;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.bson.Document;

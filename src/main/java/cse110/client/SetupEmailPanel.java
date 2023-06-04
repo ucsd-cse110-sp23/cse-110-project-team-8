@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 import javax.swing.JLabel; 
 import javax.swing.JPanel;

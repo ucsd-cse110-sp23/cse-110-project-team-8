@@ -1,11 +1,14 @@
-package cse110;
+package cse110.server;
 
 import com.sun.net.httpserver.*;
+
+import cse110.middleware.Whisper;
+
 import java.io.*;
 import java.net.*;
 
 
-public class ResponseHandler implements HttpHandler {
+public class TranscriptionHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String response = "Request Received";
@@ -35,36 +38,13 @@ public class ResponseHandler implements HttpHandler {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
 
-        // Get prompt 
-        String prompt = "";
-        int tokens = 0;
+        String filePath = "";
         if (query != null) {
-            prompt = query.substring(query.indexOf("prompt=") + 7, query.indexOf("&tokens="));
-            tokens = Integer.parseInt(query.substring(query.indexOf("tokens=")+7));
+            filePath = query.substring(query.indexOf("=") + 1);
         }
 
-        // Encode prompt
-        StringBuilder promptBuilder = new StringBuilder();
-        // Set prompt as valid string first
-        for (int i = 0 ; i < prompt.length(); i++) {
-            if (prompt.charAt(i) == '+') {
-            promptBuilder.append(' ');
-            } else {
-            promptBuilder.append(prompt.charAt(i));
-            }
-        }
-        prompt = promptBuilder.toString();
-        System.out.println("prompt: " + prompt);
-
-        // Use ChatGPT API to get response
-        try {
-            response = ChatGPT.getResponse(prompt, tokens);
-            System.out.println("ChatGPT response" + response);
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error: " + e.getMessage());
-            response = "Error: Couldn't get response";
-        }
-
+        // Use Whisper API to transcribe audio
+        response = Whisper.transcribe(filePath);
         return response;
     }
 }

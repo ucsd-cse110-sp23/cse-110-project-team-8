@@ -1,4 +1,4 @@
-package cse110;
+package cse110.server;
 
 public class DBAccess {
     static String DBusername = "team8";

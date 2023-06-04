@@ -1,9 +1,12 @@
-package cse110;
+package cse110.middleware;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
+
+import cse110.client.DataManager;
+import cse110.client.QuestionData;
 
 import java.io.*;
 import java.net.*;

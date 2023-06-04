@@ -1,4 +1,4 @@
-package cse110;
+package cse110.middleware;
 import java.io.*;
 
 public class AudioFileWriter {

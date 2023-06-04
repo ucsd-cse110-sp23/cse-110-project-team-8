@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import cse110.middleware.ServerCommunication;
 
 public class SidebarUI extends JPanel implements ListSelectionListener {
     private MainPanel mainPanel;

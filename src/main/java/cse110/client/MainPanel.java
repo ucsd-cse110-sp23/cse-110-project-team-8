@@ -1,4 +1,4 @@
-package cse110;
+package cse110.client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,6 +1,7 @@
-package cse110;
+package cse110.client;
 
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
