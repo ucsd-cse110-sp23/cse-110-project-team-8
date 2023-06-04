@@ -264,8 +264,6 @@ class AppFrame extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
           // Check if auto-login is enabled
-          
-
           String res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
           System.out.println(res);
           boolean autoChecker = autoCheck.isSelected();

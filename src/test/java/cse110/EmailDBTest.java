@@ -1,4 +1,4 @@
-/*package cse110;
+package cse110;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class EmailDBTest {
 
     @BeforeEach
     void setUp() {
-        userId = "user1";
+        userId = "user9090";
         firstName = "Helen";
         lastName = "SayIt";
         displayName = "Hel";
@@ -75,4 +75,3 @@ public class EmailDBTest {
         assertFalse(ReadEmailDB.existsEmailInfo(userId));
     }
 }
-*/

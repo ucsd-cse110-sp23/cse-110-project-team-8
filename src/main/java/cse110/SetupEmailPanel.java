@@ -43,13 +43,13 @@ public class SetupEmailPanel extends JPanel{
 
     SetupEmailPanel(AppFrame appFrame) {
      this.appFrame = appFrame;
-      addText(firstName,firstNameLabel,"First Name");
-      addText(lastName, lastNameLabel, "Last Name");
-      addText(displayName, displayNameLabel, "Display Name");
-      addText(emailAddress, emailAddressLabel, "Email Address");
-      addText(smtpHost, smtpHostLabel, "SMTP Host");
-      addText(tlsPort, tlsPortLabel, "TLS Port");
-      addText(emailPassword, emailPasswordLabel, "Email Password");
+      firstName = addText(firstName,firstNameLabel,"First Name");
+      lastName = addText(lastName, lastNameLabel, "Last Name");
+      displayName = addText(displayName, displayNameLabel, "Display Name");
+      emailAddress = addText(emailAddress, emailAddressLabel, "Email Address");
+      smtpHost = addText(smtpHost, smtpHostLabel, "SMTP Host");
+      tlsPort = addText(tlsPort, tlsPortLabel, "TLS Port");
+      emailPassword = addText(emailPassword, emailPasswordLabel, "Email Password");
 
       saveBtn = new JButton("save"); 
       cancelBtn = new JButton("cancel"); 
@@ -63,16 +63,20 @@ public class SetupEmailPanel extends JPanel{
               // Set entered data as EmailInfo object
               EmailInfo ei = new EmailInfo()
                 .setUserId(appFrame.getCurrUserId())
-                .setFirstName(firstName.getText())
-                .setLastName(lastName.getText())
-                .setdisplayName(displayName.getText())
-                .setEmailAddress(emailAddress.getText())
-                .setSmtp(smtpHost.getText())
-                .setTls(tlsPort.getText())
-                .setPassword(emailPassword.getText());
+                .setFirstName(firstName.getText().toString())
+                .setLastName(lastName.getText().toString())
+                .setdisplayName(displayName.getText().toString())
+                .setEmailAddress(emailAddress.getText().toString())
+                .setSmtp(smtpHost.getText().toString())
+                .setTls(tlsPort.getText().toString())
+                .setPassword(emailPassword.getText().toString());
+
               // Save entered data 
               EmailInfoCommuncation.sendEmailInfo(ei);
               System.out.println("Data Saved");
+
+              // Go back to main question panel
+              appFrame.goToQuestionPanel();
             }
         });
 
@@ -88,11 +92,12 @@ public class SetupEmailPanel extends JPanel{
         });
     }
 
-    public void addText(JTextField text, JLabel label, String nameLabel) {
+    public JTextField addText(JTextField text, JLabel label, String nameLabel) {
       label = new JLabel(nameLabel); 
       this.add(label); 
       text = new JTextField(); 
-      text.setColumns(100); 
+      text.setColumns(70); 
       this.add(text); 
+      return text;
     }
 }
