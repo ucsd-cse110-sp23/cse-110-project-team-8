@@ -31,6 +31,8 @@ public class Server {
     server.createContext("/response", new ResponseHandler());
     // Request handler for creating an account
     server.createContext("/account", new AccountHandler());
+    // Request handler for email info
+    server.createContext("/emailInfo", new EmailInfoHandler());
 
     server.setExecutor(threadPoolExecutor);
     server.start();
