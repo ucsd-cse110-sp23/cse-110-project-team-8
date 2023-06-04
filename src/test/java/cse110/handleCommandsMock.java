@@ -8,7 +8,7 @@ public class handleCommandsMock {
             return false; 
         }
         //handle for when command is setup email
-        if (command.equalsIgnoreCase("Setup email.")) {
+        if (command.equalsIgnoreCase("Set up email.")) {
             System.out.println("set up email");
             return true;
         } else if (command.indexOf("Question") == 0) {
