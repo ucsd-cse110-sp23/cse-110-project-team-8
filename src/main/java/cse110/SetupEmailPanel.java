@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 
 
 public class SetupEmailPanel extends JPanel{
-Appframe appFrame;
+  AppFrame appFrame;
     private JTextField firstName; 
     private JTextField lastName; 
     private JTextField displayName; 
