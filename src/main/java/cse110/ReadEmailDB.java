@@ -15,7 +15,7 @@ public class ReadEmailDB extends DBAccess {
             MongoCollection<Document> userCollection = accountsDB.getCollection("info");
 
             // find one document with Filters.eq()
-            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, new ObjectId(userId))).first();
+            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, userId)).first();
 
             if (emailInfoDoc == null) {
                 return false;
@@ -31,7 +31,7 @@ public class ReadEmailDB extends DBAccess {
             MongoCollection<Document> userCollection = accountsDB.getCollection("info");
 
             // find one document with Filters.eq()
-            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, new ObjectId(userId))).first();
+            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, userId)).first();
             return EmailInfo.fromDocument(emailInfoDoc);
         }
     }
