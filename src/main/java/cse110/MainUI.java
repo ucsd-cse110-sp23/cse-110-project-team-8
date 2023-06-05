@@ -352,9 +352,13 @@ class AppFrame extends JFrame {
       sidebar.clearAll();
       return true;
     } else if (command.equalsIgnoreCase("Delete prompt.")) {
+      //handle for command delete prompt
       sidebar.deleteItem(); 
       return true; 
+    } else if (command.equals("Create email.")) {
+      return false; 
     } else if (command.indexOf("Create email") == 0) {
+      //handle for create email 
       JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
       if (jsonObj.has("error")) {
         // Error getting email info
@@ -365,7 +369,7 @@ class AppFrame extends JFrame {
 
       questionPanel.setQuestionText(currPrompt + "\n"); 
       // Set currPrompt as the email draft from ChatGPT
-      String newPrompt = currPrompt + ". Make email from " + jsonObj.get(EmailInfo.displayNameKey).getAsString() +". ";
+      String newPrompt = currPrompt + ". Make email and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
       System.out.println(newPrompt);
       newPrompt += "Do not include 'From [email]' or 'To [email]'.";
       currResponse= getGPTResponse(newPrompt);
