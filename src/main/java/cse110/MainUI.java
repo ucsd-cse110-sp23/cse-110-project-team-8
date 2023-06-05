@@ -351,7 +351,7 @@ class AppFrame extends JFrame {
       return true; 
     } else if (command.indexOf("Create email") == 0) {
       // Set currPrompt as the email draft from ChatGPT
-      currPrompt = getGPTResponse(currPrompt + " Make email from " + this.getCurrUserId());
+      currResponse= getGPTResponse(currPrompt + " Make email from " + this.getCurrUserId());
       System.out.println("\nResponse:" + currResponse);
       questionPanel.setResponseText(currResponse);  
 
