@@ -381,6 +381,13 @@ class AppFrame extends JFrame {
 
       sidebar.addItem(currPrompt);
       return true;
+    } else if (command.equals("Send email.")) {
+      return false; 
+    } else if (command.equals("Send email to")) {
+      return false; 
+    } else if (command.indexOf("Send email") == 0) {
+      //TODO: add in send email commands 
+      return true; 
     }
     //invalid prompt but not empty 
     return false; 
