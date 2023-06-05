@@ -54,6 +54,7 @@ public class handleCommandsMock {
               System.out.println(command); 
               return false;
             }
+            /* 
             System.out.println(command); 
             // Set currPrompt as the email draft from ChatGPT
             String newPrompt = command + ". Make email and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
@@ -61,6 +62,7 @@ public class handleCommandsMock {
             newPrompt += "Do not include 'From [email]' or 'To [email]'.";
             String currResponse = ChatGPTMock.getResponse(newPrompt,1000);
             System.out.println("\nResponse:" + currResponse);
+            */
             return true; 
         }
         //invalid prompt but not empty 
