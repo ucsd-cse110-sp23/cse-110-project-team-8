@@ -349,6 +349,17 @@ class AppFrame extends JFrame {
     } else if (command.equalsIgnoreCase("Delete prompt.")) {
       sidebar.deleteItem(); 
       return true; 
+    } else if (command.indexOf("Create email") == 0) {
+      // Set currPrompt as the email draft from ChatGPT
+      currPrompt = getGPTResponse(currPrompt + " Make email from " + this.getCurrUserId());
+      System.out.println("\nResponse:" + currResponse);
+      questionPanel.setResponseText(currResponse);  
+
+      // Save email draft in Server
+      ServerCommunication.sendPostRequest(currPrompt, currResponse);
+
+      sidebar.addItem(currPrompt);
+      return true;
     }
     //invalid prompt but not empty 
     return false; 
