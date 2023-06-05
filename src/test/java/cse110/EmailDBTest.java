@@ -1,4 +1,4 @@
-/*package cse110;
+package cse110;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class EmailDBTest {
 
     @BeforeEach
     void setUp() {
-        userId = "6471bcd5286e654cd761c8db";
+        userId = "user9090";
         firstName = "Helen";
         lastName = "SayIt";
         displayName = "Hel";
@@ -67,6 +67,7 @@ public class EmailDBTest {
     void testCreateAndDelete() {
         userId = "64768c434debd4569ceb5f55";
         testEi.setUserId(userId);
+        System.out.println("testEI::"+testEi.getDisplayName());
         CreateEmailDB.addEmailInfo(testEi);
         assertTrue(ReadEmailDB.existsEmailInfo(userId));
         // Now Delete
@@ -74,4 +75,3 @@ public class EmailDBTest {
         assertFalse(ReadEmailDB.existsEmailInfo(userId));
     }
 }
-*/
