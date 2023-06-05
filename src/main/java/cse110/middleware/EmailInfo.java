@@ -16,7 +16,7 @@ public class EmailInfo {
     private String tls;
     private String password;
 
-    public static final String userIdKey = "userId";
+    public static final String userIdKey = "username";
     public static final String firstNameKey = "firstName";
     public static final String lastNameKey= "lastName";
     public static final String displayNameKey = "displayName";
@@ -69,7 +69,7 @@ public class EmailInfo {
 
     public Document toDocument() {
         return new Document("_id", new ObjectId())
-            .append(userIdKey, new ObjectId(userId))
+            .append(userIdKey, userId)
             .append(firstNameKey, firstName)
             .append(lastNameKey, lastName)
             .append(displayNameKey, displayName)
@@ -93,7 +93,7 @@ public class EmailInfo {
 
     public static EmailInfo fromDocument(Document doc) {
         return new EmailInfo()
-            .setUserId((String) doc.get(userIdKey).toString())
+            .setUserId((String) doc.get(userIdKey))
             .setFirstName((String) doc.get(firstNameKey))
             .setLastName((String) doc.get(lastNameKey))
             .setdisplayName((String) doc.get(displayNameKey))

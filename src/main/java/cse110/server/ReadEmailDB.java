@@ -6,7 +6,6 @@ import com.mongodb.client.*;
 import cse110.middleware.EmailInfo;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -18,7 +17,7 @@ public class ReadEmailDB extends DBAccess {
             MongoCollection<Document> userCollection = accountsDB.getCollection("info");
 
             // find one document with Filters.eq()
-            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, new ObjectId(userId))).first();
+            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, userId)).first();
 
             if (emailInfoDoc == null) {
                 return false;
@@ -34,7 +33,7 @@ public class ReadEmailDB extends DBAccess {
             MongoCollection<Document> userCollection = accountsDB.getCollection("info");
 
             // find one document with Filters.eq()
-            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, new ObjectId(userId))).first();
+            Document emailInfoDoc = userCollection.find(eq(EmailInfo.userIdKey, userId)).first();
             return EmailInfo.fromDocument(emailInfoDoc);
         }
     }

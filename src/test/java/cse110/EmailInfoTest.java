@@ -25,7 +25,7 @@ public class EmailInfoTest {
 
     @BeforeEach
     void setUp() {
-        userId = "6471bcd5286e654cd761c8db";
+        userId = "user1";
         firstName = "Helen";
         lastName = "SayIt";
         displayName = "Hel";
