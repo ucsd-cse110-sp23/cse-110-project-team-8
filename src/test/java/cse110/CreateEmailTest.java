@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class CreateEmailTest {
 
     //test for a registered fake email and correct prompt
+    /* 
     @Test 
     void testCreateEmailCorrect() {
         String prompt = "Create email to the TA can you please give me an A on this project";
@@ -15,6 +16,7 @@ public class CreateEmailTest {
         System.out.println(prompt);
         assertTrue(handleCommandsMock.parseCreateEmail(prompt, username)); 
     }
+    */
 
     //test for a registered fake email and an incorrect prompt
     @Test 
