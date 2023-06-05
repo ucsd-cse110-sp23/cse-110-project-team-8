@@ -11,6 +11,11 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
+
+import cse110.server.CreateDB;
+import cse110.server.ReadDB;
+import cse110.middleware.ResponseStrings;
+
 import static com.mongodb.client.model.Filters.*;
 
 import org.bson.Document;
@@ -45,7 +50,7 @@ public class AccountsDBTest {
         String password = "password123";
         String res = ReadDB.checkLogin(username, password);
         System.out.println(res);
-        assertEquals(res, ReadDB.LOGIN_SUCCESS);
+        assertEquals(res, ResponseStrings.LOGIN_SUCCESS);
     }
 
     @Test
@@ -54,7 +59,7 @@ public class AccountsDBTest {
         String password = "";
         String res = ReadDB.checkLogin(username, password);
         System.out.println(res);
-        assertEquals(res, ReadDB.USERNAME_ERROR);
+        assertEquals(res, ResponseStrings.USERNAME_ERROR);
     }
 
     @Test
@@ -63,7 +68,7 @@ public class AccountsDBTest {
         String password = "password321";
         String res = ReadDB.checkLogin(username, password);
         System.out.println(res);
-        assertEquals(res, ReadDB.PASSWORD_ERROR);
+        assertEquals(res, ResponseStrings.PASSWORD_ERROR);
     }
 
     @Test
@@ -72,7 +77,7 @@ public class AccountsDBTest {
         String password = "";
         String res = CreateDB.addUser(username, password);
         System.out.println(res);
-        assertEquals(res, CreateDB.USERNAME_TAKEN);
+        assertEquals(res, ResponseStrings.USERNAME_TAKEN);
     }
 
     @Test
@@ -80,6 +85,6 @@ public class AccountsDBTest {
         String password = "pw";
         String res = CreateDB.addUser(newUsername, password);
         System.out.println(res);
-        assertEquals(res, CreateDB.ADDED_USER);
+        assertEquals(res, ResponseStrings.ADDED_USER);
     }
 }

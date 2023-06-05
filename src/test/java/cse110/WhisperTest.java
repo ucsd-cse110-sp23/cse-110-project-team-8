@@ -1,14 +1,9 @@
 package cse110;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-
-import cse110.Whisper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.io.File;
 
 public class WhisperTest {
     private String testAudio;

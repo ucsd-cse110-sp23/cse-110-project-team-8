@@ -2,14 +2,16 @@ package cse110;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.gson.JsonObject;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
+
+import cse110.middleware.EmailInfo;
+import cse110.server.ReadEmailDB;
+import cse110.server.CreateEmailDB;
+import cse110.server.DeleteEmailDB;
 
 
 public class EmailDBTest {

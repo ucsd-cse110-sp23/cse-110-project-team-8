@@ -2,6 +2,9 @@ package cse110;
 
 import org.junit.jupiter.api.Test;
 
+import cse110.client.DataManager;
+import cse110.client.QuestionData;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterAll;
