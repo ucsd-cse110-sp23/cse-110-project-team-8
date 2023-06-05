@@ -20,6 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
+
+import com.google.gson.JsonObject;
+
+import netscape.javascript.JSObject;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -350,8 +355,20 @@ class AppFrame extends JFrame {
       sidebar.deleteItem(); 
       return true; 
     } else if (command.indexOf("Create email") == 0) {
+      JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
+      if (jsonObj.has("error")) {
+        // Error getting email info
+        currPrompt = "Please Set up email info first.";
+        questionPanel.setQuestionText(currPrompt + "\n"); 
+        return false;
+      }
+
+      questionPanel.setQuestionText(currPrompt + "\n"); 
       // Set currPrompt as the email draft from ChatGPT
-      currResponse= getGPTResponse(currPrompt + ". Make email from " + this.getCurrUserId());
+      String newPrompt = currPrompt + ". Make email from " + jsonObj.get(EmailInfo.displayNameKey).getAsString() +". ";
+      System.out.println(newPrompt);
+      newPrompt += "Do not include 'From [email]' or 'To [email]'.";
+      currResponse= getGPTResponse(newPrompt);
       System.out.println("\nResponse:" + currResponse);
       questionPanel.setResponseText(currResponse);  
 
