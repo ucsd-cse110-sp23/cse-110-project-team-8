@@ -1,6 +1,8 @@
 package cse110;
 import com.google.gson.JsonObject;
 
+import cse110.middleware.EmailInfoCommuncation;
+
 public class handleCommandsMock {
     public static boolean parseCommand(String command){
         String currResponse; 
