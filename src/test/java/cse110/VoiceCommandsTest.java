@@ -8,6 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class VoiceCommandsTest {
 
     @Test 
+    void testCreateEmailNoPrompt() {
+        String prompt = "Create email.";
+        System.out.println(prompt);
+        assertFalse(handleCommandsMock.parseCommand(prompt)); 
+    }
+
+    @Test 
+    void testCreateEmail() {
+        String prompt = "Create email blablabla";
+        System.out.println(prompt);
+        assertTrue(handleCommandsMock.parseCommand(prompt)); 
+    }
+
+    @Test 
     void testSetUpEmail() {
         String prompt = "Set up email.";
         System.out.println(prompt);
@@ -52,6 +66,13 @@ public class VoiceCommandsTest {
     @Test 
     void testContainsWordQuestion() {
         String prompt = "what if I ask a question";
+        System.out.println(prompt);
+        assertFalse(handleCommandsMock.parseCommand(prompt));       
+    }
+
+    @Test 
+    void testQuestionNoPrompt() {
+        String prompt = "Question.";
         System.out.println(prompt);
         assertFalse(handleCommandsMock.parseCommand(prompt));       
     }

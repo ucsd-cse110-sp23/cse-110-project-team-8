@@ -20,7 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import com.google.gson.JsonObject;
+
 import cse110.middleware.AccountCommunication;
+import cse110.middleware.EmailInfo;
+import cse110.middleware.EmailInfoCommuncation;
 import cse110.middleware.ServerCommunication;
 import cse110.middleware.ResponseStrings;
 
@@ -350,8 +354,35 @@ class AppFrame extends JFrame {
       sidebar.clearAll();
       return true;
     } else if (command.equalsIgnoreCase("Delete prompt.")) {
+      //handle for command delete prompt
       sidebar.deleteItem(); 
       return true; 
+    } else if (command.equals("Create email.")) {
+      return false; 
+    } else if (command.indexOf("Create email") == 0) {
+      //handle for create email 
+      JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
+      if (jsonObj.has("error")) {
+        // Error getting email info
+        currPrompt = "Please Set up email info first.";
+        questionPanel.setQuestionText(currPrompt + "\n"); 
+        return false;
+      }
+
+      questionPanel.setQuestionText(currPrompt + "\n"); 
+      // Set currPrompt as the email draft from ChatGPT
+      String newPrompt = currPrompt + ". Make email and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
+      System.out.println(newPrompt);
+      newPrompt += "Do not include 'From [email]' or 'To [email]'.";
+      currResponse= getGPTResponse(newPrompt);
+      System.out.println("\nResponse:" + currResponse);
+      questionPanel.setResponseText(currResponse);  
+
+      // Save email draft in Server
+      ServerCommunication.sendPostRequest(currPrompt, currResponse);
+
+      sidebar.addItem(currPrompt);
+      return true;
     }
     //invalid prompt but not empty 
     return false; 

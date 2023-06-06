@@ -70,12 +70,23 @@ public class EmailInfoHandler implements HttpHandler {
         String query = uri.getRawQuery();
 
         // Get prompt 
-        String userId = "";
+        String username = "";
         if (query != null) {
-            userId = query.substring(query.indexOf("userId=") + "userId=".length());
+            username = query.substring(query.indexOf("userId=") + "userId=".length());
         }
 
-        if (!ReadEmailDB.existsEmailInfo(userId)) {
+        // Set username 
+        StringBuilder usernameBuilder = new StringBuilder();
+        for (int i = 0 ; i < username.length(); i++) {
+        if (username.charAt(i) == '+') {
+            usernameBuilder.append(' ');
+        } else {
+            usernameBuilder.append(username.charAt(i));
+        }
+        }
+        username = usernameBuilder.toString();
+
+        if (!ReadEmailDB.existsEmailInfo(username)) {
             // No Email info for this account
             JsonObject jsonObj = new JsonObject();
             jsonObj.addProperty("error", "No email info for this account");
@@ -83,6 +94,6 @@ public class EmailInfoHandler implements HttpHandler {
         }
 
         // Return email info as json object as string
-        return ReadEmailDB.getEmailInfo(userId).toJson().toString();
+        return ReadEmailDB.getEmailInfo(username).toJson().toString();
     }
 }
