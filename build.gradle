@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-mainClassName = 'cse110.MainUI'
+mainClassName = 'cse110.client.MainUI'
 
 java {
     toolchain {
@@ -39,7 +39,7 @@ task server(type: JavaExec){
     description = "Runs the main server"
 
     classpath = sourceSets.main.runtimeClasspath
-    main = "cse110.Server"
+    main = "cse110.server.Server"
 }
 
 task mockMain(type: JavaExec){
