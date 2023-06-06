@@ -332,6 +332,7 @@ class AppFrame extends JFrame {
     }
     //handle for when command is setup email
     if (command.equalsIgnoreCase("Set up email.")) {
+      setupEmailPanel.updateDisplay();
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
       return true;
