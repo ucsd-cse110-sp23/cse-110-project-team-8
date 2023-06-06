@@ -12,7 +12,7 @@ import com.sun.net.httpserver.*;
 
 import cse110.client.DataManager;
 import cse110.client.QuestionData;
-import cse110.middleware.RequestHandler;
+import cse110.server.RequestHandler;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;

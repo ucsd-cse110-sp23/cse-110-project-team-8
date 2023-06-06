@@ -4,6 +4,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.google.gson.JsonObject;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,6 +49,7 @@ public class SetupEmailPanel extends JPanel{
       cancelBtn = new JButton("cancel"); 
       this.add(saveBtn);
       this.add(cancelBtn); 
+
       
       // Add save button and its action listener
         saveBtn.addActionListener(new ActionListener() {
@@ -81,6 +85,24 @@ public class SetupEmailPanel extends JPanel{
                 System.out.println("Action Cancelled");
             }
         });
+    }
+
+    /**
+     * Updates text spaces with saved email info
+     */
+    public void updateDisplay() {
+      // Set text of saved email info
+      JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(appFrame.getCurrUserId());
+      if (!jsonObj.has("error")) {
+        EmailInfo ei = EmailInfo.fromJson(jsonObj);
+        firstName.setText(ei.getFirstName());
+        lastName.setText(ei.getLastName());
+        displayName.setText(ei.getDisplayName());
+        emailAddress.setText(ei.getEmailAddress());
+        smtpHost.setText(ei.getSmtp());
+        tlsPort.setText(ei.getTls());
+        emailPassword.setText(ei.getPassword());
+      }
     }
 
     public JTextField addText(JTextField text, JLabel label, String nameLabel) {

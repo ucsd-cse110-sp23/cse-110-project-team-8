@@ -191,8 +191,8 @@ class AppFrame extends JFrame {
                             currPrompt = transcribePrompt(); //transcribe
                             //runnning handleCommand and returning and error
                             //if invalid command
-                            if(handleCommand(currPrompt) == false) {
-                              questionPanel.setResponseText("Invalid command");  
+                            if(handleCommand(currPrompt) != "Success") {
+                              questionPanel.setResponseText(handleCommand(currPrompt));  
                             }
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -325,19 +325,20 @@ class AppFrame extends JFrame {
   }
   
   //if returns false, then not valid command or empty 
-  boolean handleCommand(String command) {
+  String handleCommand(String command) {
     //handle for when prompt is null 
     if (command == null || command.isEmpty()) {
-      return false; 
+      return "Error: Command is null or empty."; 
     }
     //handle for when command is setup email
     if (command.equalsIgnoreCase("Set up email.")) {
+      setupEmailPanel.updateDisplay();
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
-      return true;
+      return "Success";
     } else if (command.equals("Question.")) {
-      //when commmand is Question, but there is no prompt
-      return false; 
+      //when command is Question, but there is no prompt
+      return "Error: Command is 'Question.' but there is no prompt."; 
     } else if (command.indexOf("Question") == 0) {
       //handle when command is for a question
       questionPanel.setQuestionText(currPrompt + "\n"); 
@@ -348,17 +349,17 @@ class AppFrame extends JFrame {
       //save question 
       ServerCommunication.sendPostRequest(currPrompt, currResponse);
       sidebar.addItem(currPrompt);
-      return true; 
+      return "Success"; 
     } else if (command.equalsIgnoreCase("Clear all.")) { 
       //handle for command clear all
       sidebar.clearAll();
-      return true;
+      return "Success";
     } else if (command.equalsIgnoreCase("Delete prompt.")) {
       //handle for command delete prompt
       sidebar.deleteItem(); 
-      return true; 
+      return "Success"; 
     } else if (command.equals("Create email.")) {
-      return false; 
+      return "Error: 'Create email to [Recipient]' is the proper format."; 
     } else if (command.indexOf("Create email") == 0) {
       //handle for create email 
       JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
@@ -366,7 +367,7 @@ class AppFrame extends JFrame {
         // Error getting email info
         currPrompt = "Please Set up email info first.";
         questionPanel.setQuestionText(currPrompt + "\n"); 
-        return false;
+        return "Error: Failed to get email info. Please Set up email info first.";
       }
 
       questionPanel.setQuestionText(currPrompt + "\n"); 
@@ -382,11 +383,12 @@ class AppFrame extends JFrame {
       ServerCommunication.sendPostRequest(currPrompt, currResponse);
 
       sidebar.addItem(currPrompt);
-      return true;
+      return "Success";
     }
-    //invalid prompt but not empty 
-    return false; 
-  }
+
+    return "Error: Command not recognized.";
+}
+
   void goToQuestionPanel() {
     cards.show(card, "questionPanel");
   }

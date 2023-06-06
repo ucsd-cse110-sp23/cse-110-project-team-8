@@ -47,7 +47,7 @@ task mockMain(type: JavaExec){
     description = "Runs the mock Main UI"
 
     classpath = sourceSets.main.runtimeClasspath
-    main = "cse110.MockMainUI"
+    main = "cse110.client.MockMainUI"
 }
 
 task mockSetupEmail(type: JavaExec){
@@ -55,5 +55,5 @@ task mockSetupEmail(type: JavaExec){
     description = "Runs the mock Setup email"
 
     classpath = sourceSets.main.runtimeClasspath
-    main = "cse110.MockSetupEmailMain"
+    main = "cse110.client.MockSetupEmailMain"
 }
