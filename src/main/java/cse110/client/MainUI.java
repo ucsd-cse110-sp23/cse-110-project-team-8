@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
 
 import cse110.middleware.AccountCommunication;
@@ -312,8 +313,9 @@ class AppFrame extends JFrame {
 
           // TODO: handle errors in account creation
 
-          // TODO: set this response string to match server response
-          if (res.equals(ResponseStrings.ADDED_USER)) {
+          JsonObject jsonObj = JsonParser.parseString(res).getAsJsonObject();
+          String response = jsonObj.get("response").getAsString();
+          if (response.equals(ResponseStrings.DATABASE_WRITE_SUCCESS)) {
             currUserId = createAccountPanel.getUsername();
             System.out.println("Current user: " + currUserId);
             createSidebarUI();
