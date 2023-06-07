@@ -21,7 +21,12 @@ public class DBWrite extends DBCredentials {
             MongoDatabase userDB = mongoClient.getDatabase("users");
             MongoCollection<Document> userDataCollection = userDB.getCollection("userData");
 
-            userDataCollection.replaceOne(eq("_id",data.get("_id")),data);
+            if (userDataCollection.find(eq("_id",data.get("_id"))).first() != null) {
+                userDataCollection.replaceOne(eq("_id",data.get("_id")),data);
+            } else {
+                // insert
+                userDataCollection.insertOne(data);
+            }
 
             json.addProperty("response", ResponseStrings.DATABASE_WRITE_SUCCESS);
             json.add("body",JsonParser.parseString(data.toJson()).getAsJsonObject());

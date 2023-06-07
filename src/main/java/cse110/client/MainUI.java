@@ -307,6 +307,7 @@ class AppFrame extends JFrame {
 
           // TODO: handle errors in account creation
 
+          // TODO: set this response string to match server response
           if (res.equals(ResponseStrings.ADDED_USER)) {
             currUserId = createAccountPanel.getUsername();
             System.out.println("Current user: " + currUserId);
