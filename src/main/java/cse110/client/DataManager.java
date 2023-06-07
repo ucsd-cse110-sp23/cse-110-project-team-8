@@ -21,10 +21,18 @@ public class DataManager {
 
     public static ArrayList<QuestionData> getQuestionData(){
         JsonArray promptHistory;
+
+        if (getData() == null) {
+            // Create new data if data is null
+            data = new JsonObject();
+        }
+
         JsonObject userData = getData();
         if (userData.get("promptHistory") != null){
             promptHistory = userData.get("promptHistory").getAsJsonArray();
+            System.out.println(promptHistory.toString());
         }else{
+            System.out.println("Should be null");
             promptHistory = new JsonArray();
         }
 
