@@ -8,6 +8,7 @@ import java.net.*;
 
 
 public class AccountCommunication extends ServerCommunication {
+  public static final String accountURL = URL+"account";
 
     /**
      * Creates account or returns error message if invalid info
