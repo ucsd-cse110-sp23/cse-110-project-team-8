@@ -228,10 +228,8 @@ class AppFrame extends JFrame {
                             System.out.println("Current user: " + currUserId);
                             DataManager.setData(res.get("body").getAsJsonObject());
 
-                            sidebar = new SidebarUI(questionPanel, DataManager.getQuestionData()); 
-                            sidebar.setBounds(0, 0, 350, 600);
+                            createSidebarUI();
 
-                            // 
                             // Switch to question panel if user is created
                             cards.show(card, "questionPanel"); 
                         } else System.out.println("Request Failed");
@@ -290,6 +288,7 @@ class AppFrame extends JFrame {
             System.out.println("Current user: " + currUserId);
             System.out.println(res.toString());
             DataManager.setData(res.get("body").getAsJsonObject());
+            createSidebarUI();
             // Switch to question panel if user is created
             goToQuestionPanel();
           }
@@ -311,12 +310,19 @@ class AppFrame extends JFrame {
           if (res.equals(ResponseStrings.ADDED_USER)) {
             currUserId = createAccountPanel.getUsername();
             System.out.println("Current user: " + currUserId);
+            createSidebarUI();
             // Switch to question panel if user is created
             goToQuestionPanel();
           }
         } 
       }
     );
+  }
+
+  void createSidebarUI() {
+    sidebar = new SidebarUI(questionPanel, DataManager.getQuestionData()); 
+    sidebar.setBounds(0, 0, 350, 500);
+    revalidate();
   }
 
   String transcribePrompt() {
