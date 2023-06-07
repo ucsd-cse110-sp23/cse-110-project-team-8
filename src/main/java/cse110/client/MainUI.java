@@ -156,11 +156,6 @@ class AppFrame extends JFrame {
     askButton = questionPanel.getQuestionButton();
     askButton.setPreferredSize(new Dimension(430,50));
 
-    // Check server connection
-    if (!ServerCommunication.checkServerConnection()) {
-      this.showServerError();
-    }
-
     addListeners();
     this.setVisible(true); // Make visible
   }
@@ -291,7 +286,6 @@ class AppFrame extends JFrame {
                 ioException.printStackTrace();
             }
           }
-          // TODO: handle errors in login
 
           if (res.get("response").getAsString().equals(ResponseStrings.LOGIN_SUCCESS)) {
             currUserId = loginPanel.getUsername();
@@ -301,6 +295,8 @@ class AppFrame extends JFrame {
             createSidebarUI();
             // Switch to question panel if user is created
             goToQuestionPanel();
+          }else{
+            showPopup(res.get("response").getAsString());
           }
         } 
       }
@@ -323,6 +319,8 @@ class AppFrame extends JFrame {
             createSidebarUI();
             // Switch to question panel if user is created
             goToQuestionPanel();
+          }else{
+            showPopup(res);
           }
         } 
       }
@@ -430,9 +428,9 @@ class AppFrame extends JFrame {
     return this.currUserId;
   }
 
-  public void showServerError() {
+  public void showPopup(String text) {
     if (errorPopup == null) errorPopup = new ErrorPopup(this);
-    errorPopup.setMessage("Server is unavailable.");
+    errorPopup.setMessage(text);
     errorPopup.show();
   }
 }

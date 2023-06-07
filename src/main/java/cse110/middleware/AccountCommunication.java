@@ -50,15 +50,10 @@ public class AccountCommunication extends ServerCommunication {
             BufferedReader reader = new BufferedReader(
                 new InputStreamReader(conn.getInputStream())
             );
-            String response = reader.readLine();
-            String in;
-            while ((in = reader.readLine())!=null){
-                response+=in;
-            }
+            JsonObject response = JsonParser.parseReader(reader).getAsJsonObject();
+            System.out.println("Response: " + response.toString());
             reader.close();
-
-            System.out.println("Response: " + response);
-            return response;
+            return response.get("response").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,11 +106,6 @@ public class AccountCommunication extends ServerCommunication {
             BufferedReader reader = new BufferedReader(
             new InputStreamReader(conn.getInputStream())
             );
-            // String response = reader.readLine();
-            // String in;
-            // while ((in = reader.readLine())!=null){
-            //     response+=in;
-            // }
             
             JsonObject response = JsonParser.parseReader(reader).getAsJsonObject();
             System.out.println("Response: " + response.toString());

@@ -32,8 +32,6 @@ public class AccountHandler implements HttpHandler {
             e.printStackTrace();
         }
 
-        System.out.println("4");
-
         // Sending back response to the client
         String responsestring = response.toString();
         httpExchange.getResponseHeaders().set("Content-Type","application/json");
@@ -54,6 +52,13 @@ public class AccountHandler implements HttpHandler {
         String username = jsonObj.get("username").getAsString();
         String password = jsonObj.get("password").getAsString();
 
+        JsonObject response = DBRead.getUserData(username, password);
+        System.out.println(response.toString());
+        if (!response.get("response").getAsString().equals(ResponseStrings.USERNAME_ERROR)){
+            response = new JsonObject();
+            response.addProperty("response", ResponseStrings.USERNAME_TAKEN);
+            return response;
+        }
         Document userData = new Document()
             .append("username", username)
             .append("password",password);
