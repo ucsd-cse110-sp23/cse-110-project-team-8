@@ -14,7 +14,7 @@ import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.eq;
 
 
-public class DeleteEmailDB extends DBAccess {
+public class DeleteEmailDB extends DBCredentials {
 
     public static void deleteEmailInfo(String userId) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {

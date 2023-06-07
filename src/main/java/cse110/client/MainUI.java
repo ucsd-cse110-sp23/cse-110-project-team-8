@@ -11,7 +11,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import cse110.middleware.AccountCommunication;
 import cse110.middleware.EmailInfo;
@@ -97,7 +97,6 @@ class AppFrame extends JFrame {
   private AudioRecorder audio; 
 
   //basic sidebar variables
-  private ArrayList<QuestionData> historyList; 
   private SidebarUI sidebar; 
 
   AppFrame() {
@@ -118,11 +117,6 @@ class AppFrame extends JFrame {
     audio = new AudioRecorder(); 
     header = new Header();
     footer = new Footer();
-
-    // setting up basic sidebar
-    historyList = ServerCommunication.sendGetAllRequest();
-    sidebar = new SidebarUI(questionPanel, historyList); 
-    sidebar.setBounds(0, 0, 350, 600);
     
     //creating SetupEmail Email Panel
     setupEmailPanel = new SetupEmailPanel(this); 
@@ -228,10 +222,16 @@ class AppFrame extends JFrame {
                     if(scanner.hasNextLine()) {
                         String password = scanner.nextLine();
                         System.out.println("Sending Request");
-                        String res = AccountCommunication.sendLoginRequest(username, password);
-                        if (ResponseStrings.LOGIN_SUCCESS.equals(res)) {
+                        JsonObject res = AccountCommunication.sendLoginRequest(username, password);
+                        if (res.get("response").getAsString().equals(ResponseStrings.LOGIN_SUCCESS)) {
                             currUserId = username;
                             System.out.println("Current user: " + currUserId);
+                            DataManager.setData(res.get("body").getAsJsonObject());
+
+                            sidebar = new SidebarUI(questionPanel, DataManager.getQuestionData()); 
+                            sidebar.setBounds(0, 0, 350, 600);
+
+                            // 
                             // Switch to question panel if user is created
                             cards.show(card, "questionPanel"); 
                         } else System.out.println("Request Failed");
@@ -271,7 +271,7 @@ class AppFrame extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
           // Check if auto-login is enabled
-          String res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
+          JsonObject res = AccountCommunication.sendLoginRequest(loginPanel.getUsername(), loginPanel.getPassword());
           System.out.println(res);
           boolean autoChecker = autoCheck.isSelected();
           // if checkBox is selected, remember user
@@ -285,9 +285,11 @@ class AppFrame extends JFrame {
           }
           // TODO: handle errors in login
 
-          if (ResponseStrings.LOGIN_SUCCESS.equals(res)) {
+          if (res.get("response").getAsString().equals(ResponseStrings.LOGIN_SUCCESS)) {
             currUserId = loginPanel.getUsername();
             System.out.println("Current user: " + currUserId);
+            System.out.println(res.toString());
+            DataManager.setData(res.get("body").getAsJsonObject());
             // Switch to question panel if user is created
             goToQuestionPanel();
           }
@@ -346,8 +348,22 @@ class AppFrame extends JFrame {
       currResponse = getGPTResponse(currPrompt); //get chat gpt response
       System.out.println("\nResponse:" + currResponse);
       questionPanel.setResponseText(currResponse);  
-      //save question 
-      ServerCommunication.sendPostRequest(currPrompt, currResponse);
+
+      //save question
+      JsonObject userData = DataManager.getData();
+      JsonObject newquestion = new JsonObject();
+      newquestion.addProperty("prompt", currPrompt);
+      newquestion.addProperty("response", currResponse);
+      JsonArray promptHistory;
+      if (userData.get("promptHistory") != null){
+        promptHistory = userData.get("promptHistory").getAsJsonArray();
+      }else{
+        promptHistory = new JsonArray();
+      }
+      promptHistory.add(newquestion);
+      userData.add("promptHistory", promptHistory);
+      System.out.println(DataManager.getData().toString());
+      ServerCommunication.sendPostRequest(DataManager.getData());
       sidebar.addItem(currPrompt);
       return "Success"; 
     } else if (command.equalsIgnoreCase("Clear all.")) { 
@@ -380,7 +396,7 @@ class AppFrame extends JFrame {
       questionPanel.setResponseText(currResponse);  
 
       // Save email draft in Server
-      ServerCommunication.sendPostRequest(currPrompt, currResponse);
+      ServerCommunication.sendPostRequest(DataManager.getData());
 
       sidebar.addItem(currPrompt);
       return "Success";

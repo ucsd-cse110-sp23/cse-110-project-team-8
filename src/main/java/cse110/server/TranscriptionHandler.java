@@ -2,8 +2,6 @@ package cse110.server;
 
 import com.sun.net.httpserver.*;
 
-import cse110.middleware.Whisper;
-
 import java.io.*;
 import java.net.*;
 
