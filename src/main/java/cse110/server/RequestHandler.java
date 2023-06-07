@@ -117,6 +117,7 @@ public class RequestHandler implements HttpHandler {
         String query = uri.getRawQuery();
         if (query != null) {
             String value = query.substring(query.indexOf("=") + 1);
+
             if (value.equals("all")) {
                 return handleGetAll();
             }

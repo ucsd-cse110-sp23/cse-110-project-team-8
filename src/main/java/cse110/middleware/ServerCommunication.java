@@ -16,7 +16,44 @@ public class ServerCommunication {
   public static final String URL = "http://localhost:8100/";
   public static final String transcriptionURL = URL+"transcribe";
   public static final String responseURL = URL+"response";
-  public static final String accountURL = URL+"account";
+
+  public static boolean isConnectError(Exception e) {
+    return e instanceof ConnectException;
+  }
+
+  public static boolean checkServerConnection() {
+    try {
+        // Setup the server address with queries for prompt and tokens
+        URL url = new URL(URL);
+
+        // Create a HttpURLConnection object
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        // Set method to GET
+        conn.setRequestMethod("GET");
+
+        // Get the response code
+        int responseCode = conn.getResponseCode();
+        System.out.println("GET Response Code: " + responseCode);
+
+        // Get response from server
+        BufferedReader reader = new BufferedReader(
+          new InputStreamReader(conn.getInputStream())
+        );
+        String response = reader.readLine();
+        String in;
+        while ((in = reader.readLine())!=null){
+          response+=in;
+        }
+        reader.close();
+
+        System.out.println("Response: " + response);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return !isConnectError(e);
+    }
+    return true;
+  }
 
   /**
    * Given a prompt, returns the response to that prompt

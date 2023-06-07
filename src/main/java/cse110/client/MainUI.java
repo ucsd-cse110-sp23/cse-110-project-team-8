@@ -62,6 +62,11 @@ class Header extends JPanel {
 
 
 class AppFrame extends JFrame {
+  public static final int WIDTH = 800;
+  public static final int HEIGHT = 600;
+
+  private ErrorPopup errorPopup;
+
   private final String fileName = "lib/recording.wav";
   private int maxTokens = 1000;
   private String currUserId = "";
@@ -101,7 +106,7 @@ class AppFrame extends JFrame {
   private SidebarUI sidebar; 
 
   AppFrame() {
-    this.setSize(800, 600); // 400 width and 600 height
+    this.setSize(WIDTH, HEIGHT); 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close on exit
 
     //Creating text labels and setting default text
@@ -156,6 +161,11 @@ class AppFrame extends JFrame {
     //creating and modifying askButton
     askButton = questionPanel.getQuestionButton();
     askButton.setPreferredSize(new Dimension(430,50));
+
+    // Check server connection
+    if (!ServerCommunication.checkServerConnection()) {
+      this.showServerError();
+    }
 
     addListeners();
     this.setVisible(true); // Make visible
@@ -395,6 +405,12 @@ class AppFrame extends JFrame {
 
   String getCurrUserId() {
     return this.currUserId;
+  }
+
+  public void showServerError() {
+    if (errorPopup == null) errorPopup = new ErrorPopup(this);
+    errorPopup.setMessage("Server is unavailable.");
+    errorPopup.show();
   }
 }
 
