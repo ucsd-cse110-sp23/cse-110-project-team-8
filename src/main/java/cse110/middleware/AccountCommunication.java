@@ -16,7 +16,8 @@ public class AccountCommunication extends ServerCommunication {
      * @param password
      * @return Message string
      */
-    public static String sendCreateRequest(String username, String password) {
+    public static JsonObject sendCreateRequest(String username, String password) {
+        JsonObject json = new JsonObject();
         try {
             // Setup the server address
             URL url = new URL(accountURL);
@@ -53,11 +54,12 @@ public class AccountCommunication extends ServerCommunication {
             JsonObject response = JsonParser.parseReader(reader).getAsJsonObject();
             System.out.println("Response: " + response.toString());
             reader.close();
-            return response.get("response").getAsString();
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Server Error";
+        json.addProperty("response", ResponseStrings.SERVER_ERROR);
+        return json;
     }
 
     /**

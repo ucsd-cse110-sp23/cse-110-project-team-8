@@ -238,7 +238,9 @@ class AppFrame extends JFrame {
 
                             // Switch to question panel if user is created
                             cards.show(card, "questionPanel"); 
-                        } else System.out.println("Request Failed");
+                        } else{
+                          showPopup(res.get("response").getAsString());
+                        }
                     } else System.out.println("Password not found");
                 }
             } else {
@@ -308,21 +310,16 @@ class AppFrame extends JFrame {
         @override
         public void mousePressed(MouseEvent e) {
           // Send message to server to create account
-          String res = AccountCommunication.sendCreateRequest(createAccountPanel.getUsername(), createAccountPanel.getPassword());
-          System.out.println(res);
+          JsonObject res = AccountCommunication.sendCreateRequest(createAccountPanel.getUsername(), createAccountPanel.getPassword());
 
-          // TODO: handle errors in account creation
-
-          JsonObject jsonObj = JsonParser.parseString(res).getAsJsonObject();
-          String response = jsonObj.get("response").getAsString();
-          if (response.equals(ResponseStrings.DATABASE_WRITE_SUCCESS)) {
+          if (res.get("response").getAsString().equals(ResponseStrings.DATABASE_WRITE_SUCCESS)) {
             currUserId = createAccountPanel.getUsername();
             System.out.println("Current user: " + currUserId);
             createSidebarUI();
             // Switch to question panel if user is created
             goToQuestionPanel();
           }else{
-            showPopup(res);
+            showPopup(res.get("response").getAsString());
           }
         } 
       }

@@ -63,7 +63,7 @@ public class ServerCommunication {
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return "";
+    return ResponseStrings.SERVER_ERROR;
   }
 
   /**
@@ -98,7 +98,7 @@ public class ServerCommunication {
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return "";
+    return ResponseStrings.SERVER_ERROR;
   }
 
   /**
