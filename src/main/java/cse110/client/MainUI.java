@@ -26,7 +26,6 @@ import cse110.middleware.AccountCommunication;
 import cse110.middleware.EmailInfo;
 import cse110.middleware.EmailInfoCommuncation;
 import cse110.middleware.ServerCommunication;
-import cse110.server.Server;
 import cse110.middleware.ResponseStrings;
 
 import java.awt.*;
