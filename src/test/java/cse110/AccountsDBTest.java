@@ -29,7 +29,6 @@ public class AccountsDBTest {
     @BeforeEach
     void setUp() {
         newUsername = "testAddUser 2347198374982137598";
-        DBCredentials.uri = "mongodb://localhost";
     }
 
     @AfterAll
