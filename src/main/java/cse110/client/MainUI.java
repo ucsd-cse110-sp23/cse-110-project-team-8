@@ -26,7 +26,9 @@ import com.google.gson.JsonArray;
 import cse110.middleware.AccountCommunication;
 import cse110.middleware.EmailInfo;
 import cse110.middleware.EmailInfoCommuncation;
+import cse110.middleware.ResponseCommunication;
 import cse110.middleware.ServerCommunication;
+import cse110.middleware.TranscriptionCommunication;
 import cse110.middleware.ResponseStrings;
 import cse110.middleware.SendEmail; 
 
@@ -335,7 +337,7 @@ class AppFrame extends JFrame {
   }
 
   String transcribePrompt() {
-    return ServerCommunication.sendTranscribeRequest(fileName);
+    return TranscriptionCommunication.sendTranscribeRequest(fileName);
   }
 
   void savePrompt(String currPrompt,String currResponse){
@@ -358,7 +360,7 @@ class AppFrame extends JFrame {
   }
 
   String getGPTResponse(String prompt) {
-    return ServerCommunication.sendResponseRequest(prompt, maxTokens);
+    return ResponseCommunication.sendResponseRequest(prompt, maxTokens);
   }
   
   //if returns false, then not valid command or empty 
