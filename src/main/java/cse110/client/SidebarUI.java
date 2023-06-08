@@ -31,14 +31,15 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     public SidebarUI(MainPanel mainPanel, ArrayList<QuestionData> dataList) {
         this.mainPanel = mainPanel;
 
+        // Initialize list with given data
         ArrayList<String> newlist = new ArrayList<>();
         if (dataList != null){
             for (int i=0; i<dataList.size();i++){
                 newlist.add(dataList.get(i).getPrompt());
             }
         }
-
         this.historyList = newlist;
+
         this.selectedIndex = UNSELECTED;
 
         this.setPreferredSize(new Dimension(panelWidth, panelHeight)); // set size of task
@@ -46,7 +47,6 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.setLayout(new BorderLayout()); // set layout of task
 
         this.jlist = new JList<String>((String[]) historyList.toArray(new String[historyList.size()]));
-        // this.jlist.setPreferredSize(new Dimension(listWidth, listHeight));
 
         // Create a JScrollPane and add the JList to it
         this.scrollPane = new JScrollPane(this.jlist);
@@ -54,14 +54,6 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.add(scrollPane, BorderLayout.NORTH);
                         
         this.jlist.addListSelectionListener(this);
-        /* 
-        buttonPanel.removeButton.addActionListener(
-            (ActionEvent e) -> {
-                if (this.selectedIndex == UNSELECTED) return;
-                this.deleteItem(this.selectedIndex);
-            }
-        );
-        */
         mainPanel.add(this); 
     }
 

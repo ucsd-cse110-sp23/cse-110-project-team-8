@@ -14,6 +14,9 @@ import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.eq;
 
 
+/**
+ * Deletes email info from MongoDB.
+ */
 public class DeleteEmailDB extends DBCredentials {
 
     public static void deleteEmailInfo(String userId) {

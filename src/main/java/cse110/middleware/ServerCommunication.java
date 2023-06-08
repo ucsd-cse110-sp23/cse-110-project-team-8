@@ -6,6 +6,9 @@ import java.io.*;
 import java.net.*;
 
 
+/**
+ * Send Http server requests to / endpoint.
+ */
 public class ServerCommunication {
   public static final String URL = "http://localhost:8100/";
   public static final String responseURL = URL+"response";

@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-
+import java.util.Currency;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
@@ -30,6 +30,7 @@ import cse110.middleware.ResponseCommunication;
 import cse110.middleware.ServerCommunication;
 import cse110.middleware.TranscriptionCommunication;
 import cse110.middleware.ResponseStrings;
+import cse110.middleware.SendEmail; 
 
 import java.awt.*;
 import javax.swing.*;
@@ -174,8 +175,6 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((questionPanel.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    questionPanel.setResponseText("Recording");
-                   
                     audio.startRecording(fileName);
                      
                     questionPanel.getQuestionButton().setText("End Question"); 
@@ -189,12 +188,12 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
                             //runnning handleCommand and returning and error
                             //if invalid command
-                            if(handleCommand(currPrompt) != "Success") {
-                              questionPanel.setResponseText(handleCommand(currPrompt));  
+                            String response = handleCommand(currPrompt);
+                            if(!response.equals("Success")) {
+                              showPopup(response);
                             }
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -368,7 +367,7 @@ class AppFrame extends JFrame {
       return "Error: Command is null or empty."; 
     }
     //handle for when command is setup email
-    if (command.equalsIgnoreCase("Set up email.")) {
+    if (command.equalsIgnoreCase("Set up email.") || command.equalsIgnoreCase("Setup email.")) {
       setupEmailPanel.updateDisplay();
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
@@ -402,27 +401,42 @@ class AppFrame extends JFrame {
       JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
       if (jsonObj.has("error")) {
         // Error getting email info
-        currPrompt = "Please Set up email info first.";
-        questionPanel.setQuestionText(currPrompt + "\n"); 
-        return "Error: Failed to get email info. Please Set up email info first.";
+        return ResponseStrings.EMAIL_SETUP_ERROR;
       }
 
       questionPanel.setQuestionText(currPrompt + "\n"); 
       // Set currPrompt as the email draft from ChatGPT
-      String newPrompt = currPrompt + ". Make email and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
+      String newPrompt = currPrompt + ".  Make email, give me a subject line then start the email with the word Dear and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
       System.out.println(newPrompt);
       newPrompt += "Do not include 'From [email]' or 'To [email]'.";
       currResponse= getGPTResponse(newPrompt);
-      System.out.println("\nResponse:" + currResponse);
+      System.out.println("\nResponse: " + currResponse);
       questionPanel.setResponseText(currResponse);  
-
+  
       // Save email draft in Server
-      //ServerCommunication.sendPostRequest(DataManager.getData());
       savePrompt(currPrompt, currResponse);
 
       return "Success";
+    } else if (command.equals("Send email") || command.equals("Send email to")) {
+      //handle for end email with no email
+      return ResponseStrings.EMAIL_NORECIPIENT_ERROR; 
+    } else if (command.toLowerCase().indexOf("send email") == 0){
+      System.out.println("body of email: " + questionPanel.getResponseArea().getText()); 
+      final String eAddress = setupEmailPanel.getEmailAddress(); 
+      final String ePassword = setupEmailPanel.getEmailPassword();
+      final String ePrompt = questionPanel.getResponseArea().getText(); 
+      final String eSmtp = setupEmailPanel.getSmtpHost(); 
+      final String eTls = setupEmailPanel.getTlsPort(); 
+      System.out.println("Address: " + eAddress + " \n Password: " + ePassword + " \n Prompt" + ePrompt + "\n SMTP: " + eSmtp + " \n TLS " + eTls); 
+      String sendEmailVerification = SendEmail.createAndSendEmail(eAddress, ePassword, command, ePrompt, eSmtp, eTls);
+      savePrompt(command, sendEmailVerification);
+      if (!sendEmailVerification.equals(ResponseStrings.EMAIL_SUCCESS)){
+        return ResponseStrings.EMAIL_SMTP_ERROR;
+      }
+      // Save send email response in Server
+      return "Success"; 
     }
-
+    //when command is not one on the list (but not empty!!)
     return "Error: Command not recognized.";
 }
 

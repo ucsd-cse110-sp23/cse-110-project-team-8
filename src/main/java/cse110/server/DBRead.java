@@ -11,6 +11,9 @@ import com.google.gson.JsonParser;
 import static com.mongodb.client.model.Filters.*;
 
 
+/**
+ * Read user data from MongoDB.
+ */
 public class DBRead extends DBCredentials {
 
     public static JsonObject getUserData(String username, String password){
