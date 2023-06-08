@@ -13,4 +13,6 @@ public class ResponseStrings {
     public static final String SERVER_INVALID_ERROR = "Error: Invalid request to server.";
     public static final String EMAIL_SMTP_ERROR = "Error: Invalid SMTP Host.";
     public static final String EMAIL_SUCCESS = "Success: Email sent.";
+    public static final String EMAIL_SETUP_ERROR = "Error: Email hasn't been setup yet.";
+    public static final String EMAIL_NORECIPIENT_ERROR = "Error: No recipient specified.";
 }

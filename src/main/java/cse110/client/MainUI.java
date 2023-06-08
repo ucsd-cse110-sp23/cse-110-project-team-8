@@ -402,9 +402,7 @@ class AppFrame extends JFrame {
       JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
       if (jsonObj.has("error")) {
         // Error getting email info
-        currPrompt = "Please Set up email info first.";
-        questionPanel.setQuestionText(currPrompt + "\n"); 
-        return "Error: Failed to get email info. Please Set up email info first.";
+        return ResponseStrings.EMAIL_SETUP_ERROR;
       }
 
       questionPanel.setQuestionText(currPrompt + "\n"); 
@@ -423,8 +421,8 @@ class AppFrame extends JFrame {
       return "Success";
     } else if (command.equals("Send email") || command.equals("Send email to")) {
       //handle for end email with no email
-      return "Error: Please add an email to send to"; 
-    } else if (command.indexOf("Send email") == 0){
+      return ResponseStrings.EMAIL_NORECIPIENT_ERROR; 
+    } else if (command.toLowerCase().indexOf("send email") == 0){
       System.out.println("body of email: " + questionPanel.getResponseArea().getText()); 
       final String eAddress = setupEmailPanel.getEmailAddress(); 
       final String ePassword = setupEmailPanel.getEmailPassword();
@@ -433,8 +431,8 @@ class AppFrame extends JFrame {
       final String eTls = setupEmailPanel.getTlsPort(); 
       System.out.println("Address: " + eAddress + " \n Password: " + ePassword + " \n Prompt" + ePrompt + "\n SMTP: " + eSmtp + " \n TLS " + eTls); 
       String sendEmailVerification = SendEmail.createAndSendEmail(eAddress, ePassword, command, ePrompt, eSmtp, eTls);
+      savePrompt(command, sendEmailVerification);
       if (!sendEmailVerification.equals(ResponseStrings.EMAIL_SUCCESS)){
-        showPopup(ResponseStrings.EMAIL_SMTP_ERROR);
         return ResponseStrings.EMAIL_SMTP_ERROR;
       }
       // Save send email response in Server
