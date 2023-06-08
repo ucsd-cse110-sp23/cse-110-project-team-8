@@ -368,7 +368,7 @@ class AppFrame extends JFrame {
       return "Error: Command is null or empty."; 
     }
     //handle for when command is setup email
-    if (command.equalsIgnoreCase("Set up email.")) {
+    if (command.equalsIgnoreCase("Set up email.") || command.equalsIgnoreCase("Setup email.")) {
       setupEmailPanel.updateDisplay();
       cards.show(card, "setupEmailPanel"); 
       System.out.println("set up email");
