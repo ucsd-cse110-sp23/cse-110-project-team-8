@@ -15,6 +15,7 @@ public class DBRead extends DBCredentials {
 
     public static JsonObject getUserData(String username, String password){
         JsonObject json = new JsonObject();
+        System.out.println(DBCredentials.uri);
         try (MongoClient mongoClient = MongoClients.create(DBCredentials.uri)) {
             MongoDatabase userDB = mongoClient.getDatabase("users");
             MongoCollection<Document> userDataCollection = userDB.getCollection("userData");
