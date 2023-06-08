@@ -91,23 +91,6 @@ public class ServerTest {
         assertEquals(ResponseStrings.DATABASE_WRITE_SUCCESS, response.body());
     }
 
-    // @Test
-    // public void testGetRequest_1() {
-    //     // Now, make a get request
-    //     HttpClient client = HttpClient.newHttpClient();
-    //     HttpRequest getRequest = HttpRequest.newBuilder()
-    //             .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/account?username=user1&password=pass"))
-    //             .build();
-    //     HttpResponse<String> getResponse = null;
-    //     try {
-    //         getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-    //     } catch (IOException | InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-
-    //     assertEquals(ResponseStrings.DATABASE_READ_SUCCESS,getResponse.body());
-    // }
-
     @Test
     public void testPutRequest() {
         HttpClient client = HttpClient.newHttpClient();

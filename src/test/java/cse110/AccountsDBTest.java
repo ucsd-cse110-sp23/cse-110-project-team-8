@@ -29,6 +29,8 @@ public class AccountsDBTest {
     @BeforeEach
     void setUp() {
         newUsername = "testAddUser 2347198374982137598";
+        // Attempt to mock database with localhost
+        // DBCredentials.uri = "mongodb://localhost";
     }
 
     @AfterAll
@@ -49,6 +51,22 @@ public class AccountsDBTest {
     void testVerifyCorrectLogin() {
         String username = "user1";
         String password = "pass";
+
+        // Attemp to mock: Error: operations on the localhost collection results in com.mongodb.MongoTimeoutException
+        // // Add user
+        // MongoClient mongo = MongoClients.create(DBCredentials.uri);
+        // MongoDatabase db = mongo.getDatabase("users");
+        // MongoCollection<Document> table = db.getCollection("userData");
+        // /**** Insert ****/
+        // // create a document to store key and value
+        // Document document = new Document()
+        //     .append("username", username)
+        //     .append("password", password);
+        // if (table.find(eq("username",username)).first() == null) {
+        //     // insert
+        //     table.insertOne(document);
+        // }
+
         String res = DBRead.getUserData(username, password).get("response").getAsString();
         System.out.println(res);
         assertEquals(res, ResponseStrings.DATABASE_READ_SUCCESS);
