@@ -336,6 +336,25 @@ class AppFrame extends JFrame {
     return ServerCommunication.sendTranscribeRequest(fileName);
   }
 
+  void savePrompt(String currPrompt,String currResponse){
+    //save question
+    JsonObject userData = DataManager.getData();
+    JsonObject newquestion = new JsonObject();
+    newquestion.addProperty("prompt", currPrompt);
+    newquestion.addProperty("response", currResponse);
+    JsonArray promptHistory;
+    if (userData.get("promptHistory") != null){
+      promptHistory = userData.get("promptHistory").getAsJsonArray();
+    }else{
+      promptHistory = new JsonArray();
+    }
+    promptHistory.add(newquestion);
+    userData.add("promptHistory", promptHistory);
+    System.out.println(DataManager.getData().toString());
+    ServerCommunication.sendPostRequest(DataManager.getData());
+    sidebar.addItem(currPrompt);
+  }
+
   String getGPTResponse(String prompt) {
     return ServerCommunication.sendResponseRequest(prompt, maxTokens);
   }
@@ -364,21 +383,7 @@ class AppFrame extends JFrame {
       questionPanel.setResponseText(currResponse);  
 
       //save question
-      JsonObject userData = DataManager.getData();
-      JsonObject newquestion = new JsonObject();
-      newquestion.addProperty("prompt", currPrompt);
-      newquestion.addProperty("response", currResponse);
-      JsonArray promptHistory;
-      if (userData.get("promptHistory") != null){
-        promptHistory = userData.get("promptHistory").getAsJsonArray();
-      }else{
-        promptHistory = new JsonArray();
-      }
-      promptHistory.add(newquestion);
-      userData.add("promptHistory", promptHistory);
-      System.out.println(DataManager.getData().toString());
-      ServerCommunication.sendPostRequest(DataManager.getData());
-      sidebar.addItem(currPrompt);
+      savePrompt(currPrompt, currResponse);
       return "Success"; 
     } else if (command.equalsIgnoreCase("Clear all.")) { 
       //handle for command clear all
@@ -388,9 +393,9 @@ class AppFrame extends JFrame {
       //handle for command delete prompt
       sidebar.deleteItem(); 
       return "Success"; 
-    } else if (command.equals("Create email.")) {
+    } else if (command.equalsIgnoreCase("Create email.")) {
       return "Error: 'Create email to [Recipient]' is the proper format."; 
-    } else if (command.indexOf("Create email") == 0) {
+    } else if (command.toLowerCase().indexOf("create email") == 0) {
       //handle for create email 
       JsonObject jsonObj = EmailInfoCommuncation.sendGetEmailInfo(this.getCurrUserId());
       if (jsonObj.has("error")) {
@@ -410,9 +415,9 @@ class AppFrame extends JFrame {
       questionPanel.setResponseText(currResponse);  
 
       // Save email draft in Server
-      ServerCommunication.sendPostRequest(DataManager.getData());
+      //ServerCommunication.sendPostRequest(DataManager.getData());
+      savePrompt(currPrompt, currResponse);
 
-      sidebar.addItem(currPrompt);
       return "Success";
     }
 
