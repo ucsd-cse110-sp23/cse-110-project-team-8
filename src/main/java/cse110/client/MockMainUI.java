@@ -3,7 +3,7 @@ package cse110.client;
 class MockAppFrame extends AppFrame {
     @override
     String transcribePrompt() {
-        return "New question what is 5 inches in centimeters";
+        return "Question. What is 5 inches in centimeters";
     }
 
     @override
