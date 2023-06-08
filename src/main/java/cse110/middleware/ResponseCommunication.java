@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 
 
+/**
+ * Send Http server requests to /response endpoint.
+ */
 public class ResponseCommunication extends ServerCommunication {
   public static final String responseURL = URL+"response";
 

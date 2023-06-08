@@ -175,8 +175,6 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((questionPanel.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    //questionPanel.setResponseText("Recording");
-                   
                     audio.startRecording(fileName);
                      
                     questionPanel.getQuestionButton().setText("End Question"); 
@@ -190,7 +188,6 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            //questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
                             //runnning handleCommand and returning and error
                             //if invalid command
@@ -417,7 +414,6 @@ class AppFrame extends JFrame {
       questionPanel.setResponseText(currResponse);  
   
       // Save email draft in Server
-      //ServerCommunication.sendPostRequest(DataManager.getData());
       savePrompt(currPrompt, currResponse);
 
       return "Success";
@@ -438,8 +434,6 @@ class AppFrame extends JFrame {
         return ResponseStrings.EMAIL_SMTP_ERROR;
       }
       // Save send email response in Server
-      //ServerCommunication.sendPostRequest(command, sendEmailVerification);
-      //sidebar.addItem(command);
       return "Success"; 
     }
     //when command is not one on the list (but not empty!!)
