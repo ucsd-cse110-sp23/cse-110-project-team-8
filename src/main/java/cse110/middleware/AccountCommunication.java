@@ -1,12 +1,14 @@
 package cse110.middleware;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.net.*;
 
 
 public class AccountCommunication extends ServerCommunication {
+  public static final String accountURL = URL+"account";
 
     /**
      * Creates account or returns error message if invalid info
@@ -14,7 +16,8 @@ public class AccountCommunication extends ServerCommunication {
      * @param password
      * @return Message string
      */
-    public static String sendCreateRequest(String username, String password) {
+    public static JsonObject sendCreateRequest(String username, String password) {
+        JsonObject json = new JsonObject();
         try {
             // Setup the server address
             URL url = new URL(accountURL);
@@ -37,29 +40,26 @@ public class AccountCommunication extends ServerCommunication {
             jsonObj.addProperty("password", password);
             out.write(jsonObj.toString());
             out.flush();
-            out.close();
 
             // Get the response code
             int responseCode = conn.getResponseCode();
             System.out.println("POST Response Code: " + responseCode);
 
+            out.close();
+
             // Get response from server
             BufferedReader reader = new BufferedReader(
                 new InputStreamReader(conn.getInputStream())
             );
-            String response = reader.readLine();
-            String in;
-            while ((in = reader.readLine())!=null){
-                response+=in;
-            }
+            JsonObject response = JsonParser.parseReader(reader).getAsJsonObject();
+            System.out.println("Response: " + response.toString());
             reader.close();
-
-            System.out.println("Response: " + response);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Server Error";
+        json.addProperty("response", ResponseStrings.SERVER_ERROR);
+        return json;
     }
 
     /**
@@ -68,7 +68,7 @@ public class AccountCommunication extends ServerCommunication {
      * @param password
      * @return Message string 
      */
-    public static String sendLoginRequest(String username, String password) {
+    public static JsonObject sendLoginRequest(String username, String password) {
         // Set username and password as valid string first (in case they have space ' ')
         StringBuilder usernameBuilder = new StringBuilder();
         for (int i = 0 ; i < username.length(); i++) {
@@ -89,6 +89,7 @@ public class AccountCommunication extends ServerCommunication {
         }
         password = passwordBuilder.toString();
 
+        JsonObject json = new JsonObject();
         try {
             // Setup the server address with queries for prompt and tokens
             URL url = new URL(accountURL+ "?username=" + username + "&password=" + password);
@@ -107,18 +108,15 @@ public class AccountCommunication extends ServerCommunication {
             BufferedReader reader = new BufferedReader(
             new InputStreamReader(conn.getInputStream())
             );
-            String response = reader.readLine();
-            String in;
-            while ((in = reader.readLine())!=null){
-            response+=in;
-            }
+            
+            JsonObject response = JsonParser.parseReader(reader).getAsJsonObject();
+            System.out.println("Response: " + response.toString());
             reader.close();
-
-            System.out.println("Response: " + response);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Server Error";
+        json.addProperty("response", ResponseStrings.SERVER_ERROR);
+        return json;
     }
 }

@@ -10,7 +10,7 @@ import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
 
 
-public class ReadEmailDB extends DBAccess {
+public class ReadEmailDB extends DBCredentials {
     public static boolean existsEmailInfo(String userId) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase accountsDB = mongoClient.getDatabase("email");
