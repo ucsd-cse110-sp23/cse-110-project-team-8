@@ -6,4 +6,6 @@ gradle build
 
 gradle server
 
+Then keep the server running and run:
+
 gradle run 
