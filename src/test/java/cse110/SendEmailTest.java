@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.BeforeEach;
 
 import cse110.middleware.SendEmail; 
+import cse110.middleware.ResponseStrings;
 
 public class SendEmailTest {
 
@@ -78,7 +79,7 @@ public class SendEmailTest {
        String emailContents = "Subject Line: Please workDear Claire, if this doesn't work, you suck. Best regards, yourself";
        String smtpHost = "smtp.gmail.com";
        String tlsPort = "587"; 
-       String expected = "Email successfully sent"; 
+       String expected = ResponseStrings.EMAIL_SUCCESS; 
        assertTrue(expected.equals(SendEmail.createAndSendEmail(fromEmail, password, toEmail, emailContents, smtpHost, tlsPort)));
    } 
 }
