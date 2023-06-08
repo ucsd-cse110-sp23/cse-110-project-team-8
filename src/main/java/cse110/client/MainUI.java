@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-
+import java.util.Currency;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
@@ -28,6 +28,7 @@ import cse110.middleware.EmailInfo;
 import cse110.middleware.EmailInfoCommuncation;
 import cse110.middleware.ServerCommunication;
 import cse110.middleware.ResponseStrings;
+import cse110.middleware.SendEmail; 
 
 import java.awt.*;
 import javax.swing.*;
@@ -172,7 +173,7 @@ class AppFrame extends JFrame {
                 //comparing label of button to see if recording or not
                 //note file name for recording is "recording.wav"
                 if (((questionPanel.getQuestionButton()).getText()).compareTo("Add Question") == 0) {
-                    questionPanel.setResponseText("Recording");
+                    //questionPanel.setResponseText("Recording");
                    
                     audio.startRecording(fileName);
                      
@@ -187,7 +188,7 @@ class AppFrame extends JFrame {
                         @Override
                         public void run(){
                           try {
-                            questionPanel.setResponseText("Transcribing");
+                            //questionPanel.setResponseText("Transcribing");
                             currPrompt = transcribePrompt(); //transcribe
                             //runnning handleCommand and returning and error
                             //if invalid command
@@ -407,20 +408,36 @@ class AppFrame extends JFrame {
 
       questionPanel.setQuestionText(currPrompt + "\n"); 
       // Set currPrompt as the email draft from ChatGPT
-      String newPrompt = currPrompt + ". Make email and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
+      String newPrompt = currPrompt + ".  Make email, give me a subject line then start the email with the word Dear and end the email with the words: Best Regards, " + jsonObj.get(EmailInfo.displayNameKey).getAsString();
       System.out.println(newPrompt);
       newPrompt += "Do not include 'From [email]' or 'To [email]'.";
       currResponse= getGPTResponse(newPrompt);
-      System.out.println("\nResponse:" + currResponse);
+      System.out.println("\nResponse: " + currResponse);
       questionPanel.setResponseText(currResponse);  
-
+  
       // Save email draft in Server
       //ServerCommunication.sendPostRequest(DataManager.getData());
       savePrompt(currPrompt, currResponse);
 
       return "Success";
+    } else if (command.equals("Send email") || command.equals("Send email to")) {
+      //handle for end email with no email
+      return "Error: Please add an email to send to"; 
+    } else if (command.indexOf("Send email") == 0){
+      System.out.println("body of email: " + questionPanel.getResponseArea().getText()); 
+      final String eAddress = setupEmailPanel.getEmailAddress(); 
+      final String ePassword = setupEmailPanel.getEmailPassword();
+      final String ePrompt = questionPanel.getResponseArea().getText(); 
+      final String eSmtp = setupEmailPanel.getSmtpHost(); 
+      final String eTls = setupEmailPanel.getTlsPort(); 
+      System.out.println("Address: " + eAddress + " \n Password: " + ePassword + " \n Prompt" + ePrompt + "\n SMTP: " + eSmtp + " \n TLS " + eTls); 
+      String sendEmailVerification = SendEmail.createAndSendEmail(eAddress, ePassword, command, ePrompt, eSmtp, eTls);  
+      // Save send email response in Server
+      //ServerCommunication.sendPostRequest(command, sendEmailVerification);
+      //sidebar.addItem(command);
+      return "Success"; 
     }
-
+    //when command is not one on the list (but not empty!!)
     return "Error: Command not recognized.";
 }
 

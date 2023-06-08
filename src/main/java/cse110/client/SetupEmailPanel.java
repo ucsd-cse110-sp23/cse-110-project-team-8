@@ -113,4 +113,24 @@ public class SetupEmailPanel extends JPanel{
       this.add(text); 
       return text;
     }
+
+    public String getEmailAddress(){
+      return emailAddress.getText(); 
+    }
+
+    public String getEmailPassword() {
+      return emailPassword.getText();
+    }
+    
+    public String getSmtpHost(){
+      return smtpHost.getText(); 
+    }
+
+    public String getTlsPort() {
+      return tlsPort.getText();
+    }
+
+    public String getDisplayName() {
+      return displayName.getText(); 
+    }
 }

@@ -28,6 +28,10 @@ dependencies {
     // MongoDB dependencies
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.mongodb:mongodb-driver-sync:4.9.1'
+
+    //JakartaMail or JavaMail API
+    implementation files('lib/javax.mail.jar')
+    implementation 'com.sun.mail:javax.mail:1.6.2'
 }
 
 test {
