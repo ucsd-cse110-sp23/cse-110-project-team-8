@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 
 
+/**
+ * Send Http server requests to /transcribe endpoint.
+ */
 public class TranscriptionCommunication extends ServerCommunication {
   public static final String transcriptionURL = URL+"transcribe";
 

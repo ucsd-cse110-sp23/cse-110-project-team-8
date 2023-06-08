@@ -10,6 +10,9 @@ import cse110.middleware.EmailInfo;
 import org.bson.Document;
 
 
+/**
+ * Adds email info into mongoDB.
+ */
 public class CreateEmailDB extends DBCredentials {
     static final String EMAIL_INFO_SUCCESS = "Email info upload successful.";
     public static String addEmailInfo(EmailInfo ei) {

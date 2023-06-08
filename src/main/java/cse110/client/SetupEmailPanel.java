@@ -106,11 +106,34 @@ public class SetupEmailPanel extends JPanel{
     }
 
     public JTextField addText(JTextField text, JLabel label, String nameLabel) {
+      JPanel subPanel = new JPanel(); // Create a new sub JPanel with FlowLayout
       label = new JLabel(nameLabel); 
-      this.add(label); 
+      subPanel.add(label); // Add the label to the sub JPanel
       text = new JTextField(); 
       text.setColumns(70); 
-      this.add(text); 
+      subPanel.add(text); // Add the text field to the sub JPanel
+      this.add(subPanel); // Add the sub JPanel to the main JPanel
       return text;
+  }
+  
+
+    public String getEmailAddress(){
+      return emailAddress.getText(); 
+    }
+
+    public String getEmailPassword() {
+      return emailPassword.getText();
+    }
+    
+    public String getSmtpHost(){
+      return smtpHost.getText(); 
+    }
+
+    public String getTlsPort() {
+      return tlsPort.getText();
+    }
+
+    public String getDisplayName() {
+      return displayName.getText(); 
     }
 }

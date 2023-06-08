@@ -7,6 +7,9 @@ import java.io.*;
 import java.net.*;
 
 
+/**
+ * Send Http server requests to /emailInfo endpoint.
+ */
 public class EmailInfoCommuncation extends ServerCommunication {
     public static final String emailInfoURL = URL+"emailInfo";
 

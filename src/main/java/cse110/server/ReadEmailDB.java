@@ -10,6 +10,9 @@ import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
 
 
+/**
+ * Reads email setup info from MongoDB.
+ */
 public class ReadEmailDB extends DBCredentials {
     public static boolean existsEmailInfo(String userId) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {

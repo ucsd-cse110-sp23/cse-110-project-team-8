@@ -6,6 +6,10 @@ import org.bson.types.ObjectId;
 
 import com.google.gson.JsonObject;
 
+/**
+ * Class that stores Email Setup info.
+ * Includes methods for conversion from and to Document and Json.
+ */
 public class EmailInfo {
     private String userId;
     private String firstName;

@@ -13,6 +13,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+/**
+ * Write user data into MongoDB.
+ */
 public class DBWrite extends DBCredentials {
 
     public static JsonObject setUserData(Document data){

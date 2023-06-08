@@ -14,7 +14,6 @@ class MainPanel extends JPanel {
     private JButton askButton; //NEW
   
     MainPanel(String currPrompt, String currResponse) {
-      //this.setBounds(0, 0, 800, 600);
       questionText = new JTextArea(currPrompt); 
   
       responseText = new JTextArea(currResponse); 
