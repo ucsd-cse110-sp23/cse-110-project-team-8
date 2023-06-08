@@ -193,7 +193,8 @@ class AppFrame extends JFrame {
                             //if invalid command
                             String response = handleCommand(currPrompt);
                             if(!response.equals("Success")) {
-                              showPopup(response);
+                              //showPopup(response);
+                              questionPanel.setResponseText(response);
                             }
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -421,6 +422,7 @@ class AppFrame extends JFrame {
       //handle for end email with no email
       return ResponseStrings.EMAIL_NORECIPIENT_ERROR; 
     } else if (command.toLowerCase().indexOf("send email") == 0){
+      //Handle for when send email has a prompt 
       System.out.println("body of email: " + questionPanel.getResponseArea().getText()); 
       final String eAddress = setupEmailPanel.getEmailAddress(); 
       final String ePassword = setupEmailPanel.getEmailPassword();
