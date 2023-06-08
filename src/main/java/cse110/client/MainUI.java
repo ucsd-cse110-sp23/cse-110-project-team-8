@@ -192,8 +192,9 @@ class AppFrame extends JFrame {
                             currPrompt = transcribePrompt(); //transcribe
                             //runnning handleCommand and returning and error
                             //if invalid command
-                            if(handleCommand(currPrompt) != "Success") {
-                              questionPanel.setResponseText(handleCommand(currPrompt));  
+                            String response = handleCommand(currPrompt);
+                            if(!response.equals("Success")) {
+                              showPopup(response);
                             }
                           } catch (Exception e) {
                             e.printStackTrace(System.out);
@@ -431,7 +432,11 @@ class AppFrame extends JFrame {
       final String eSmtp = setupEmailPanel.getSmtpHost(); 
       final String eTls = setupEmailPanel.getTlsPort(); 
       System.out.println("Address: " + eAddress + " \n Password: " + ePassword + " \n Prompt" + ePrompt + "\n SMTP: " + eSmtp + " \n TLS " + eTls); 
-      String sendEmailVerification = SendEmail.createAndSendEmail(eAddress, ePassword, command, ePrompt, eSmtp, eTls);  
+      String sendEmailVerification = SendEmail.createAndSendEmail(eAddress, ePassword, command, ePrompt, eSmtp, eTls);
+      if (!sendEmailVerification.equals(ResponseStrings.EMAIL_SUCCESS)){
+        showPopup(ResponseStrings.EMAIL_SMTP_ERROR);
+        return ResponseStrings.EMAIL_SMTP_ERROR;
+      }
       // Save send email response in Server
       //ServerCommunication.sendPostRequest(command, sendEmailVerification);
       //sidebar.addItem(command);

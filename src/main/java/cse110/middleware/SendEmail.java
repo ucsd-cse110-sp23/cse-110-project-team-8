@@ -87,12 +87,12 @@ public class SendEmail {
          System.out.println("Email Sent Successfully!!");
 
 
-         return "Email successfully sent";
+         return ResponseStrings.EMAIL_SUCCESS;
        }
        catch (Exception e) {
          System.out.println("you have failed");
          e.printStackTrace();
-         return "Error with SMTP Host";
+         return ResponseStrings.EMAIL_SMTP_ERROR;
        }
    }
 
