@@ -10,7 +10,7 @@ import cse110.middleware.EmailInfo;
 import org.bson.Document;
 
 
-public class CreateEmailDB extends DBAccess {
+public class CreateEmailDB extends DBCredentials {
     static final String EMAIL_INFO_SUCCESS = "Email info upload successful.";
     public static String addEmailInfo(EmailInfo ei) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {

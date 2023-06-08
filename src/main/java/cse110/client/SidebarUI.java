@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import cse110.middleware.ServerCommunication;
 
@@ -26,7 +28,7 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
     int listWidth = panelWidth;
     int listHeight = panelHeight-80;
 
-    public SidebarUI(MainPanel mainPanel ,ArrayList<QuestionData> dataList) {
+    public SidebarUI(MainPanel mainPanel, ArrayList<QuestionData> dataList) {
         this.mainPanel = mainPanel;
 
         ArrayList<String> newlist = new ArrayList<>();
@@ -73,7 +75,9 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.jlist.repaint();
 
         // Clear stored data and save
-        ServerCommunication.sendClearRequest();      
+        JsonObject userData = DataManager.getData();
+        userData.remove("promptHistory");
+        ServerCommunication.sendPostRequest(userData);    
     }
 
     public String deleteItem() {
@@ -86,13 +90,19 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
         this.scrollPane.repaint();
 
         // Remove the corresponding data from the JSON file
-        ServerCommunication.sendRemoveRequest(index);
+        JsonObject userData = DataManager.getData();
+        JsonArray promptHistory = userData.get("promptHistory").getAsJsonArray();
+        promptHistory.remove(index);
+        userData.add("promptHistory", promptHistory);
+        ServerCommunication.sendPostRequest(userData);   
 
         return deletedString;
     }
 
     public boolean addItem(String prompt) {
+        System.out.println(historyList.toString());
         boolean addedPrompt = this.historyList.add(prompt);
+        System.out.println(historyList.toString());
         this.jlist.setListData(this.historyList.toArray(new String[this.historyList.size()]));
 
         // call revalidate() and repaint() on scrollPane
@@ -109,8 +119,9 @@ public class SidebarUI extends JPanel implements ListSelectionListener {
 
         // Check if an item is selected
         if (this.selectedIndex != UNSELECTED) {
-            QuestionData qd = ServerCommunication.sendGetRequest(this.selectedIndex);
-            this.mainPanel.updateData(qd.getPrompt(), qd.getResponse());
+            ArrayList<QuestionData> promptHistory = DataManager.getQuestionData();
+            QuestionData question = promptHistory.get(this.selectedIndex);
+            this.mainPanel.updateData(question.getPrompt(), question.getResponse());
         }
     }
 

@@ -3,6 +3,9 @@ package cse110.server;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.*;
+import org.bson.Document;
+
+import cse110.middleware.ResponseStrings;
 
 import java.io.*;
 import java.net.*;
@@ -12,9 +15,8 @@ import java.util.Scanner;
 public class AccountHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String response = "Request Received";
+        JsonObject response;
         String method = httpExchange.getRequestMethod();
-
         try {
             if (method.equals("GET")) {
                 response = handleGet(httpExchange);
@@ -25,34 +27,46 @@ public class AccountHandler implements HttpHandler {
             }
         } catch (Exception e) {
             System.out.println("An erroneous request");
-            response = e.toString();
+            response = new JsonObject();
+            response.addProperty("response",ResponseStrings.SERVER_INVALID_ERROR);
             e.printStackTrace();
         }
 
         // Sending back response to the client
-        httpExchange.sendResponseHeaders(200, response.length());
+        String responsestring = response.toString();
+        httpExchange.getResponseHeaders().set("Content-Type","application/json");
+        httpExchange.sendResponseHeaders(200, responsestring.length());
         OutputStream outStream = httpExchange.getResponseBody();
-        outStream.write(response.getBytes());
+        outStream.write(responsestring.getBytes());
         outStream.close();
+        
     }
 
-    private String handlePost(HttpExchange httpExchange) throws IOException {
+    private JsonObject handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
         JsonObject jsonObj = JsonParser.parseString(postData).getAsJsonObject();
+        scanner.close();
 
         String username = jsonObj.get("username").getAsString();
         String password = jsonObj.get("password").getAsString();
-        
-        String response = CreateDB.addUser(username, password);
-        System.out.println(response);
-        scanner.close();
 
-        return response;
+        JsonObject response = DBRead.getUserData(username, password);
+        System.out.println(response.toString());
+        if (!response.get("response").getAsString().equals(ResponseStrings.USERNAME_ERROR)){
+            response = new JsonObject();
+            response.addProperty("response", ResponseStrings.USERNAME_TAKEN);
+            return response;
+        }
+        Document userData = new Document()
+            .append("username", username)
+            .append("password",password);
+
+        return DBWrite.setUserData(userData);
     }
     
-    private String handleGet(HttpExchange httpExchange) throws IOException {
+    private JsonObject handleGet(HttpExchange httpExchange) throws IOException {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
 
@@ -64,6 +78,15 @@ public class AccountHandler implements HttpHandler {
             password = query.substring(query.indexOf("password=")+"password=".length());
         }
 
-        return ReadDB.checkLogin(username, password);
+        JsonObject response = new JsonObject();
+        JsonObject databaseresponse = DBRead.getUserData(username, password);
+        if (databaseresponse.get("response").getAsString().equals(ResponseStrings.DATABASE_READ_SUCCESS)){
+            response.addProperty("response", ResponseStrings.LOGIN_SUCCESS);
+            response.add("body",databaseresponse.get("body"));
+        }else{
+            response.addProperty("response", databaseresponse.get("response").getAsString());
+        }
+
+        return response;
     }
 }

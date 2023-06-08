@@ -4,3 +4,4 @@ recording.wav
 data.json
 .gradle
 build/
+*.code-workspace
