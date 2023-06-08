@@ -69,7 +69,9 @@ class AppFrame extends JFrame {
   public static final int WIDTH = 800;
   public static final int HEIGHT = 600;
 
+  //error variables
   private ErrorPopup errorPopup;
+  private JButton acceptError; 
 
   private final String fileName = "lib/recording.wav";
   private int maxTokens = 1000;
@@ -107,6 +109,7 @@ class AppFrame extends JFrame {
 
   //basic sidebar variables
   private SidebarUI sidebar; 
+
 
   AppFrame() {
     this.setSize(WIDTH, HEIGHT); 
@@ -159,6 +162,10 @@ class AppFrame extends JFrame {
     //creating and modifying askButton
     askButton = questionPanel.getQuestionButton();
     askButton.setPreferredSize(new Dimension(430,50));
+
+    //creating and modifying errorBtn
+    errorPopup = new ErrorPopup(this); 
+    acceptError = errorPopup.getBtn(); 
 
     addListeners();
     this.setVisible(true); // Make visible
@@ -326,6 +333,15 @@ class AppFrame extends JFrame {
         } 
       }
     );
+
+    acceptError.addMouseListener(
+      new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+          errorPopup.hide();
+        }
+      }
+    );
   }
 
   void createSidebarUI() {
@@ -451,7 +467,6 @@ class AppFrame extends JFrame {
   }
 
   public void showPopup(String text) {
-    if (errorPopup == null) errorPopup = new ErrorPopup(this);
     errorPopup.setMessage(text);
     errorPopup.show();
   }

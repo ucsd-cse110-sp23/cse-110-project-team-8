@@ -7,9 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
+import javax.swing.JButton; 
 
 public class ErrorPopup {
     JLabel label;
+    JButton acceptBtn; 
     Popup p;
     ErrorPopup(JFrame appFrame) {
         // create a panel
@@ -18,7 +20,9 @@ public class ErrorPopup {
         label = new JLabel("Error", JLabel.RIGHT);
         label.setFont(new Font("Verdana", Font.PLAIN, 35));
         panel.add(label);
-
+        //create a button
+        acceptBtn = new JButton("ok"); 
+        panel.add(acceptBtn);
         // create a popup
         PopupFactory pf = new PopupFactory();
         p = pf.getPopup(appFrame, panel, AppFrame.WIDTH/2-150, AppFrame.HEIGHT/2-150);
@@ -31,5 +35,9 @@ public class ErrorPopup {
     }
     void hide() {
         p.hide();
+    }
+
+    public JButton getBtn() {
+        return acceptBtn; 
     }
 }
