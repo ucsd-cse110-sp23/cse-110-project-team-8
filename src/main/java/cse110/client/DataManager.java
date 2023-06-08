@@ -32,7 +32,6 @@ public class DataManager {
             promptHistory = userData.get("promptHistory").getAsJsonArray();
             System.out.println(promptHistory.toString());
         }else{
-            System.out.println("Should be null");
             promptHistory = new JsonArray();
         }
 

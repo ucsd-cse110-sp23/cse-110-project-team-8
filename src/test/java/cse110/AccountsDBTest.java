@@ -12,9 +12,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 
-import cse110.server.CreateDB;
-import cse110.server.ReadDB;
 import cse110.middleware.ResponseStrings;
+import cse110.server.DBCredentials;
+import cse110.server.DBRead;
+import cse110.server.DBWrite;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -33,9 +34,9 @@ public class AccountsDBTest {
     @AfterAll
     static void tearDown() {
         // Delete the newly created user in testAddNewUsername()
-        try (MongoClient mongoClient = MongoClients.create(CreateDB.uri)) {
-            MongoDatabase accountsDB = mongoClient.getDatabase("accounts");
-            MongoCollection<Document> userCollection = accountsDB.getCollection("loginInfo");
+        try (MongoClient mongoClient = MongoClients.create(DBCredentials.uri)) {
+            MongoDatabase accountsDB = mongoClient.getDatabase("users");
+            MongoCollection<Document> userCollection = accountsDB.getCollection("userData");
 
             // delete one document
             Bson filter = eq("username", newUsername);
@@ -47,17 +48,17 @@ public class AccountsDBTest {
     @Test
     void testVerifyCorrectLogin() {
         String username = "user1";
-        String password = "password123";
-        String res = ReadDB.checkLogin(username, password);
+        String password = "pass";
+        String res = DBRead.getUserData(username, password).get("response").getAsString();
         System.out.println(res);
-        assertEquals(res, ResponseStrings.LOGIN_SUCCESS);
+        assertEquals(res, ResponseStrings.DATABASE_READ_SUCCESS);
     }
 
     @Test
     void testLoginIncorrectUsername() {
         String username = "kelfcJOOSJ Fi fjs oe8f  F83 jrof8e93w r";
         String password = "";
-        String res = ReadDB.checkLogin(username, password);
+        String res = DBRead.getUserData(username, password).get("response").getAsString();
         System.out.println(res);
         assertEquals(res, ResponseStrings.USERNAME_ERROR);
     }
@@ -66,25 +67,19 @@ public class AccountsDBTest {
     void testLoginIncorrectPassword() {
         String username = "user1";
         String password = "password321";
-        String res = ReadDB.checkLogin(username, password);
+        String res = DBRead.getUserData(username, password).get("response").getAsString();
         System.out.println(res);
         assertEquals(res, ResponseStrings.PASSWORD_ERROR);
     }
 
     @Test
-    void testAddExistingUsername() {
-        String username = "user1";
-        String password = "";
-        String res = CreateDB.addUser(username, password);
-        System.out.println(res);
-        assertEquals(res, ResponseStrings.USERNAME_TAKEN);
-    }
-
-    @Test
     void testAddNewUsername() {
         String password = "pw";
-        String res = CreateDB.addUser(newUsername, password);
+        Document userData = new Document()
+            .append("username", newUsername)
+            .append("password", password);
+        String res = DBWrite.setUserData(userData).get("response").getAsString();
         System.out.println(res);
-        assertEquals(res, ResponseStrings.ADDED_USER);
+        assertEquals(res, ResponseStrings.DATABASE_WRITE_SUCCESS);
     }
 }

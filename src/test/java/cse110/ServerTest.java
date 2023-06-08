@@ -12,6 +12,7 @@ import com.sun.net.httpserver.*;
 
 import cse110.client.DataManager;
 import cse110.client.QuestionData;
+import cse110.middleware.ResponseStrings;
 import cse110.server.RequestHandler;
 
 import java.net.InetSocketAddress;
@@ -57,7 +58,6 @@ public class ServerTest {
         if (server != null) {
             server.stop(0);
         }
-        DataManager.setData(new ArrayList<>());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ServerTest {
         }
         
         // Assert that the response message is as expected
-        assertEquals("Posted entry {question, answer}", response.body());
+        assertEquals(ResponseStrings.DATABASE_WRITE_SUCCESS, response.body());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ServerTest {
         // Now, make a get request
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest getRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/?index=0"))
+                .uri(URI.create("http://" + SERVER_HOSTNAME + ":" + SERVER_PORT + "/account?username=user1&password=pass"))
                 .build();
         HttpResponse<String> getResponse = null;
         try {
@@ -105,14 +105,7 @@ public class ServerTest {
             e.printStackTrace();
         }
 
-        // Ensure there is at least one data entry
-        DataManager.addData(new QuestionData("question", "answer"));
-        // Compare with response from DataManager
-        QuestionData qd = DataManager.getData().get(0);
-        JsonObject jsobObj = new JsonObject();
-        jsobObj.addProperty("prompt", qd.getPrompt());
-        jsobObj.addProperty("response", qd.getResponse());
-        assertEquals(jsobObj.toString(), getResponse.body());
+        assertEquals(ResponseStrings.DATABASE_READ_SUCCESS,getResponse.body());
     }
 
     @Test
