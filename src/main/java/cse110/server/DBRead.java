@@ -17,20 +17,14 @@ public class DBRead extends DBCredentials {
         JsonObject json = new JsonObject();
         System.out.println(DBCredentials.uri);
         try (MongoClient mongoClient = MongoClients.create(DBCredentials.uri)) {
-            System.out.println(DBCredentials.uri + " made connection");
             MongoDatabase userDB = mongoClient.getDatabase("users");
-            System.out.println(DBCredentials.uri + " made database");
             MongoCollection<Document> userDataCollection = userDB.getCollection("userData");
 
-            System.out.println(DBCredentials.uri + " made collection");
             // Get document with matching username and password
             Document userData = userDataCollection.find(eq("username", username)).first();
-            System.out.println(DBCredentials.uri + "find in made collection");
 
             if (userData == null){
-                System.out.println(DBCredentials.uri + "is null");
                 json.addProperty("response", ResponseStrings.USERNAME_ERROR);
-                System.out.println(DBCredentials.uri + "set response");
                 return json;
             }
 

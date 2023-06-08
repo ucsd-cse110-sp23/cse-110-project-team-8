@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -51,27 +50,6 @@ public class AccountsDBTest {
     void testVerifyCorrectLogin() {
         String username = "user1";
         String password = "pass";
-
-        // Add user
-        MongoClient mongo = MongoClients.create(DBCredentials.uri);
-        System.out.println("made test client");
-        MongoDatabase db = mongo.getDatabase("users");
-        System.out.println("made test db");
-        MongoCollection<Document> table = db.getCollection("userData");
-        System.out.println("made test collection");
-
-        /**** Insert ****/
-        // create a document to store key and value
-        Document document = new Document()
-            .append("username", username)
-            .append("password", password);
-        System.out.println("made test doc");
-        if (table.find(eq("username",username)).first() == null) {
-            // insert
-            table.insertOne(document);
-        }
-        System.out.println("made test insert");
-
         String res = DBRead.getUserData(username, password).get("response").getAsString();
         System.out.println(res);
         assertEquals(res, ResponseStrings.DATABASE_READ_SUCCESS);
